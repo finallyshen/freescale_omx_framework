@@ -22,19 +22,21 @@
 
 #define LIB_NAME_LEN 512
 
-typedef struct _LIB_INFO {
-    fsl_osal_char lib_name[LIB_NAME_LEN];
-    fsl_osal_ptr hlib;
-    fsl_osal_s32 refCount;
-}LIB_INFO;
+typedef struct _LIB_INFO
+{
+	fsl_osal_char lib_name[LIB_NAME_LEN];
+	fsl_osal_ptr hlib;
+	fsl_osal_s32 refCount;
+} LIB_INFO;
 
-class ShareLibarayMgr {
+class ShareLibarayMgr
+{
 public:
-    fsl_osal_ptr load(fsl_osal_char *lib_name);
-    fsl_osal_s32 unload(fsl_osal_ptr hlib);
-    fsl_osal_ptr getSymbol(fsl_osal_ptr hlib, fsl_osal_char *symbol);
+	fsl_osal_ptr load(fsl_osal_char *lib_name);
+	fsl_osal_s32 unload(fsl_osal_ptr hlib);
+	fsl_osal_ptr getSymbol(fsl_osal_ptr hlib, fsl_osal_char *symbol);
 private:
-    List<LIB_INFO> lib_info;
+	List<LIB_INFO> lib_info;
 };
 
 #endif

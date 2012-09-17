@@ -78,74 +78,74 @@
         : "memory", "r12");
 void put_pixels8_y2_iwmmxt(uint8_t *block, const uint8_t *pixels, const int line_size, int h)
 {
-    OP("wavg2br");
+	OP("wavg2br");
 }
 void put_no_rnd_pixels8_y2_iwmmxt(uint8_t *block, const uint8_t *pixels, const int line_size, int h)
 {
-    OP("wavg2b");
+	OP("wavg2b");
 }
 #undef OP
 
 void add_pixels_clamped_iwmmxt(const DCTELEM *block, uint8_t *pixels, int line_size)
 {
-    uint8_t *pixels2 = pixels + line_size;
+	uint8_t *pixels2 = pixels + line_size;
 
-    __asm__ volatile (
-        "mov            r12, #4                 \n\t"
-        "1:                                     \n\t"
-        "pld            [%[pixels], %[line_size2]]              \n\t"
-        "pld            [%[pixels2], %[line_size2]]             \n\t"
-        "wldrd          wr4, [%[pixels]]        \n\t"
-        "wldrd          wr5, [%[pixels2]]       \n\t"
-        "pld            [%[block], #32]         \n\t"
-        "wunpckelub     wr6, wr4                \n\t"
-        "wldrd          wr0, [%[block]]         \n\t"
-        "wunpckehub     wr7, wr4                \n\t"
-        "wldrd          wr1, [%[block], #8]     \n\t"
-        "wunpckelub     wr8, wr5                \n\t"
-        "wldrd          wr2, [%[block], #16]    \n\t"
-        "wunpckehub     wr9, wr5                \n\t"
-        "wldrd          wr3, [%[block], #24]    \n\t"
-        "add            %[block], %[block], #32 \n\t"
-        "waddhss        wr10, wr0, wr6          \n\t"
-        "waddhss        wr11, wr1, wr7          \n\t"
-        "waddhss        wr12, wr2, wr8          \n\t"
-        "waddhss        wr13, wr3, wr9          \n\t"
-        "wpackhus       wr14, wr10, wr11        \n\t"
-        "wpackhus       wr15, wr12, wr13        \n\t"
-        "wstrd          wr14, [%[pixels]]       \n\t"
-        "add            %[pixels], %[pixels], %[line_size2]     \n\t"
-        "subs           r12, r12, #1            \n\t"
-        "wstrd          wr15, [%[pixels2]]      \n\t"
-        "add            %[pixels2], %[pixels2], %[line_size2]   \n\t"
-        "bne            1b                      \n\t"
-        : [block]"+r"(block), [pixels]"+r"(pixels), [pixels2]"+r"(pixels2)
-        : [line_size2]"r"(line_size << 1)
-        : "cc", "memory", "r12");
+	__asm__ volatile (
+	    "mov            r12, #4                 \n\t"
+	    "1:                                     \n\t"
+	    "pld            [%[pixels], %[line_size2]]              \n\t"
+	    "pld            [%[pixels2], %[line_size2]]             \n\t"
+	    "wldrd          wr4, [%[pixels]]        \n\t"
+	    "wldrd          wr5, [%[pixels2]]       \n\t"
+	    "pld            [%[block], #32]         \n\t"
+	    "wunpckelub     wr6, wr4                \n\t"
+	    "wldrd          wr0, [%[block]]         \n\t"
+	    "wunpckehub     wr7, wr4                \n\t"
+	    "wldrd          wr1, [%[block], #8]     \n\t"
+	    "wunpckelub     wr8, wr5                \n\t"
+	    "wldrd          wr2, [%[block], #16]    \n\t"
+	    "wunpckehub     wr9, wr5                \n\t"
+	    "wldrd          wr3, [%[block], #24]    \n\t"
+	    "add            %[block], %[block], #32 \n\t"
+	    "waddhss        wr10, wr0, wr6          \n\t"
+	    "waddhss        wr11, wr1, wr7          \n\t"
+	    "waddhss        wr12, wr2, wr8          \n\t"
+	    "waddhss        wr13, wr3, wr9          \n\t"
+	    "wpackhus       wr14, wr10, wr11        \n\t"
+	    "wpackhus       wr15, wr12, wr13        \n\t"
+	    "wstrd          wr14, [%[pixels]]       \n\t"
+	    "add            %[pixels], %[pixels], %[line_size2]     \n\t"
+	    "subs           r12, r12, #1            \n\t"
+	    "wstrd          wr15, [%[pixels2]]      \n\t"
+	    "add            %[pixels2], %[pixels2], %[line_size2]   \n\t"
+	    "bne            1b                      \n\t"
+	    : [block]"+r"(block), [pixels]"+r"(pixels), [pixels2]"+r"(pixels2)
+	    : [line_size2]"r"(line_size << 1)
+	    : "cc", "memory", "r12");
 }
 
 static void clear_blocks_iwmmxt(DCTELEM *blocks)
 {
-    __asm__ volatile(
-                "wzero wr0                      \n\t"
-                "mov r1, #(128 * 6 / 32)        \n\t"
-                "1:                             \n\t"
-                "wstrd wr0, [%0]                \n\t"
-                "wstrd wr0, [%0, #8]            \n\t"
-                "wstrd wr0, [%0, #16]           \n\t"
-                "wstrd wr0, [%0, #24]           \n\t"
-                "subs r1, r1, #1                \n\t"
-                "add %0, %0, #32                \n\t"
-                "bne 1b                         \n\t"
-                : "+r"(blocks)
-                :
-                : "r1"
-        );
+	__asm__ volatile(
+	    "wzero wr0                      \n\t"
+	    "mov r1, #(128 * 6 / 32)        \n\t"
+	    "1:                             \n\t"
+	    "wstrd wr0, [%0]                \n\t"
+	    "wstrd wr0, [%0, #8]            \n\t"
+	    "wstrd wr0, [%0, #16]           \n\t"
+	    "wstrd wr0, [%0, #24]           \n\t"
+	    "subs r1, r1, #1                \n\t"
+	    "add %0, %0, #32                \n\t"
+	    "bne 1b                         \n\t"
+	    : "+r"(blocks)
+	    :
+	    : "r1"
+	);
 }
 
 static void nop(uint8_t *block, const uint8_t *pixels, int line_size, int h)
 {
-    return;
+	return;
 }
 
 /* A run time test is not simple. If this file is compiled in
@@ -154,54 +154,55 @@ static void nop(uint8_t *block, const uint8_t *pixels, int line_size, int h)
 
 void ff_dsputil_init_iwmmxt(DSPContext* c, AVCodecContext *avctx)
 {
-    int mm_flags = AV_CPU_FLAG_IWMMXT; /* multimedia extension flags */
+	int mm_flags = AV_CPU_FLAG_IWMMXT; /* multimedia extension flags */
 
-    if (avctx->dsp_mask) {
-        if (avctx->dsp_mask & AV_CPU_FLAG_FORCE)
-            mm_flags |= (avctx->dsp_mask & 0xffff);
-        else
-            mm_flags &= ~(avctx->dsp_mask & 0xffff);
-    }
+	if (avctx->dsp_mask)
+	{
+		if (avctx->dsp_mask & AV_CPU_FLAG_FORCE)
+			mm_flags |= (avctx->dsp_mask & 0xffff);
+		else
+			mm_flags &= ~(avctx->dsp_mask & 0xffff);
+	}
 
-    if (!(mm_flags & AV_CPU_FLAG_IWMMXT)) return;
+	if (!(mm_flags & AV_CPU_FLAG_IWMMXT)) return;
 
-    c->add_pixels_clamped = add_pixels_clamped_iwmmxt;
+	c->add_pixels_clamped = add_pixels_clamped_iwmmxt;
 
-    c->clear_blocks = clear_blocks_iwmmxt;
+	c->clear_blocks = clear_blocks_iwmmxt;
 
-    c->put_pixels_tab[0][0] = put_pixels16_iwmmxt;
-    c->put_pixels_tab[0][1] = put_pixels16_x2_iwmmxt;
-    c->put_pixels_tab[0][2] = put_pixels16_y2_iwmmxt;
-    c->put_pixels_tab[0][3] = put_pixels16_xy2_iwmmxt;
-    c->put_no_rnd_pixels_tab[0][0] = put_pixels16_iwmmxt;
-    c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x2_iwmmxt;
-    c->put_no_rnd_pixels_tab[0][2] = put_no_rnd_pixels16_y2_iwmmxt;
-    c->put_no_rnd_pixels_tab[0][3] = put_no_rnd_pixels16_xy2_iwmmxt;
+	c->put_pixels_tab[0][0] = put_pixels16_iwmmxt;
+	c->put_pixels_tab[0][1] = put_pixels16_x2_iwmmxt;
+	c->put_pixels_tab[0][2] = put_pixels16_y2_iwmmxt;
+	c->put_pixels_tab[0][3] = put_pixels16_xy2_iwmmxt;
+	c->put_no_rnd_pixels_tab[0][0] = put_pixels16_iwmmxt;
+	c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x2_iwmmxt;
+	c->put_no_rnd_pixels_tab[0][2] = put_no_rnd_pixels16_y2_iwmmxt;
+	c->put_no_rnd_pixels_tab[0][3] = put_no_rnd_pixels16_xy2_iwmmxt;
 
-    c->put_pixels_tab[1][0] = put_pixels8_iwmmxt;
-    c->put_pixels_tab[1][1] = put_pixels8_x2_iwmmxt;
-    c->put_pixels_tab[1][2] = put_pixels8_y2_iwmmxt;
-    c->put_pixels_tab[1][3] = put_pixels8_xy2_iwmmxt;
-    c->put_no_rnd_pixels_tab[1][0] = put_pixels8_iwmmxt;
-    c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_iwmmxt;
-    c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_iwmmxt;
-    c->put_no_rnd_pixels_tab[1][3] = put_no_rnd_pixels8_xy2_iwmmxt;
+	c->put_pixels_tab[1][0] = put_pixels8_iwmmxt;
+	c->put_pixels_tab[1][1] = put_pixels8_x2_iwmmxt;
+	c->put_pixels_tab[1][2] = put_pixels8_y2_iwmmxt;
+	c->put_pixels_tab[1][3] = put_pixels8_xy2_iwmmxt;
+	c->put_no_rnd_pixels_tab[1][0] = put_pixels8_iwmmxt;
+	c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x2_iwmmxt;
+	c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_iwmmxt;
+	c->put_no_rnd_pixels_tab[1][3] = put_no_rnd_pixels8_xy2_iwmmxt;
 
-    c->avg_pixels_tab[0][0] = avg_pixels16_iwmmxt;
-    c->avg_pixels_tab[0][1] = avg_pixels16_x2_iwmmxt;
-    c->avg_pixels_tab[0][2] = avg_pixels16_y2_iwmmxt;
-    c->avg_pixels_tab[0][3] = avg_pixels16_xy2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[0][0] = avg_pixels16_iwmmxt;
-    c->avg_no_rnd_pixels_tab[0][1] = avg_no_rnd_pixels16_x2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[0][2] = avg_no_rnd_pixels16_y2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[0][3] = avg_no_rnd_pixels16_xy2_iwmmxt;
+	c->avg_pixels_tab[0][0] = avg_pixels16_iwmmxt;
+	c->avg_pixels_tab[0][1] = avg_pixels16_x2_iwmmxt;
+	c->avg_pixels_tab[0][2] = avg_pixels16_y2_iwmmxt;
+	c->avg_pixels_tab[0][3] = avg_pixels16_xy2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[0][0] = avg_pixels16_iwmmxt;
+	c->avg_no_rnd_pixels_tab[0][1] = avg_no_rnd_pixels16_x2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[0][2] = avg_no_rnd_pixels16_y2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[0][3] = avg_no_rnd_pixels16_xy2_iwmmxt;
 
-    c->avg_pixels_tab[1][0] = avg_pixels8_iwmmxt;
-    c->avg_pixels_tab[1][1] = avg_pixels8_x2_iwmmxt;
-    c->avg_pixels_tab[1][2] = avg_pixels8_y2_iwmmxt;
-    c->avg_pixels_tab[1][3] = avg_pixels8_xy2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[1][0] = avg_no_rnd_pixels8_iwmmxt;
-    c->avg_no_rnd_pixels_tab[1][1] = avg_no_rnd_pixels8_x2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[1][2] = avg_no_rnd_pixels8_y2_iwmmxt;
-    c->avg_no_rnd_pixels_tab[1][3] = avg_no_rnd_pixels8_xy2_iwmmxt;
+	c->avg_pixels_tab[1][0] = avg_pixels8_iwmmxt;
+	c->avg_pixels_tab[1][1] = avg_pixels8_x2_iwmmxt;
+	c->avg_pixels_tab[1][2] = avg_pixels8_y2_iwmmxt;
+	c->avg_pixels_tab[1][3] = avg_pixels8_xy2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[1][0] = avg_no_rnd_pixels8_iwmmxt;
+	c->avg_no_rnd_pixels_tab[1][1] = avg_no_rnd_pixels8_x2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[1][2] = avg_no_rnd_pixels8_y2_iwmmxt;
+	c->avg_no_rnd_pixels_tab[1][3] = avg_no_rnd_pixels8_xy2_iwmmxt;
 }

@@ -32,78 +32,82 @@
 
 static av_cold int gsm_init(AVCodecContext *avctx)
 {
-    avctx->channels = 1;
-    if (!avctx->sample_rate)
-        avctx->sample_rate = 8000;
-    avctx->sample_fmt = AV_SAMPLE_FMT_S16;
+	avctx->channels = 1;
+	if (!avctx->sample_rate)
+		avctx->sample_rate = 8000;
+	avctx->sample_fmt = AV_SAMPLE_FMT_S16;
 
-    switch (avctx->codec_id) {
-    case CODEC_ID_GSM:
-        avctx->frame_size  = GSM_FRAME_SIZE;
-        avctx->block_align = GSM_BLOCK_SIZE;
-        break;
-    case CODEC_ID_GSM_MS:
-        avctx->frame_size  = 2 * GSM_FRAME_SIZE;
-        avctx->block_align = GSM_MS_BLOCK_SIZE;
-    }
+	switch (avctx->codec_id)
+	{
+	case CODEC_ID_GSM:
+		avctx->frame_size  = GSM_FRAME_SIZE;
+		avctx->block_align = GSM_BLOCK_SIZE;
+		break;
+	case CODEC_ID_GSM_MS:
+		avctx->frame_size  = 2 * GSM_FRAME_SIZE;
+		avctx->block_align = GSM_MS_BLOCK_SIZE;
+	}
 
-    return 0;
+	return 0;
 }
 
 static int gsm_decode_frame(AVCodecContext *avctx, void *data,
                             int *data_size, AVPacket *avpkt)
 {
-    int res;
-    GetBitContext gb;
-    const uint8_t *buf = avpkt->data;
-    int buf_size = avpkt->size;
-    int16_t *samples = data;
-    int frame_bytes = 2 * avctx->frame_size;
+	int res;
+	GetBitContext gb;
+	const uint8_t *buf = avpkt->data;
+	int buf_size = avpkt->size;
+	int16_t *samples = data;
+	int frame_bytes = 2 * avctx->frame_size;
 
-    if (*data_size < frame_bytes)
-        return -1;
-    *data_size = 0;
-    if(buf_size < avctx->block_align)
-        return AVERROR_INVALIDDATA;
+	if (*data_size < frame_bytes)
+		return -1;
+	*data_size = 0;
+	if(buf_size < avctx->block_align)
+		return AVERROR_INVALIDDATA;
 
-    switch (avctx->codec_id) {
-    case CODEC_ID_GSM:
-        init_get_bits(&gb, buf, buf_size * 8);
-        if (get_bits(&gb, 4) != 0xd)
-            av_log(avctx, AV_LOG_WARNING, "Missing GSM magic!\n");
-        res = gsm_decode_block(avctx, samples, &gb);
-        if (res < 0)
-            return res;
-        break;
-    case CODEC_ID_GSM_MS:
-        res = ff_msgsm_decode_block(avctx, samples, buf);
-        if (res < 0)
-            return res;
-    }
-    *data_size = frame_bytes;
-    return avctx->block_align;
+	switch (avctx->codec_id)
+	{
+	case CODEC_ID_GSM:
+		init_get_bits(&gb, buf, buf_size * 8);
+		if (get_bits(&gb, 4) != 0xd)
+			av_log(avctx, AV_LOG_WARNING, "Missing GSM magic!\n");
+		res = gsm_decode_block(avctx, samples, &gb);
+		if (res < 0)
+			return res;
+		break;
+	case CODEC_ID_GSM_MS:
+		res = ff_msgsm_decode_block(avctx, samples, buf);
+		if (res < 0)
+			return res;
+	}
+	*data_size = frame_bytes;
+	return avctx->block_align;
 }
 
-AVCodec ff_gsm_decoder = {
-    "gsm",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_GSM,
-    sizeof(GSMContext),
-    gsm_init,
-    NULL,
-    NULL,
-    gsm_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("GSM"),
+AVCodec ff_gsm_decoder =
+{
+	"gsm",
+	AVMEDIA_TYPE_AUDIO,
+	CODEC_ID_GSM,
+	sizeof(GSMContext),
+	gsm_init,
+	NULL,
+	NULL,
+	gsm_decode_frame,
+	.long_name = NULL_IF_CONFIG_SMALL("GSM"),
 };
 
-AVCodec ff_gsm_ms_decoder = {
-    "gsm_ms",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_GSM_MS,
-    sizeof(GSMContext),
-    gsm_init,
-    NULL,
-    NULL,
-    gsm_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("GSM Microsoft variant"),
+AVCodec ff_gsm_ms_decoder =
+{
+	"gsm_ms",
+	AVMEDIA_TYPE_AUDIO,
+	CODEC_ID_GSM_MS,
+	sizeof(GSMContext),
+	gsm_init,
+	NULL,
+	NULL,
+	gsm_decode_frame,
+	.long_name = NULL_IF_CONFIG_SMALL("GSM Microsoft variant"),
 };

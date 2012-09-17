@@ -30,15 +30,15 @@
  */
 efsl_osal_return_type_t fsl_osal_systime(fsl_osal_timeval *time)
 {
-    struct timeval tv;
+	struct timeval tv;
 
-    if(time == NULL)
-        return E_FSL_OSAL_FAILURE;
+	if(time == NULL)
+		return E_FSL_OSAL_FAILURE;
 
-    gettimeofday(&tv, NULL);
-    time->sec = tv.tv_sec;
-    time->usec = tv.tv_usec;
+	gettimeofday(&tv, NULL);
+	time->sec = tv.tv_sec;
+	time->usec = tv.tv_usec;
 
-    return E_FSL_OSAL_SUCCESS;
+	return E_FSL_OSAL_SUCCESS;
 }
 

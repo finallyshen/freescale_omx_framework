@@ -32,57 +32,62 @@
 /**
  * single band psychoacoustic information
  */
-typedef struct FFPsyBand {
-    int   bits;
-    float energy;
-    float threshold;
-    float distortion;
-    float perceptual_weight;
+typedef struct FFPsyBand
+{
+	int   bits;
+	float energy;
+	float threshold;
+	float distortion;
+	float perceptual_weight;
 } FFPsyBand;
 
 /**
  * windowing related information
  */
-typedef struct FFPsyWindowInfo {
-    int window_type[3];               ///< window type (short/long/transitional, etc.) - current, previous and next
-    int window_shape;                 ///< window shape (sine/KBD/whatever)
-    int num_windows;                  ///< number of windows in a frame
-    int grouping[8];                  ///< window grouping (for e.g. AAC)
-    int *window_sizes;                ///< sequence of window sizes inside one frame (for eg. WMA)
+typedef struct FFPsyWindowInfo
+{
+	int window_type[3];               ///< window type (short/long/transitional, etc.) - current, previous and next
+	int window_shape;                 ///< window shape (sine/KBD/whatever)
+	int num_windows;                  ///< number of windows in a frame
+	int grouping[8];                  ///< window grouping (for e.g. AAC)
+	int *window_sizes;                ///< sequence of window sizes inside one frame (for eg. WMA)
 } FFPsyWindowInfo;
 
 /**
  * context used by psychoacoustic model
  */
-typedef struct FFPsyContext {
-    AVCodecContext *avctx;            ///< encoder context
-    const struct FFPsyModel *model;   ///< encoder-specific model functions
+typedef struct FFPsyContext
+{
+	AVCodecContext *avctx;            ///< encoder context
+	const struct FFPsyModel *model;   ///< encoder-specific model functions
 
-    FFPsyBand *psy_bands;             ///< frame bands information
+	FFPsyBand *psy_bands;             ///< frame bands information
 
-    uint8_t **bands;                  ///< scalefactor band sizes for possible frame sizes
-    int     *num_bands;               ///< number of scalefactor bands for possible frame sizes
-    int num_lens;                     ///< number of scalefactor band sets
+	uint8_t **bands;                  ///< scalefactor band sizes for possible frame sizes
+	int     *num_bands;               ///< number of scalefactor bands for possible frame sizes
+	int num_lens;                     ///< number of scalefactor band sets
 
-    float pe[PSY_MAX_CHANS];          ///< total PE for each channel in the frame
+	float pe[PSY_MAX_CHANS];          ///< total PE for each channel in the frame
 
-    struct {
-        int size;                     ///< size of the bitresevoir in bits
-        int bits;                     ///< number of bits used in the bitresevoir
-    } bitres;
+	struct
+	{
+		int size;                     ///< size of the bitresevoir in bits
+		int bits;                     ///< number of bits used in the bitresevoir
+	} bitres;
 
-    void* model_priv_data;            ///< psychoacoustic model implementation private data
+	void* model_priv_data;            ///< psychoacoustic model implementation private data
 } FFPsyContext;
 
 /**
  * codec-specific psychoacoustic model implementation
  */
-typedef struct FFPsyModel {
-    const char *name;
-    int  (*init)   (FFPsyContext *apc);
-    FFPsyWindowInfo (*window)(FFPsyContext *ctx, const int16_t *audio, const int16_t *la, int channel, int prev_type);
-    void (*analyze)(FFPsyContext *ctx, int channel, const float *coeffs, const FFPsyWindowInfo *wi);
-    void (*end)    (FFPsyContext *apc);
+typedef struct FFPsyModel
+{
+	const char *name;
+	int  (*init)   (FFPsyContext *apc);
+	FFPsyWindowInfo (*window)(FFPsyContext *ctx, const int16_t *audio, const int16_t *la, int channel, int prev_type);
+	void (*analyze)(FFPsyContext *ctx, int channel, const float *coeffs, const FFPsyWindowInfo *wi);
+	void (*end)    (FFPsyContext *apc);
 } FFPsyModel;
 
 /**

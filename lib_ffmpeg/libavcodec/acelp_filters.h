@@ -101,10 +101,10 @@ void ff_acelp_high_pass_filter(int16_t* out, int hpf_f[2],
  * @param n number of samples
  */
 void ff_acelp_apply_order_2_transfer_function(float *out, const float *in,
-                                              const float zero_coeffs[2],
-                                              const float pole_coeffs[2],
-                                              float gain,
-                                              float mem[2], int n);
+        const float zero_coeffs[2],
+        const float pole_coeffs[2],
+        float gain,
+        float mem[2], int n);
 
 /**
  * Apply tilt compensation filter, 1 - tilt * z-1.

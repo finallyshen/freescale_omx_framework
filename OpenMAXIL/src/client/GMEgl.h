@@ -18,11 +18,12 @@
 
 #include "OMX_Core.h"
 
-typedef enum {
-    GMEGLDisplayNONE = -1,
-    GMEGLDisplayX11,	
-    GMEGLDisplayFB
-}GMEglDisplayType;
+typedef enum
+{
+	GMEGLDisplayNONE = -1,
+	GMEGLDisplayX11,
+	GMEGLDisplayFB
+} GMEglDisplayType;
 
 OMX_ERRORTYPE GMCreateEglContext(OMX_PTR *pContext, OMX_U32 nWidth, OMX_U32 nHeight, GMEglDisplayType dispType);
 OMX_ERRORTYPE GMDestroyEglContext(OMX_PTR Context);

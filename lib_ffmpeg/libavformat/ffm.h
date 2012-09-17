@@ -35,24 +35,26 @@
 #define FLAG_KEY_FRAME       0x01
 #define FLAG_DTS             0x02
 
-enum {
-    READ_HEADER,
-    READ_DATA,
+enum
+{
+	READ_HEADER,
+	READ_DATA,
 };
 
-typedef struct FFMContext {
-    /* only reading mode */
-    int64_t write_index, file_size;
-    int read_state;
-    uint8_t header[FRAME_HEADER_SIZE+4];
+typedef struct FFMContext
+{
+	/* only reading mode */
+	int64_t write_index, file_size;
+	int read_state;
+	uint8_t header[FRAME_HEADER_SIZE+4];
 
-    /* read and write */
-    int first_packet; /* true if first packet, needed to set the discontinuity tag */
-    int packet_size;
-    int frame_offset;
-    int64_t dts;
-    uint8_t *packet_ptr, *packet_end;
-    uint8_t packet[FFM_PACKET_SIZE];
+	/* read and write */
+	int first_packet; /* true if first packet, needed to set the discontinuity tag */
+	int packet_size;
+	int frame_offset;
+	int64_t dts;
+	uint8_t *packet_ptr, *packet_end;
+	uint8_t packet[FFM_PACKET_SIZE];
 } FFMContext;
 
 #endif /* AVFORMAT_FFM_H */

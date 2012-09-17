@@ -27,9 +27,9 @@
 
 static inline uint64_t read_time(void)
 {
-    uint32_t a, d;
-    __asm__ volatile("rdtsc" : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
+	uint32_t a, d;
+	__asm__ volatile("rdtsc" : "=a" (a), "=d" (d));
+	return ((uint64_t)d << 32) + a;
 }
 
 #endif /* AVUTIL_X86_TIMER_H */

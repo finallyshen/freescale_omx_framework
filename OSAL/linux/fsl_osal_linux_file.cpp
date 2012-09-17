@@ -19,16 +19,16 @@
 
 //#define USE_LIBC_IF
 
- #include <string.h>
- #include <stdlib.h>
- #include <unistd.h>
- #include <sys/stat.h>
- #include <sys/vfs.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/vfs.h>
 #ifndef USE_LIBC_IF
- #include <fcntl.h>
+#include <fcntl.h>
 #endif
- #include "Log.h"
- #include "fsl_osal.h"
+#include "Log.h"
+#include "fsl_osal.h"
 
 //#define LOG_DEBUG printf
 /*! Opens a file.
@@ -46,30 +46,30 @@
  *		E_FSL_OSAL_UNAVAILABLE if the file is not found
  */
 efsl_osal_return_type_t fsl_osal_fopen(const fsl_osal_char *path,
-									 const fsl_osal_char *mode,
-									 fsl_osal_file *file_handle)
- {
+                                       const fsl_osal_char *mode,
+                                       fsl_osal_file *file_handle)
+{
 #ifdef USE_LIBC_IF
- 	FILE *fp;
- 	fp = fopen(path, mode);
- 	if(fp == NULL)
- 	{
- 		//LOG_ERROR("\n Error in opening the file.");
- 		return E_FSL_OSAL_UNAVAILABLE;
- 	}
- 	*file_handle = (void *)fp;
+	FILE *fp;
+	fp = fopen(path, mode);
+	if(fp == NULL)
+	{
+		//LOG_ERROR("\n Error in opening the file.");
+		return E_FSL_OSAL_UNAVAILABLE;
+	}
+	*file_handle = (void *)fp;
 #else
-        int fd;
-        fd = open(path, O_LARGEFILE | O_RDONLY);
-        if(fd < 0)
- 	{
- 		LOG_DEBUG("\n Error in opening the file.");
- 		return E_FSL_OSAL_UNAVAILABLE;
- 	}
-        *file_handle = (void *)fd;
+	int fd;
+	fd = open(path, O_LARGEFILE | O_RDONLY);
+	if(fd < 0)
+	{
+		LOG_DEBUG("\n Error in opening the file.");
+		return E_FSL_OSAL_UNAVAILABLE;
+	}
+	*file_handle = (void *)fd;
 #endif
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Closes the given file.
  *
@@ -80,29 +80,30 @@ efsl_osal_return_type_t fsl_osal_fopen(const fsl_osal_char *path,
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_fclose(fsl_osal_file file_handle)
- {
+{
 #ifdef USE_LIBC_IF
- 	FILE *fp;
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE *)file_handle;
- 	clearerr(fp);
- 	if(fclose(fp) != 0)
- 	{
+	FILE *fp;
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE *)file_handle;
+	clearerr(fp);
+	if(fclose(fp) != 0)
+	{
 		LOG_ERROR("\n Error in closing file.");
 		return E_FSL_OSAL_UNKNOWN;
 	}
 #else
-        int mFd = (int)file_handle;
-        if (mFd >= 0) {
-            close(mFd);
-        }
+	int mFd = (int)file_handle;
+	if (mFd >= 0)
+	{
+		close(mFd);
+	}
 #endif
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Read from a file.
  *
@@ -121,54 +122,54 @@ efsl_osal_return_type_t fsl_osal_fclose(fsl_osal_file file_handle)
  *		E_FSL_OSAL_FAILURE in case of error.
  */
 efsl_osal_return_type_t fsl_osal_fread(fsl_osal_ptr buffer,
-									 fsl_osal_s32 size,
-									 fsl_osal_file file_handle,
-									 fsl_osal_s32 *actual_size)
- {
+                                       fsl_osal_s32 size,
+                                       fsl_osal_file file_handle,
+                                       fsl_osal_s32 *actual_size)
+{
 #ifdef USE_LIBC_IF
- 	FILE *fp;
+	FILE *fp;
 
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE *)file_handle;
- 	clearerr(fp);
-  	
- 	*actual_size = fread(buffer,1,size,fp);
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE *)file_handle;
+	clearerr(fp);
+
+	*actual_size = fread(buffer,1,size,fp);
 
 	if(feof(fp) != 0)
- 	{
+	{
 		LOG_DEBUG("\n End of file reached.");
 		return E_FSL_OSAL_EOF;
 	}
-	
- 	if(ferror(fp) != 0)
- 	{
+
+	if(ferror(fp) != 0)
+	{
 		LOG_ERROR("\n Error in reading from file.");
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
 #else
-        int ret;
-        int mFd = (int)file_handle;
+	int ret;
+	int mFd = (int)file_handle;
 
- 	if(mFd < 0 )
- 	{
- 		LOG_ERROR("\n Invalid fd.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
-        ret = ::read(mFd, (void *)buffer, size);
-        if(ret < 0)
- 	{
+	if(mFd < 0 )
+	{
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	ret = ::read(mFd, (void *)buffer, size);
+	if(ret < 0)
+	{
 		LOG_ERROR("\n Error in reading from file.");
 		return E_FSL_OSAL_FAILURE;
 	}
 
-        *actual_size = ret;
+	*actual_size = ret;
 #endif
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Writes the given buffer to the specified file.
  *
@@ -187,47 +188,47 @@ efsl_osal_return_type_t fsl_osal_fread(fsl_osal_ptr buffer,
  *		E_FSL_OSAL_FAILURE in case of error.
  */
 efsl_osal_return_type_t fsl_osal_fwrite(const fsl_osal_ptr buffer,
-									  fsl_osal_s32 size,
-									  fsl_osal_file file_handle,
-									  fsl_osal_s32 *actual_size)
- {
+                                        fsl_osal_s32 size,
+                                        fsl_osal_file file_handle,
+                                        fsl_osal_s32 *actual_size)
+{
 #ifdef USE_LIBC_IF
- 	FILE *fp;
+	FILE *fp;
 
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE*)file_handle;
- 	clearerr(fp);
- 	*actual_size = fwrite(buffer ,1, size, fp);
- 	if(ferror(fp) != 0)
- 	{
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE*)file_handle;
+	clearerr(fp);
+	*actual_size = fwrite(buffer ,1, size, fp);
+	if(ferror(fp) != 0)
+	{
 		LOG_ERROR("\n Error in closing file.");
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
-	fflush(fp); 
+	fflush(fp);
 #else
-        int ret;
-        int mFd = (int)file_handle;
- 	if(mFd < 0 )
- 	{
- 		LOG_ERROR("\n Invalid fd.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	ret = ::write(mFd, buffer, size);
-        if(ret < 0)
- 	{
+	int ret;
+	int mFd = (int)file_handle;
+	if(mFd < 0 )
+	{
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	ret = ::write(mFd, buffer, size);
+	if(ret < 0)
+	{
 		LOG_ERROR("\n Error in reading from file.");
 		return E_FSL_OSAL_FAILURE;
 	}
 
-        *actual_size = ret;
+	*actual_size = ret;
 #endif
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! The fsl_osal_fseek function sets the file position indicator for the file
  *  referred by file_handle.  The new position is obtained by adding offset bytes
@@ -246,9 +247,9 @@ efsl_osal_return_type_t fsl_osal_fwrite(const fsl_osal_ptr buffer,
  */
 
 efsl_osal_return_type_t fsl_osal_fseek(fsl_osal_file file_handle,
-									   fsl_osal_s64 offset,
-									   efsl_osal_seek_pos_t whence)
-{ 
+                                       fsl_osal_s64 offset,
+                                       efsl_osal_seek_pos_t whence)
+{
 #ifdef USE_LIBC_IF
 	if(file_handle == NULL)
 	{
@@ -285,35 +286,38 @@ efsl_osal_return_type_t fsl_osal_fseek(fsl_osal_file file_handle,
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
 #else
-        int mFd = (int)file_handle;
-        if(mFd < 0)
+	int mFd = (int)file_handle;
+	if(mFd < 0)
 	{
- 		LOG_ERROR("\n Invalid fd.");
+		LOG_ERROR("\n Invalid fd.");
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
 	if (whence == E_FSL_OSAL_SEEK_SET)
 	{
-                off64_t result = lseek64(mFd, offset, SEEK_SET);
-                if (result == -1) {
-                    LOG_ERROR("seek to %lld failed", offset);
-                    return E_FSL_OSAL_FAILURE;
-                }
+		off64_t result = lseek64(mFd, offset, SEEK_SET);
+		if (result == -1)
+		{
+			LOG_ERROR("seek to %lld failed", offset);
+			return E_FSL_OSAL_FAILURE;
+		}
 	}
 	else if(whence == E_FSL_OSAL_SEEK_END)
 	{
-                off64_t result = lseek64(mFd, offset, SEEK_END);
-                if (result == -1) {
-                    LOG_ERROR("seek to %lld failed", offset);
-                    return E_FSL_OSAL_FAILURE;
-                }
+		off64_t result = lseek64(mFd, offset, SEEK_END);
+		if (result == -1)
+		{
+			LOG_ERROR("seek to %lld failed", offset);
+			return E_FSL_OSAL_FAILURE;
+		}
 	}
 	else if(whence == E_FSL_OSAL_SEEK_CUR)
 	{
-                off64_t result = lseek64(mFd, offset, SEEK_CUR);
-                if (result == -1) {
-                    LOG_ERROR("seek to %lld failed", offset);
-                    return E_FSL_OSAL_FAILURE;
-                }
+		off64_t result = lseek64(mFd, offset, SEEK_CUR);
+		if (result == -1)
+		{
+			LOG_ERROR("seek to %lld failed", offset);
+			return E_FSL_OSAL_FAILURE;
+		}
 	}
 	else
 	{
@@ -337,7 +341,7 @@ efsl_osal_return_type_t fsl_osal_fseek(fsl_osal_file file_handle,
  *		E_FSL_OSAL_FAILURE in case of error.
  */
 efsl_osal_return_type_t fsl_osal_ftell(fsl_osal_file file_handle,
-									   fsl_osal_s64 *offset)
+                                       fsl_osal_s64 *offset)
 {
 #ifdef USE_LIBC_IF
 	fsl_osal_s32 current_offset = 0;
@@ -346,18 +350,19 @@ efsl_osal_return_type_t fsl_osal_ftell(fsl_osal_file file_handle,
 		return E_FSL_OSAL_FAILURE;
 	*offset = current_offset;
 #else
-        int mFd = (int)file_handle;
-        if(mFd < 0)
+	int mFd = (int)file_handle;
+	if(mFd < 0)
 	{
-            LOG_ERROR("\n Invalid fd.");
-            return E_FSL_OSAL_INVALIDPARAM;
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
 	}
 
-        *offset = lseek64(mFd, 0, SEEK_CUR);
-        if (*offset == -1) {
-            LOG_ERROR("ftell failed");
-            return E_FSL_OSAL_FAILURE;
-        }
+	*offset = lseek64(mFd, 0, SEEK_CUR);
+	if (*offset == -1)
+	{
+		LOG_ERROR("ftell failed");
+		return E_FSL_OSAL_FAILURE;
+	}
 
 #endif
 	return E_FSL_OSAL_SUCCESS;
@@ -388,12 +393,13 @@ efsl_osal_return_type_t fsl_osal_fflush(fsl_osal_file file_handle)
 	}
 #else
 
-        int mFd = (int)file_handle;
-        if (mFd < 0) {
-            LOG_ERROR("\n Invalid fd.");
-            return E_FSL_OSAL_INVALIDPARAM;
-        }
-        fsync(mFd);
+	int mFd = (int)file_handle;
+	if (mFd < 0)
+	{
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fsync(mFd);
 #endif
 	return E_FSL_OSAL_SUCCESS;
 }
@@ -411,21 +417,22 @@ efsl_osal_return_type_t fsl_osal_fflush(fsl_osal_file file_handle)
  */
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fsize(fsl_osal_file file_handle, fsl_osal_s64 *file_size)
 {
-        struct stat st;
+	struct stat st;
 
 #ifdef USE_LIBC_IF
 	if (fstat(fileno((FILE *)file_handle), &st) != 0)
 		return E_FSL_OSAL_FAILURE;
-	
+
 #else
-        int mFd = (int)file_handle;
-        if (mFd < 0) {
-            LOG_ERROR("\n Invalid fd.");
-            return E_FSL_OSAL_INVALIDPARAM;
-        }
+	int mFd = (int)file_handle;
+	if (mFd < 0)
+	{
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
 
 	if (fstat(mFd, &st) != 0)
-            return E_FSL_OSAL_FAILURE;
+		return E_FSL_OSAL_FAILURE;
 #endif
 	*file_size = st.st_size;
 	return E_FSL_OSAL_SUCCESS;
@@ -445,7 +452,7 @@ OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fsize(fsl_osal_file file_handle, f
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fexist(const char *file_name, fsl_osal_s32 *result)
 {
 	struct stat st;
-	
+
 	*result = (stat(file_name,&st) == 0);
 
 	return E_FSL_OSAL_SUCCESS;
@@ -465,12 +472,12 @@ OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fexist(const char *file_name, fsl_
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fspace(const char *path_name, fsl_osal_u64 *avail_space)
 {
 	struct statfs buf;
-	
+
 	if(statfs(path_name, &buf) < 0)
 		return E_FSL_OSAL_FAILURE;
-	
+
 	*avail_space = (long long)buf.f_bsize * buf.f_bavail;
-	
+
 	return E_FSL_OSAL_SUCCESS;
 }
 
@@ -499,28 +506,31 @@ efsl_osal_return_type_t fsl_osal_feof(fsl_osal_file file_handle, fsl_osal_s32 *r
 
 	*result = feof((FILE *)file_handle);
 #else
-        int ret;
-        fsl_osal_s64 pos, size;
-        int mFd = (int)file_handle;
+	int ret;
+	fsl_osal_s64 pos, size;
+	int mFd = (int)file_handle;
 
-        if (mFd < 0) {
-            LOG_ERROR("\n Invalid fd.");
-            return E_FSL_OSAL_INVALIDPARAM;
-        }
+	if (mFd < 0)
+	{
+		LOG_ERROR("\n Invalid fd.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
 
 
-        if(fsl_osal_fsize(file_handle, &size)< 0){
-            return E_FSL_OSAL_FAILURE;
-        }
-        
-        if(fsl_osal_ftell(file_handle, &pos)< 0){
-            return E_FSL_OSAL_FAILURE;
-        }
-        
-        if(pos >= size)
-            *result = 1;
-        else
-            *result = 0;
+	if(fsl_osal_fsize(file_handle, &size)< 0)
+	{
+		return E_FSL_OSAL_FAILURE;
+	}
+
+	if(fsl_osal_ftell(file_handle, &pos)< 0)
+	{
+		return E_FSL_OSAL_FAILURE;
+	}
+
+	if(pos >= size)
+		*result = 1;
+	else
+		*result = 0;
 #endif
 	return E_FSL_OSAL_SUCCESS;
 }
@@ -542,9 +552,9 @@ efsl_osal_return_type_t fsl_osal_mkdir(const char *pathname)
 	fp = fopen(pathname, "r");
 	if (fp == 0)
 	{
-        strcpy(cmd, "mkdir -p ");
-        strcat(cmd, pathname);
-        return (efsl_osal_return_type_t)system(cmd);
+		strcpy(cmd, "mkdir -p ");
+		strcat(cmd, pathname);
+		return (efsl_osal_return_type_t)system(cmd);
 	}
 	else
 		fclose(fp);
@@ -573,13 +583,13 @@ efsl_osal_return_type_t fsl_osal_deinit()
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
 
- #include <string.h>
- #include <stdlib.h>
- #include <unistd.h>
- #include <sys/stat.h>
- #include <sys/vfs.h>
- #include "Log.h"
- #include "fsl_osal.h"
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/vfs.h>
+#include "Log.h"
+#include "fsl_osal.h"
 
 /*! Opens a file.
  *
@@ -596,19 +606,19 @@ efsl_osal_return_type_t fsl_osal_deinit()
  *		E_FSL_OSAL_UNAVAILABLE if the file is not found
  */
 efsl_osal_return_type_t fsl_osal_fopen(const fsl_osal_char *path,
-									 const fsl_osal_char *mode,
-									 fsl_osal_file *file_handle)
- {
- 	FILE *fp;
- 	fp = fopen64(path, mode);
- 	if(fp == NULL)
- 	{
- 		//LOG_ERROR("\n Error in opening the file %s.", path);
- 		return E_FSL_OSAL_UNAVAILABLE;
- 	}
- 	*file_handle = (void *)fp;
- 	return E_FSL_OSAL_SUCCESS;
- }
+                                       const fsl_osal_char *mode,
+                                       fsl_osal_file *file_handle)
+{
+	FILE *fp;
+	fp = fopen64(path, mode);
+	if(fp == NULL)
+	{
+		//LOG_ERROR("\n Error in opening the file %s.", path);
+		return E_FSL_OSAL_UNAVAILABLE;
+	}
+	*file_handle = (void *)fp;
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Closes the given file.
  *
@@ -619,23 +629,23 @@ efsl_osal_return_type_t fsl_osal_fopen(const fsl_osal_char *path,
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_fclose(fsl_osal_file file_handle)
- {
- 	FILE *fp;
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE *)file_handle;
- 	clearerr(fp);
- 	if(fclose(fp) != 0)
- 	{
+{
+	FILE *fp;
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE *)file_handle;
+	clearerr(fp);
+	if(fclose(fp) != 0)
+	{
 		LOG_ERROR("\n Error in closing file.");
 		return E_FSL_OSAL_UNKNOWN;
 	}
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Read from a file.
  *
@@ -653,36 +663,36 @@ efsl_osal_return_type_t fsl_osal_fclose(fsl_osal_file file_handle)
  *		E_FSL_OSAL_EOF end of file reached
  */
 efsl_osal_return_type_t fsl_osal_fread(fsl_osal_ptr buffer,
-									 fsl_osal_s32 size,
-									 fsl_osal_file file_handle,
-									 fsl_osal_s32 *actual_size)
- {
- 	FILE *fp;
+                                       fsl_osal_s32 size,
+                                       fsl_osal_file file_handle,
+                                       fsl_osal_s32 *actual_size)
+{
+	FILE *fp;
 
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE *)file_handle;
- 	clearerr(fp);
-  	
- 	*actual_size = fread(buffer,1,size,fp);
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE *)file_handle;
+	clearerr(fp);
+
+	*actual_size = fread(buffer,1,size,fp);
 
 	if(feof(fp) != 0)
- 	{
+	{
 		LOG_DEBUG("\n End of file reached.");
 		return E_FSL_OSAL_EOF;
 	}
-	
- 	if(ferror(fp) != 0)
- 	{
+
+	if(ferror(fp) != 0)
+	{
 		LOG_ERROR("\n Error in reading from file.");
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Writes the given buffer to the specified file.
  *
@@ -700,30 +710,30 @@ efsl_osal_return_type_t fsl_osal_fread(fsl_osal_ptr buffer,
  *		E_FSL_OSAL_INVALIDMODE if mode is invalid
  */
 efsl_osal_return_type_t fsl_osal_fwrite(const fsl_osal_ptr buffer,
-									  fsl_osal_s32 size,
-									  fsl_osal_file file_handle,
-									  fsl_osal_s32 *actual_size)
- {
- 	FILE *fp;
+                                        fsl_osal_s32 size,
+                                        fsl_osal_file file_handle,
+                                        fsl_osal_s32 *actual_size)
+{
+	FILE *fp;
 
- 	if(file_handle == NULL)
- 	{
- 		LOG_ERROR("\n NULL pointer.");
- 		return E_FSL_OSAL_INVALIDPARAM;
- 	}
- 	fp = (FILE*)file_handle;
- 	clearerr(fp);
- 	*actual_size = fwrite(buffer ,1, size, fp);
+	if(file_handle == NULL)
+	{
+		LOG_ERROR("\n NULL pointer.");
+		return E_FSL_OSAL_INVALIDPARAM;
+	}
+	fp = (FILE*)file_handle;
+	clearerr(fp);
+	*actual_size = fwrite(buffer ,1, size, fp);
 	LOG_DEBUG("actual_size: %d input size: %d\n", *actual_size, size);
- 	if(ferror(fp) != 0)
- 	{
+	if(ferror(fp) != 0)
+	{
 		LOG_ERROR("\n Error in closing file.");
 		return E_FSL_OSAL_INVALIDPARAM;
 	}
-	fflush(fp); 
+	fflush(fp);
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! The fsl_osal_fseek function sets the file position indicator for the file
  *  referred by file_handle.  The new position is obtained by adding offset bytes
@@ -741,9 +751,9 @@ efsl_osal_return_type_t fsl_osal_fwrite(const fsl_osal_ptr buffer,
  */
 
 efsl_osal_return_type_t fsl_osal_fseek(fsl_osal_file file_handle,
-									   fsl_osal_s64 offset,
-									   efsl_osal_seek_pos_t whence)
-{ 
+                                       fsl_osal_s64 offset,
+                                       efsl_osal_seek_pos_t whence)
+{
 	if(file_handle == NULL)
 	{
 		LOG_ERROR(" Error.Passing NULL pointer.\n");
@@ -794,7 +804,7 @@ efsl_osal_return_type_t fsl_osal_fseek(fsl_osal_file file_handle,
  *		E_FSL_OSAL_FAILURE in case of error.
  */
 efsl_osal_return_type_t fsl_osal_ftell(fsl_osal_file file_handle,
-									   fsl_osal_s64 *offset)
+                                       fsl_osal_s64 *offset)
 {
 	fsl_osal_s64 current_offset = 0;
 	current_offset = ftello64((FILE *)file_handle);
@@ -842,10 +852,10 @@ efsl_osal_return_type_t fsl_osal_fflush(fsl_osal_file file_handle)
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fsize(fsl_osal_file file_handle, fsl_osal_s64 *file_size)
 {
 	struct stat64 st = {0};
-	
+
 	if (fstat64(fileno((FILE *)file_handle), &st) != 0)
 		return E_FSL_OSAL_FAILURE;
-	
+
 	*file_size = st.st_size;
 	return E_FSL_OSAL_SUCCESS;
 }
@@ -864,7 +874,7 @@ OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fsize(fsl_osal_file file_handle, f
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fexist(const char *file_name, fsl_osal_s32 *result)
 {
 	struct stat64 st = {0};
-	
+
 	*result = (stat64(file_name,&st) == 0);
 
 	return E_FSL_OSAL_SUCCESS;
@@ -883,13 +893,13 @@ OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fexist(const char *file_name, fsl_
  */
 OMX_OSAL_API efsl_osal_return_type_t fsl_osal_fspace(const char *path_name, fsl_osal_u64 *avail_space)
 {
-	struct statfs64 buf={0};
-	
+	struct statfs64 buf= {0};
+
 	if(statfs64(path_name, &buf) < 0)
 		return E_FSL_OSAL_FAILURE;
-	
+
 	*avail_space = (long long)buf.f_bsize * buf.f_bavail;
-	
+
 	return E_FSL_OSAL_SUCCESS;
 }
 
@@ -935,9 +945,9 @@ efsl_osal_return_type_t fsl_osal_mkdir(const char *pathname)
 	fp = fopen(pathname, "r");
 	if (fp == 0)
 	{
-        strcpy(cmd, "mkdir -p ");
-        strcat(cmd, pathname);
-        return (efsl_osal_return_type_t)system(cmd);
+		strcpy(cmd, "mkdir -p ");
+		strcat(cmd, pathname);
+		return (efsl_osal_return_type_t)system(cmd);
 	}
 	else
 		fclose(fp);

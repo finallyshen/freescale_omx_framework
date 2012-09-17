@@ -28,33 +28,35 @@
 /**
  * structure to store parser state of one AVStream
  */
-typedef struct AVParserStreamState {
-    // saved members of AVStream
-    AVCodecParserContext   *parser;
-    AVPacket                cur_pkt;
-    int64_t                 last_IP_pts;
-    int64_t                 cur_dts;
-    int64_t                 reference_dts;
-    const uint8_t          *cur_ptr;
-    int                     cur_len;
-    int                     probe_packets;
+typedef struct AVParserStreamState
+{
+	// saved members of AVStream
+	AVCodecParserContext   *parser;
+	AVPacket                cur_pkt;
+	int64_t                 last_IP_pts;
+	int64_t                 cur_dts;
+	int64_t                 reference_dts;
+	const uint8_t          *cur_ptr;
+	int                     cur_len;
+	int                     probe_packets;
 } AVParserStreamState;
 
 /**
  * structure to store parser state of AVFormat
  */
-typedef struct AVParserState {
-    int64_t         fpos;                   ///< file position at the time of call
+typedef struct AVParserState
+{
+	int64_t         fpos;                   ///< file position at the time of call
 
-    // saved members of AVFormatContext
-    AVStream       *cur_st;                 ///< current stream.
-    AVPacketList   *packet_buffer;          ///< packet buffer of original state
-    AVPacketList   *raw_packet_buffer;      ///< raw packet buffer of original state
-    int raw_packet_buffer_remaining_size;   ///< remaining space in raw_packet_buffer
+	// saved members of AVFormatContext
+	AVStream       *cur_st;                 ///< current stream.
+	AVPacketList   *packet_buffer;          ///< packet buffer of original state
+	AVPacketList   *raw_packet_buffer;      ///< raw packet buffer of original state
+	int raw_packet_buffer_remaining_size;   ///< remaining space in raw_packet_buffer
 
-    // saved info for streams
-    int                  nb_streams;        ///< number of streams with stored state
-    AVParserStreamState *stream_states;     ///< states of individual streams (array)
+	// saved info for streams
+	int                  nb_streams;        ///< number of streams with stored state
+	AVParserStreamState *stream_states;     ///< states of individual streams (array)
 } AVParserState;
 
 /**

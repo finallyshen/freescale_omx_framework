@@ -26,13 +26,14 @@
 #include <stdint.h>
 
 /** Sparse representation for the algebraic codebook (fixed) vector */
-typedef struct {
-    int      n;
-    int      x[10];
-    float    y[10];
-    int      no_repeat_mask;
-    int      pitch_lag;
-    float    pitch_fac;
+typedef struct
+{
+	int      n;
+	int      x[10];
+	float    y[10];
+	int      no_repeat_mask;
+	int      pitch_lag;
+	float    pitch_fac;
 } AMRFixed;
 
 /**
@@ -240,7 +241,7 @@ void ff_adaptive_gain_control(float *out, const float *in, float speech_energ,
  * 3GPP TS 26.090 6.1 (6)
  */
 void ff_scale_vector_to_given_sum_of_squares(float *out, const float *in,
-                                             float sum_of_squares, const int n);
+        float sum_of_squares, const int n);
 
 /**
  * Add fixed vector to an array from a sparse representation

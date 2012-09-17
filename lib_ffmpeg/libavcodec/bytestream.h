@@ -57,15 +57,15 @@ DEF  (byte, 1, AV_RB8 , AV_WB8 )
 
 static av_always_inline unsigned int bytestream_get_buffer(const uint8_t **b, uint8_t *dst, unsigned int size)
 {
-    memcpy(dst, *b, size);
-    (*b) += size;
-    return size;
+	memcpy(dst, *b, size);
+	(*b) += size;
+	return size;
 }
 
 static av_always_inline void bytestream_put_buffer(uint8_t **b, const uint8_t *src, unsigned int size)
 {
-    memcpy(*b, src, size);
-    (*b) += size;
+	memcpy(*b, src, size);
+	(*b) += size;
 }
 
 #endif /* AVCODEC_BYTESTREAM_H */

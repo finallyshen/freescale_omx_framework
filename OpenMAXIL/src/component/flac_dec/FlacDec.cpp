@@ -13,51 +13,53 @@
 
 FlacDec::FlacDec()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.flac.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_decoder.flac";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.flac.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_decoder.flac";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = FLAC_INPUT_BUF_PUSH_SIZE + 1;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE FlacDec::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = (OMX_AUDIO_CODINGTYPE)OMX_AUDIO_CodingFLAC;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = (OMX_AUDIO_CODINGTYPE)OMX_AUDIO_CodingFLAC;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = FLAC_INPUT_BUF_PUSH_SIZE;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = FLAC_INPUT_BUF_PUSH_SIZE;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -87,12 +89,12 @@ OMX_ERRORTYPE FlacDec::InitComponent()
 
 OMX_ERRORTYPE FlacDec::DeInitComponent()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterInstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	pFlacDecConfig = (FLACD_Decode_Config *)FSL_MALLOC(sizeof(FLACD_Decode_Config));
 	if (pFlacDecConfig == NULL)
 	{
@@ -126,7 +128,7 @@ OMX_ERRORTYPE FlacDec::AudioFilterInstanceInit()
 		pFlacDecConfig->flacd_mem_info.mem_info_sub[i].app_base_ptr = pBuffer;
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_S32 FlacDec_SwapBuffers(OMX_S8 **new_buf_ptr, OMX_U32 *new_buf_len, void *context)
@@ -171,7 +173,7 @@ OMX_S32 FlacDec_SwapBuffers(OMX_S8 **new_buf_ptr, OMX_U32 *new_buf_len, void *co
 
 OMX_ERRORTYPE FlacDec::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	FLACD_RET_TYPE FlacRet;
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
@@ -216,12 +218,12 @@ OMX_ERRORTYPE FlacDec::AudioFilterCodecInit()
 	}
 	fsl_osal_memset(pOutBuffer, 0, FLAC_INPUT_BUF_PUSH_SIZE);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 MemoryCnt = pFlacDecConfig->flacd_mem_info.flacd_num_reqs;
 	for (OMX_S32 i = 0; i < MemoryCnt; i ++)
 	{
@@ -232,72 +234,74 @@ OMX_ERRORTYPE FlacDec::AudioFilterInstanceDeInit()
 	FSL_FREE(pInBuffer);
 	FSL_FREE(pOutBuffer);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioFlac:
-            {
-                OMX_AUDIO_PARAM_FLACTYPE *pFlacType;
-                pFlacType = (OMX_AUDIO_PARAM_FLACTYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pFlacType, OMX_AUDIO_PARAM_FLACTYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pFlacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pFlacType, &FlacType,	sizeof(OMX_AUDIO_PARAM_FLACTYPE));
-            }
-			return ret;
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioFlac:
+	{
+		OMX_AUDIO_PARAM_FLACTYPE *pFlacType;
+		pFlacType = (OMX_AUDIO_PARAM_FLACTYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pFlacType, OMX_AUDIO_PARAM_FLACTYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pFlacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pFlacType, &FlacType,	sizeof(OMX_AUDIO_PARAM_FLACTYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioFlac:
-            {
-                OMX_AUDIO_PARAM_FLACTYPE *pFlacType;
-                pFlacType = (OMX_AUDIO_PARAM_FLACTYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pFlacType, OMX_AUDIO_PARAM_FLACTYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pFlacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(&FlacType, pFlacType, sizeof(OMX_AUDIO_PARAM_FLACTYPE));
-			}
-			return ret;
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioFlac:
+	{
+		OMX_AUDIO_PARAM_FLACTYPE *pFlacType;
+		pFlacType = (OMX_AUDIO_PARAM_FLACTYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pFlacType, OMX_AUDIO_PARAM_FLACTYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pFlacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(&FlacType, pFlacType, sizeof(OMX_AUDIO_PARAM_FLACTYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterCheckFrameHeader()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	/*
 	OMX_U8 *pBuffer;
 	OMX_U8 *pBuffer1;
@@ -320,7 +324,7 @@ OMX_ERRORTYPE FlacDec::AudioFilterCheckFrameHeader()
 			{
 				LOG_LOG("Frame header founded.\n");
 				bFounded = OMX_TRUE;
-				break;  
+				break;
 			}
 			else
 			{
@@ -336,13 +340,13 @@ OMX_ERRORTYPE FlacDec::AudioFilterCheckFrameHeader()
 		if (bFounded == OMX_TRUE)
 			break;
 	}
-*/
-    return ret;
+	*/
+	return ret;
 }
 
 AUDIO_FILTERRETURNTYPE FlacDec::AudioFilterFrame()
 {
-    AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
+	AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
 
 	FLACD_RET_TYPE FlacRet;
 	OMX_U32 OutputLenPerChannel = 0;
@@ -354,11 +358,11 @@ AUDIO_FILTERRETURNTYPE FlacDec::AudioFilterFrame()
 	if (FlacRet == FLACD_OK || FlacRet == FLACD_CONTINUE_DECODING)
 	{
 		if (PcmMode.nChannels != (OMX_U16)pFlacDecConfig->channel_no
-				|| PcmMode.nSamplingRate != (OMX_U32)pFlacDecConfig->sampling_rate
-				|| PcmMode.nBitPerSample != pFlacDecConfig->bit_per_sample)
+		        || PcmMode.nSamplingRate != (OMX_U32)pFlacDecConfig->sampling_rate
+		        || PcmMode.nBitPerSample != pFlacDecConfig->bit_per_sample)
 		{
 			LOG_DEBUG("FLAC decoder channel: %d sample rate: %d\n", \
-					pFlacDecConfig->channel_no, pFlacDecConfig->sampling_rate);
+			          pFlacDecConfig->channel_no, pFlacDecConfig->sampling_rate);
 			if (pFlacDecConfig->channel_no == 0 || pFlacDecConfig->sampling_rate == 0)
 			{
 				return AUDIO_FILTER_FAILURE;
@@ -374,52 +378,52 @@ AUDIO_FILTERRETURNTYPE FlacDec::AudioFilterFrame()
 
 		OMX_U32 i, j, OutputChannel = pFlacDecConfig->channel_no;
 		switch(pFlacDecConfig->bit_per_sample)
-		{			
-			case 8:
-				for(i = 0; i < OutputLenPerChannel; i++) 
+		{
+		case 8:
+			for(i = 0; i < OutputLenPerChannel; i++)
+			{
+				for(j=0; j<OutputChannel; j++)
 				{
-					for(j=0; j<OutputChannel; j++)
-					{
-						OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
-						OMX_U32 new_index = j+(OutputChannel)*i;
-						OMX_S8 sample_value = (OMX_S8)(*((OMX_S32*)pOutBuffer+ori_index));
+					OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
+					OMX_U32 new_index = j+(OutputChannel)*i;
+					OMX_S8 sample_value = (OMX_S8)(*((OMX_S32*)pOutBuffer+ori_index));
 
-						*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_S8)) = sample_value;
-					}
+					*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_S8)) = sample_value;
 				}
-				pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * sizeof(OMX_S8);
-				break;
-			case 16:
-				for(i = 0; i < OutputLenPerChannel; i++) 
+			}
+			pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * sizeof(OMX_S8);
+			break;
+		case 16:
+			for(i = 0; i < OutputLenPerChannel; i++)
+			{
+				for(j=0; j<OutputChannel; j++)
 				{
-					for(j=0; j<OutputChannel; j++)
-					{
-						OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
-						OMX_U32 new_index = j+(OutputChannel)*i;
-						OMX_S16 sample_value = (OMX_S16)(*((OMX_S32*)pOutBuffer+ori_index));
-						*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_U16)) = (OMX_U8)(sample_value&0x00FF);
-						*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_U16)+1) = (OMX_U8)((sample_value>>8)&0x00FF);
-					}
+					OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
+					OMX_U32 new_index = j+(OutputChannel)*i;
+					OMX_S16 sample_value = (OMX_S16)(*((OMX_S32*)pOutBuffer+ori_index));
+					*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_U16)) = (OMX_U8)(sample_value&0x00FF);
+					*(pOutBufferHdr->pBuffer+new_index*sizeof(OMX_U16)+1) = (OMX_U8)((sample_value>>8)&0x00FF);
 				}
-				pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * sizeof(OMX_S16);
-				break;
-			case 24:
-				for(i = 0; i < OutputLenPerChannel; i++) 
+			}
+			pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * sizeof(OMX_S16);
+			break;
+		case 24:
+			for(i = 0; i < OutputLenPerChannel; i++)
+			{
+				for(j=0; j<OutputChannel; j++)
 				{
-					for(j=0; j<OutputChannel; j++)
-					{
-						OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
-						OMX_U32 new_index = j+(OutputChannel)*i;
-						OMX_S32 sample_value = (OMX_S32)(*((OMX_S32*)pOutBuffer+ori_index));
-						*(pOutBufferHdr->pBuffer+new_index*3)   = (OMX_U8)(sample_value);
-						*(pOutBufferHdr->pBuffer+new_index*3+1) = (OMX_U8)(sample_value>>8);
-						*(pOutBufferHdr->pBuffer+new_index*3+2) = (OMX_U8)(sample_value>>16);
-					}
+					OMX_U32 ori_index = i+(OutputLenPerChannel)*j;
+					OMX_U32 new_index = j+(OutputChannel)*i;
+					OMX_S32 sample_value = (OMX_S32)(*((OMX_S32*)pOutBuffer+ori_index));
+					*(pOutBufferHdr->pBuffer+new_index*3)   = (OMX_U8)(sample_value);
+					*(pOutBufferHdr->pBuffer+new_index*3+1) = (OMX_U8)(sample_value>>8);
+					*(pOutBufferHdr->pBuffer+new_index*3+2) = (OMX_U8)(sample_value>>16);
 				}
-				pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * 3;
-				break;
-			default:
-				break;
+			}
+			pOutBufferHdr->nFilledLen = OutputLenPerChannel * OutputChannel * 3;
+			break;
+		default:
+			break;
 		}
 
 		pOutBufferHdr->nOffset = 0;
@@ -428,7 +432,7 @@ AUDIO_FILTERRETURNTYPE FlacDec::AudioFilterFrame()
 
 		LOG_LOG("TS per Frame = %lld\n", TS_PerFrame);
 
-		AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+		AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 	}
 	else if (FlacRet == FLACD_END_OF_STREAM || FlacRet == FLACD_COMPLETE_DECODING)
 	{
@@ -444,12 +448,12 @@ AUDIO_FILTERRETURNTYPE FlacDec::AudioFilterFrame()
 
 	LOG_LOG("Decoder nTimeStamp = %lld\n", pOutBufferHdr->nTimeStamp);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterReset()
 {
-    return AudioFilterCodecInit();
+	return AudioFilterCodecInit();
 }
 
 OMX_ERRORTYPE FlacDec::AudioFilterCheckCodecConfig()
@@ -468,28 +472,28 @@ OMX_ERRORTYPE FlacDec::AudioFilterCheckCodecConfig()
 
 	pInBufferHdr->nFilledLen = 0;
 
-    return ret;
+	return ret;
 }
 
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE FlacDecInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        FlacDec *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE FlacDecInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		FlacDec *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(FlacDec, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(FlacDec, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

@@ -29,11 +29,12 @@ extern const uint8_t ff_vorbis_channel_layout_offsets[8][8];
 extern const uint8_t ff_vorbis_encoding_channel_layout_offsets[8][8];
 extern const int64_t ff_vorbis_channel_layouts[9];
 
-typedef struct {
-    uint_fast16_t x;
-    uint_fast16_t sort;
-    uint_fast16_t low;
-    uint_fast16_t high;
+typedef struct
+{
+	uint_fast16_t x;
+	uint_fast16_t sort;
+	uint_fast16_t low;
+	uint_fast16_t high;
 } vorbis_floor1_entry;
 
 void ff_vorbis_ready_floor1_list(vorbis_floor1_entry * list, int values);

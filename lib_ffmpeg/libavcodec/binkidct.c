@@ -64,49 +64,54 @@
 
 static inline void bink_idct_col(int *dest, const DCTELEM *src)
 {
-    if ((src[8]|src[16]|src[24]|src[32]|src[40]|src[48]|src[56])==0) {
-        dest[0]  =
-        dest[8]  =
-        dest[16] =
-        dest[24] =
-        dest[32] =
-        dest[40] =
-        dest[48] =
-        dest[56] = src[0];
-    } else {
-        IDCT_COL(dest, src);
-    }
+	if ((src[8]|src[16]|src[24]|src[32]|src[40]|src[48]|src[56])==0)
+	{
+		dest[0]  =
+		    dest[8]  =
+		        dest[16] =
+		            dest[24] =
+		                dest[32] =
+		                    dest[40] =
+		                        dest[48] =
+		                            dest[56] = src[0];
+	}
+	else
+	{
+		IDCT_COL(dest, src);
+	}
 }
 
 void ff_bink_idct_c(DCTELEM *block)
 {
-    int i;
-    int temp[64];
+	int i;
+	int temp[64];
 
-    for (i = 0; i < 8; i++)
-        bink_idct_col(&temp[i], &block[i]);
-    for (i = 0; i < 8; i++) {
-        IDCT_ROW( (&block[8*i]), (&temp[8*i]) );
-    }
+	for (i = 0; i < 8; i++)
+		bink_idct_col(&temp[i], &block[i]);
+	for (i = 0; i < 8; i++)
+	{
+		IDCT_ROW( (&block[8*i]), (&temp[8*i]) );
+	}
 }
 
 void ff_bink_idct_add_c(uint8_t *dest, int linesize, DCTELEM *block)
 {
-    int i, j;
+	int i, j;
 
-    ff_bink_idct_c(block);
-    for (i = 0; i < 8; i++, dest += linesize, block += 8)
-        for (j = 0; j < 8; j++)
-             dest[j] += block[j];
+	ff_bink_idct_c(block);
+	for (i = 0; i < 8; i++, dest += linesize, block += 8)
+		for (j = 0; j < 8; j++)
+			dest[j] += block[j];
 }
 
 void ff_bink_idct_put_c(uint8_t *dest, int linesize, DCTELEM *block)
 {
-    int i;
-    int temp[64];
-    for (i = 0; i < 8; i++)
-        bink_idct_col(&temp[i], &block[i]);
-    for (i = 0; i < 8; i++) {
-        IDCT_ROW( (&dest[i*linesize]), (&temp[8*i]) );
-    }
+	int i;
+	int temp[64];
+	for (i = 0; i < 8; i++)
+		bink_idct_col(&temp[i], &block[i]);
+	for (i = 0; i < 8; i++)
+	{
+		IDCT_ROW( (&dest[i*linesize]), (&temp[8*i]) );
+	}
 }

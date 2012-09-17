@@ -11,51 +11,53 @@
 
 PcmEnc::PcmEnc()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_encoder.pcm.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = "audio_encoder.pcm";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_encoder.pcm.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = "audio_encoder.pcm";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = PCMD_INPUT_BUF_PUSH_SIZE;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE PcmEnc::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = PCMD_INPUT_BUF_PUSH_SIZE;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = PCMD_INPUT_BUF_PUSH_SIZE;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -91,68 +93,70 @@ OMX_ERRORTYPE PcmEnc::InitComponent()
 
 OMX_ERRORTYPE PcmEnc::DeInitComponent()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterInstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterSetParameterPCM()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	LOG_DEBUG("PcmMode.nSamplingRate = %d\n", PcmMode.nSamplingRate);
 	if (PcmModeOut.nChannels != PcmMode.nChannels
-			|| PcmModeOut.nSamplingRate != PcmMode.nSamplingRate
-			|| PcmModeOut.nBitPerSample != PcmMode.nBitPerSample)
+	        || PcmModeOut.nSamplingRate != PcmMode.nSamplingRate
+	        || PcmModeOut.nBitPerSample != PcmMode.nBitPerSample)
 	{
 		PcmModeOut.nChannels = PcmMode.nChannels;
 		PcmModeOut.nSamplingRate = PcmMode.nSamplingRate;
@@ -162,7 +166,7 @@ OMX_ERRORTYPE PcmEnc::AudioFilterSetParameterPCM()
 		SendEvent(OMX_EventPortSettingsChanged, AUDIO_FILTER_OUTPUT_PORT, 0, NULL);
 	}
 
-    return ret;
+	return ret;
 }
 
 void PcmEnc::PcmProcess(OMX_U8 *pOutBuffer, OMX_U32 *pOutLen, OMX_U8 *pInBuffer, OMX_U32 nInLen)
@@ -175,46 +179,46 @@ void PcmEnc::PcmProcess(OMX_U8 *pOutBuffer, OMX_U32 *pOutLen, OMX_U8 *pInBuffer,
 
 	switch(PcmMode.nBitPerSample)
 	{
-		case 8:
-			break;
-		case 16:
+	case 8:
+		break;
+	case 16:
+	{
+		OMX_S16 *pSrc = (OMX_S16 *)pInBuffer, *pDst = (OMX_S16 *)pOutBuffer;
+		OMX_S16 Tmp;
+		for (i = 0; i < Len; i ++)
+		{
+			for (j = 0; j < nChannels; j ++)
 			{
-				OMX_S16 *pSrc = (OMX_S16 *)pInBuffer, *pDst = (OMX_S16 *)pOutBuffer;
-				OMX_S16 Tmp;
-				for (i = 0; i < Len; i ++)
-				{
-					for (j = 0; j < nChannels; j ++)
-					{
-						Tmp = pSrc[i*nChannels+j];
-						Tmp = ((((OMX_U16)Tmp)&0xFF)<<8) | ((((OMX_U16)Tmp)&0xFF00)>>8);
-						pDst[i*nChannels+j] = Tmp;
-					}
-				}
+				Tmp = pSrc[i*nChannels+j];
+				Tmp = ((((OMX_U16)Tmp)&0xFF)<<8) | ((((OMX_U16)Tmp)&0xFF00)>>8);
+				pDst[i*nChannels+j] = Tmp;
 			}
-			break;
-		case 24:
+		}
+	}
+	break;
+	case 24:
+	{
+		OMX_U8 *pSrc = (OMX_U8 *)pInBuffer, *pDst = (OMX_U8 *)pOutBuffer;
+		OMX_S32 Tmp;
+		for (i = 0; i < Len; i ++)
+		{
+			for (j = 0; j < nChannels; j ++)
 			{
-				OMX_U8 *pSrc = (OMX_U8 *)pInBuffer, *pDst = (OMX_U8 *)pOutBuffer;
-				OMX_S32 Tmp;
-				for (i = 0; i < Len; i ++)
-				{
-					for (j = 0; j < nChannels; j ++)
-					{
-						Tmp = (((fsl_osal_u32)pSrc[(i*nChannels+j)*3]))|(((fsl_osal_u32)pSrc[(i*nChannels+j)*3+1])<<8)|(((fsl_osal_u32)pSrc[(i*nChannels+j)*3+2])<<16);
-						pDst[(i*nChannels+j)*3] = Tmp>>16;
-						pDst[(i*nChannels+j)*3+1] = Tmp>>8;
-						pDst[(i*nChannels+j)*3+2] = Tmp;
-					}
-				}
+				Tmp = (((fsl_osal_u32)pSrc[(i*nChannels+j)*3]))|(((fsl_osal_u32)pSrc[(i*nChannels+j)*3+1])<<8)|(((fsl_osal_u32)pSrc[(i*nChannels+j)*3+2])<<16);
+				pDst[(i*nChannels+j)*3] = Tmp>>16;
+				pDst[(i*nChannels+j)*3+1] = Tmp>>8;
+				pDst[(i*nChannels+j)*3+2] = Tmp;
 			}
-			break;
+		}
+	}
+	break;
 	}
 	*pOutLen = nInLen;
 }
 
 AUDIO_FILTERRETURNTYPE PcmEnc::AudioFilterFrame()
 {
-    AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
+	AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
 
@@ -254,8 +258,8 @@ AUDIO_FILTERRETURNTYPE PcmEnc::AudioFilterFrame()
 	{
 		LOG_DEBUG("PcmMode.nSamplingRate = %d\n", PcmMode.nSamplingRate);
 		if (PcmModeOut.nChannels != PcmMode.nChannels
-				|| PcmModeOut.nSamplingRate != PcmMode.nSamplingRate
-				|| PcmModeOut.nBitPerSample != PcmMode.nBitPerSample)
+		        || PcmModeOut.nSamplingRate != PcmMode.nSamplingRate
+		        || PcmModeOut.nBitPerSample != PcmMode.nBitPerSample)
 		{
 			PcmModeOut.nChannels = PcmMode.nChannels;
 			PcmModeOut.nSamplingRate = PcmMode.nSamplingRate;
@@ -269,7 +273,7 @@ AUDIO_FILTERRETURNTYPE PcmEnc::AudioFilterFrame()
 
 		LOG_LOG("TS per Frame = %lld\n", TS_PerFrame);
 
-		AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+		AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 	}
 	else
 	{
@@ -281,14 +285,14 @@ AUDIO_FILTERRETURNTYPE PcmEnc::AudioFilterFrame()
 
 	LOG_LOG("Encoder nTimeStamp = %lld\n", pOutBufferHdr->nTimeStamp);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterReset()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE PcmEnc::AudioFilterCheckCodecConfig()
@@ -308,32 +312,32 @@ OMX_ERRORTYPE PcmEnc::AudioFilterCheckCodecConfig()
 	TS_PerFrame = nPushModeInputLen/PcmMode.nChannels/(PcmMode.nBitPerSample>>3)*OMX_TICKS_PER_SECOND/PcmMode.nSamplingRate;
 
 	LOG_DEBUG("Get PCM encoder config. Channel: %d, Sample Rate: %d, BitsPerSample: %d\n", \
-			PcmMode.nChannels, PcmMode.nSamplingRate, PcmMode.nBitPerSample);
+	          PcmMode.nChannels, PcmMode.nSamplingRate, PcmMode.nBitPerSample);
 
 	pInBufferHdr->nFilledLen = 0;
 
-    return ret;
+	return ret;
 }
- 
+
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE PcmEncInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        PcmEnc *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE PcmEncInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		PcmEnc *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(PcmEnc, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(PcmEnc, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

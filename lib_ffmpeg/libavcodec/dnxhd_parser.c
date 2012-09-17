@@ -31,36 +31,42 @@
 static int dnxhd_find_frame_end(ParseContext *pc,
                                 const uint8_t *buf, int buf_size)
 {
-    uint64_t state = pc->state64;
-    int pic_found = pc->frame_start_found;
-    int i = 0;
+	uint64_t state = pc->state64;
+	int pic_found = pc->frame_start_found;
+	int i = 0;
 
-    if (!pic_found) {
-        for (i = 0; i < buf_size; i++) {
-            state = (state<<8) | buf[i];
-            if ((state & 0xffffffffffLL) == DNXHD_HEADER_PREFIX) {
-                i++;
-                pic_found = 1;
-                break;
-            }
-        }
-    }
+	if (!pic_found)
+	{
+		for (i = 0; i < buf_size; i++)
+		{
+			state = (state<<8) | buf[i];
+			if ((state & 0xffffffffffLL) == DNXHD_HEADER_PREFIX)
+			{
+				i++;
+				pic_found = 1;
+				break;
+			}
+		}
+	}
 
-    if (pic_found) {
-        if (!buf_size) /* EOF considered as end of frame */
-            return 0;
-        for (; i < buf_size; i++) {
-            state = (state<<8) | buf[i];
-            if ((state & 0xffffffffffLL) == DNXHD_HEADER_PREFIX) {
-                pc->frame_start_found = 0;
-                pc->state64 = -1;
-                return i-4;
-            }
-        }
-    }
-    pc->frame_start_found = pic_found;
-    pc->state64 = state;
-    return END_NOT_FOUND;
+	if (pic_found)
+	{
+		if (!buf_size) /* EOF considered as end of frame */
+			return 0;
+		for (; i < buf_size; i++)
+		{
+			state = (state<<8) | buf[i];
+			if ((state & 0xffffffffffLL) == DNXHD_HEADER_PREFIX)
+			{
+				pc->frame_start_found = 0;
+				pc->state64 = -1;
+				return i-4;
+			}
+		}
+	}
+	pc->frame_start_found = pic_found;
+	pc->state64 = state;
+	return END_NOT_FOUND;
 }
 
 static int dnxhd_parse(AVCodecParserContext *s,
@@ -68,28 +74,33 @@ static int dnxhd_parse(AVCodecParserContext *s,
                        const uint8_t **poutbuf, int *poutbuf_size,
                        const uint8_t *buf, int buf_size)
 {
-    ParseContext *pc = s->priv_data;
-    int next;
+	ParseContext *pc = s->priv_data;
+	int next;
 
-    if (s->flags & PARSER_FLAG_COMPLETE_FRAMES) {
-        next = buf_size;
-    } else {
-        next = dnxhd_find_frame_end(pc, buf, buf_size);
-        if (ff_combine_frame(pc, next, &buf, &buf_size) < 0) {
-            *poutbuf = NULL;
-            *poutbuf_size = 0;
-            return buf_size;
-        }
-    }
-    *poutbuf = buf;
-    *poutbuf_size = buf_size;
-    return next;
+	if (s->flags & PARSER_FLAG_COMPLETE_FRAMES)
+	{
+		next = buf_size;
+	}
+	else
+	{
+		next = dnxhd_find_frame_end(pc, buf, buf_size);
+		if (ff_combine_frame(pc, next, &buf, &buf_size) < 0)
+		{
+			*poutbuf = NULL;
+			*poutbuf_size = 0;
+			return buf_size;
+		}
+	}
+	*poutbuf = buf;
+	*poutbuf_size = buf_size;
+	return next;
 }
 
-AVCodecParser ff_dnxhd_parser = {
-    { CODEC_ID_DNXHD },
-    sizeof(ParseContext),
-    NULL,
-    dnxhd_parse,
-    ff_parse_close,
+AVCodecParser ff_dnxhd_parser =
+{
+	{ CODEC_ID_DNXHD },
+	sizeof(ParseContext),
+	NULL,
+	dnxhd_parse,
+	ff_parse_close,
 };

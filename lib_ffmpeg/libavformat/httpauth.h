@@ -25,23 +25,25 @@
 /**
  * Authentication types, ordered from weakest to strongest.
  */
-typedef enum HTTPAuthType {
-    HTTP_AUTH_NONE = 0,    /**< No authentication specified */
-    HTTP_AUTH_BASIC,       /**< HTTP 1.0 Basic auth from RFC 1945
+typedef enum HTTPAuthType
+{
+	HTTP_AUTH_NONE = 0,    /**< No authentication specified */
+	HTTP_AUTH_BASIC,       /**< HTTP 1.0 Basic auth from RFC 1945
                              *  (also in RFC 2617) */
-    HTTP_AUTH_DIGEST,      /**< HTTP 1.1 Digest auth from RFC 2617 */
+	HTTP_AUTH_DIGEST,      /**< HTTP 1.1 Digest auth from RFC 2617 */
 } HTTPAuthType;
 
-typedef struct {
-    char nonce[300];       /**< Server specified nonce */
-    char algorithm[10];    /**< Server specified digest algorithm */
-    char qop[30];          /**< Quality of protection, containing the one
+typedef struct
+{
+	char nonce[300];       /**< Server specified nonce */
+	char algorithm[10];    /**< Server specified digest algorithm */
+	char qop[30];          /**< Quality of protection, containing the one
                              *  that we've chosen to use, from the
                              *  alternatives that the server offered. */
-    char opaque[300];      /**< A server-specified string that should be
+	char opaque[300];      /**< A server-specified string that should be
                              *  included in authentication responses, not
                              *  included in the actual digest calculation. */
-    int nc;                /**< Nonce count, the number of earlier replies
+	int nc;                /**< Nonce count, the number of earlier replies
                              *  where this particular nonce has been used. */
 } DigestParams;
 
@@ -49,19 +51,20 @@ typedef struct {
  * HTTP Authentication state structure. Must be zero-initialized
  * before used with the functions below.
  */
-typedef struct {
-    /**
-     * The currently chosen auth type.
-     */
-    HTTPAuthType auth_type;
-    /**
-     * Authentication realm
-     */
-    char realm[200];
-    /**
-     * The parameters specifiec to digest authentication.
-     */
-    DigestParams digest_params;
+typedef struct
+{
+	/**
+	 * The currently chosen auth type.
+	 */
+	HTTPAuthType auth_type;
+	/**
+	 * Authentication realm
+	 */
+	char realm[200];
+	/**
+	 * The parameters specifiec to digest authentication.
+	 */
+	DigestParams digest_params;
 } HTTPAuthState;
 
 void ff_http_auth_handle_header(HTTPAuthState *state, const char *key,

@@ -35,8 +35,8 @@ typedef long long TSM_TIMESTAMP;
 
 typedef enum
 {
-  MODE_AI,
-  MODE_FIFO,
+	MODE_AI,
+	MODE_FIFO,
 } TSMGR_MODE;
 
 #define TSM_TIMESTAMP_NONE ((long long)(-1))
@@ -60,93 +60,93 @@ extern "C"
 {
 #endif
 
-/*!
- * This function receive timestamp into timestamp manager.
- *
- * @param	handle		handle of timestamp manager.
- *
- * @param	timestamp	timestamp received
- *
- * @return	
- */
-  EXTERN void TSManagerReceive (void *handle, TSM_TIMESTAMP timestamp);
+	/*!
+	 * This function receive timestamp into timestamp manager.
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @param	timestamp	timestamp received
+	 *
+	 * @return
+	 */
+	EXTERN void TSManagerReceive (void *handle, TSM_TIMESTAMP timestamp);
 
-  EXTERN void TSManagerReceive2 (void * handle, TSM_TIMESTAMP timestamp, int size);
+	EXTERN void TSManagerReceive2 (void * handle, TSM_TIMESTAMP timestamp, int size);
 
-  EXTERN void TSManagerFlush2 (void * handle, int size);
+	EXTERN void TSManagerFlush2 (void * handle, int size);
 
-  EXTERN void TSManagerValid2 (void * handle, int size, void * key);
+	EXTERN void TSManagerValid2 (void * handle, int size, void * key);
 
-/*!
- * This function send the timestamp for next output frame.
- *
- * @param	handle		handle of timestamp manager.
- *
- * @return	timestamp for next output frame.
- */
-  EXTERN TSM_TIMESTAMP TSManagerSend (void *handle);
+	/*!
+	 * This function send the timestamp for next output frame.
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @return	timestamp for next output frame.
+	 */
+	EXTERN TSM_TIMESTAMP TSManagerSend (void *handle);
 
-  EXTERN TSM_TIMESTAMP TSManagerSend2 (void *handle, void * key);
+	EXTERN TSM_TIMESTAMP TSManagerSend2 (void *handle, void * key);
 
-  EXTERN TSM_TIMESTAMP TSManagerQuery2 (void *handle, void * key);
+	EXTERN TSM_TIMESTAMP TSManagerQuery2 (void *handle, void * key);
 
-  EXTERN TSM_TIMESTAMP TSManagerQuery (void *handle);
-/*!
- * This function resync timestamp handler when reset and seek
- *
- * @param	handle		handle of timestamp manager.
- *
- * @param	synctime    the postion time needed to set, if value invalid, position keeps original
- * 
- * @param	mode		playing mode (AI or FIFO)
- *
- * @return	
- */
-  EXTERN void resyncTSManager (void *handle, TSM_TIMESTAMP synctime,
-      TSMGR_MODE mode);
-/*!
- * This function create and reset timestamp handler
- *
- * @param	ts_buf_size	 time stamp queue buffer size 
- * 
- * @return	
- */
-  EXTERN void *createTSManager (int ts_buf_size);
-/*!
- * This function destory timestamp handler
- *
- * @param	handle		handle of timestamp manager.
- * 
- * @return	
- */
-  EXTERN void destroyTSManager (void *handle);
-/*!
- * This function set  history buffer frame interval by fps_n and fps_d 
- *
- * @param	handle		handle of timestamp manager.
- * 
- * @param	framerate       the framerate to be set
- * 
- * @return	
- */
-  EXTERN void setTSManagerFrameRate (void *handle, int fps_n, int fps_d);
+	EXTERN TSM_TIMESTAMP TSManagerQuery (void *handle);
+	/*!
+	 * This function resync timestamp handler when reset and seek
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @param	synctime    the postion time needed to set, if value invalid, position keeps original
+	 *
+	 * @param	mode		playing mode (AI or FIFO)
+	 *
+	 * @return
+	 */
+	EXTERN void resyncTSManager (void *handle, TSM_TIMESTAMP synctime,
+	                             TSMGR_MODE mode);
+	/*!
+	 * This function create and reset timestamp handler
+	 *
+	 * @param	ts_buf_size	 time stamp queue buffer size
+	 *
+	 * @return
+	 */
+	EXTERN void *createTSManager (int ts_buf_size);
+	/*!
+	 * This function destory timestamp handler
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @return
+	 */
+	EXTERN void destroyTSManager (void *handle);
+	/*!
+	 * This function set  history buffer frame interval by fps_n and fps_d
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @param	framerate       the framerate to be set
+	 *
+	 * @return
+	 */
+	EXTERN void setTSManagerFrameRate (void *handle, int fps_n, int fps_d);
 //EXTERN void setTSManagerFrameRate(void * handle, float framerate);
-/*!
- * This function set the current calculated Frame Interval
- *
- * @param	handle		handle of timestamp manager.
- * 
- * @return	
- */
-  EXTERN TSM_TIMESTAMP getTSManagerFrameInterval (void *handle);
-/*!
- * This function get  the current time stamp postion
- *
- * @param	handle		handle of timestamp manager.
- * 
- * @return	
- */
-  EXTERN TSM_TIMESTAMP getTSManagerPosition (void *handle);
+	/*!
+	 * This function set the current calculated Frame Interval
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @return
+	 */
+	EXTERN TSM_TIMESTAMP getTSManagerFrameInterval (void *handle);
+	/*!
+	 * This function get  the current time stamp postion
+	 *
+	 * @param	handle		handle of timestamp manager.
+	 *
+	 * @return
+	 */
+	EXTERN TSM_TIMESTAMP getTSManagerPosition (void *handle);
 
 #ifdef __cplusplus
 }

@@ -19,12 +19,13 @@
 #include "aac_parser/AacCoreParser.h"
 #include "AudioParserBase.h"
 
-class AacParser : public AudioParserBase {
-    public:
-        AacParser();
-    private:
-		OMX_ERRORTYPE GetCoreParser();
-		OMX_AUDIO_CODINGTYPE GetAudioCodingType();
+class AacParser : public AudioParserBase
+{
+public:
+	AacParser();
+private:
+	OMX_ERRORTYPE GetCoreParser();
+	OMX_AUDIO_CODINGTYPE GetAudioCodingType();
 };
 
 #endif

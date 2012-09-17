@@ -34,19 +34,19 @@
 extern "C" {
 #endif
 
-/*! This method is the entry point function to this content pipe implementation. This function
- 	is registered with core during content pipe registration (Will happen at OMX_Init).
- 	Later when OMX_GetContentPipe is called for this implementation this entry point function
-    is called, and content pipe function pointers are assigned with the implementation function
- 	pointers.
+	/*! This method is the entry point function to this content pipe implementation. This function
+	 	is registered with core during content pipe registration (Will happen at OMX_Init).
+	 	Later when OMX_GetContentPipe is called for this implementation this entry point function
+	    is called, and content pipe function pointers are assigned with the implementation function
+	 	pointers.
 
-    @param [InOut] pipe
-              pipe is the handle to the content pipe that is passed.
+	    @param [InOut] pipe
+	              pipe is the handle to the content pipe that is passed.
 
-    @return OMX_ERRORTYPE
-             This will denote the success or failure of the method call.
- */
-OMX_HTTPS_PIPE_API CPresult HttpsPipe_Init(CP_PIPETYPE *pipe);
+	    @return OMX_ERRORTYPE
+	             This will denote the success or failure of the method call.
+	 */
+	OMX_HTTPS_PIPE_API CPresult HttpsPipe_Init(CP_PIPETYPE *pipe);
 
 #ifdef __cplusplus
 }

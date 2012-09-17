@@ -13,19 +13,20 @@
 
 #include "OMX_Core.h"
 
-typedef struct {
-    OMX_PTR pVirtualAddr;
-    OMX_PTR pPhysicAddr;
-}PMEMADDR;
+typedef struct
+{
+	OMX_PTR pVirtualAddr;
+	OMX_PTR pPhysicAddr;
+} PMEMADDR;
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-OMX_PTR CreatePMeoryContext();
-OMX_ERRORTYPE DestroyPMeoryContext(OMX_PTR Context);
-PMEMADDR GetPMBuffer(OMX_PTR Context, OMX_U32 nSize, OMX_U32 nNum);
-OMX_ERRORTYPE FreePMBuffer(OMX_PTR Context, OMX_PTR pBuffer);
+	OMX_PTR CreatePMeoryContext();
+	OMX_ERRORTYPE DestroyPMeoryContext(OMX_PTR Context);
+	PMEMADDR GetPMBuffer(OMX_PTR Context, OMX_U32 nSize, OMX_U32 nNum);
+	OMX_ERRORTYPE FreePMBuffer(OMX_PTR Context, OMX_PTR pBuffer);
 
 #ifdef __cplusplus
 }

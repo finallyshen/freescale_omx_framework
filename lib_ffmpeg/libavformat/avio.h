@@ -44,24 +44,26 @@
  * version bump.
  * sizeof(URLContext) must not be used outside libav*.
  */
-typedef struct URLContext {
+typedef struct URLContext
+{
 #if FF_API_URL_CLASS
-    const AVClass *av_class; ///< information for av_log(). Set by url_open().
+	const AVClass *av_class; ///< information for av_log(). Set by url_open().
 #endif
-    struct URLProtocol *prot;
-    int flags;
-    int is_streamed;  /**< true if streamed (no seek possible), default = false */
-    int max_packet_size;  /**< if non zero, the stream is packetized with this max packet size */
-    void *priv_data;
-    char *filename; /**< specified URL */
-    int is_connected;
+	struct URLProtocol *prot;
+	int flags;
+	int is_streamed;  /**< true if streamed (no seek possible), default = false */
+	int max_packet_size;  /**< if non zero, the stream is packetized with this max packet size */
+	void *priv_data;
+	char *filename; /**< specified URL */
+	int is_connected;
 } URLContext;
 
 #if FF_API_OLD_AVIO
-typedef struct URLPollEntry {
-    URLContext *handle;
-    int events;
-    int revents;
+typedef struct URLPollEntry
+{
+	URLContext *handle;
+	int events;
+	int revents;
 } URLPollEntry;
 
 /**
@@ -101,7 +103,7 @@ typedef int URLInterruptCB(void);
  * @{
  */
 attribute_deprecated int url_open_protocol (URLContext **puc, struct URLProtocol *up,
-                                            const char *url, int flags);
+        const char *url, int flags);
 attribute_deprecated int url_alloc(URLContext **h, const char *url, int flags);
 attribute_deprecated int url_connect(URLContext *h);
 attribute_deprecated int url_open(URLContext **h, const char *url, int flags);
@@ -116,7 +118,7 @@ attribute_deprecated int url_get_max_packet_size(URLContext *h);
 attribute_deprecated void url_get_filename(URLContext *h, char *buf, int buf_size);
 attribute_deprecated int av_url_read_pause(URLContext *h, int pause);
 attribute_deprecated int64_t av_url_read_seek(URLContext *h, int stream_index,
-                                              int64_t timestamp, int flags);
+        int64_t timestamp, int flags);
 attribute_deprecated void url_set_interrupt_cb(URLInterruptCB *interrupt_cb);
 #endif
 
@@ -142,21 +144,22 @@ attribute_deprecated int url_poll(URLPollEntry *poll_table, int n, int timeout);
 #define URL_PROTOCOL_FLAG_NESTED_SCHEME 1 /*< The protocol name can be the first part of a nested protocol scheme */
 #endif
 
-typedef struct URLProtocol {
-    const char *name;
-    int (*url_open)(URLContext *h, const char *url, int flags);
-    int (*url_read)(URLContext *h, unsigned char *buf, int size);
-    int (*url_write)(URLContext *h, const unsigned char *buf, int size);
-    int64_t (*url_seek)(URLContext *h, int64_t pos, int whence);
-    int (*url_close)(URLContext *h);
-    struct URLProtocol *next;
-    int (*url_read_pause)(URLContext *h, int pause);
-    int64_t (*url_read_seek)(URLContext *h, int stream_index,
-                             int64_t timestamp, int flags);
-    int (*url_get_file_handle)(URLContext *h);
-    int priv_data_size;
-    const AVClass *priv_data_class;
-    int flags;
+typedef struct URLProtocol
+{
+	const char *name;
+	int (*url_open)(URLContext *h, const char *url, int flags);
+	int (*url_read)(URLContext *h, unsigned char *buf, int size);
+	int (*url_write)(URLContext *h, const unsigned char *buf, int size);
+	int64_t (*url_seek)(URLContext *h, int64_t pos, int whence);
+	int (*url_close)(URLContext *h);
+	struct URLProtocol *next;
+	int (*url_read_pause)(URLContext *h, int pause);
+	int64_t (*url_read_seek)(URLContext *h, int stream_index,
+	                         int64_t timestamp, int flags);
+	int (*url_get_file_handle)(URLContext *h);
+	int priv_data_size;
+	const AVClass *priv_data_class;
+	int flags;
 } URLProtocol;
 
 #if FF_API_REGISTER_PROTOCOL
@@ -208,54 +211,55 @@ attribute_deprecated int av_register_protocol2(URLProtocol *protocol, int size);
  * version bump.
  * sizeof(AVIOContext) must not be used outside libav*.
  */
-typedef struct {
-    unsigned char *buffer;
-    int buffer_size;
-    unsigned char *buf_ptr, *buf_end;
-    void *opaque;
-    int (*read_packet)(void *opaque, uint8_t *buf, int buf_size);
-    int (*write_packet)(void *opaque, uint8_t *buf, int buf_size);
-    int64_t (*seek)(void *opaque, int64_t offset, int whence);
-    int64_t pos; /**< position in the file of the current buffer */
-    int must_flush; /**< true if the next seek should flush */
-    int eof_reached; /**< true if eof reached */
-    int write_flag;  /**< true if open for writing */
+typedef struct
+{
+	unsigned char *buffer;
+	int buffer_size;
+	unsigned char *buf_ptr, *buf_end;
+	void *opaque;
+	int (*read_packet)(void *opaque, uint8_t *buf, int buf_size);
+	int (*write_packet)(void *opaque, uint8_t *buf, int buf_size);
+	int64_t (*seek)(void *opaque, int64_t offset, int whence);
+	int64_t pos; /**< position in the file of the current buffer */
+	int must_flush; /**< true if the next seek should flush */
+	int eof_reached; /**< true if eof reached */
+	int write_flag;  /**< true if open for writing */
 #if FF_API_OLD_AVIO
-    attribute_deprecated int is_streamed;
+	attribute_deprecated int is_streamed;
 #endif
-    int max_packet_size;
-    unsigned long checksum;
-    unsigned char *checksum_ptr;
-    unsigned long (*update_checksum)(unsigned long checksum, const uint8_t *buf, unsigned int size);
-    int error;         ///< contains the error code or 0 if no error happened
-    int (*read_pause)(void *opaque, int pause);
-    int64_t (*read_seek)(void *opaque, int stream_index,
-                         int64_t timestamp, int flags);
-    /**
-     * A combination of AVIO_SEEKABLE_ flags or 0 when the stream is not seekable.
-     */
-    int seekable;
+	int max_packet_size;
+	unsigned long checksum;
+	unsigned char *checksum_ptr;
+	unsigned long (*update_checksum)(unsigned long checksum, const uint8_t *buf, unsigned int size);
+	int error;         ///< contains the error code or 0 if no error happened
+	int (*read_pause)(void *opaque, int pause);
+	int64_t (*read_seek)(void *opaque, int stream_index,
+	                     int64_t timestamp, int flags);
+	/**
+	 * A combination of AVIO_SEEKABLE_ flags or 0 when the stream is not seekable.
+	 */
+	int seekable;
 } AVIOContext;
 
 #if FF_API_OLD_AVIO
 typedef attribute_deprecated AVIOContext ByteIOContext;
 
 attribute_deprecated int init_put_byte(AVIOContext *s,
-                  unsigned char *buffer,
-                  int buffer_size,
-                  int write_flag,
-                  void *opaque,
-                  int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int64_t (*seek)(void *opaque, int64_t offset, int whence));
+                                       unsigned char *buffer,
+                                       int buffer_size,
+                                       int write_flag,
+                                       void *opaque,
+                                       int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
+                                       int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
+                                       int64_t (*seek)(void *opaque, int64_t offset, int whence));
 attribute_deprecated AVIOContext *av_alloc_put_byte(
-                  unsigned char *buffer,
-                  int buffer_size,
-                  int write_flag,
-                  void *opaque,
-                  int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int64_t (*seek)(void *opaque, int64_t offset, int whence));
+    unsigned char *buffer,
+    int buffer_size,
+    int write_flag,
+    void *opaque,
+    int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
+    int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
+    int64_t (*seek)(void *opaque, int64_t offset, int whence));
 
 /**
  * @defgroup old_avio_funcs Old put_/get_*() functions
@@ -292,7 +296,7 @@ attribute_deprecated void         put_tag(AVIOContext *s, const char *tag);
 
 attribute_deprecated int     av_url_read_fpause(AVIOContext *h,    int pause);
 attribute_deprecated int64_t av_url_read_fseek (AVIOContext *h,    int stream_index,
-                                                int64_t timestamp, int flags);
+        int64_t timestamp, int flags);
 
 /**
  * @defgroup old_url_f_funcs Old url_f* functions
@@ -328,8 +332,8 @@ attribute_deprecated int udp_set_remote_url(URLContext *h, const char *uri);
 attribute_deprecated int udp_get_local_port(URLContext *h);
 
 attribute_deprecated void init_checksum(AVIOContext *s,
-                   unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len),
-                   unsigned long checksum);
+                                        unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len),
+                                        unsigned long checksum);
 attribute_deprecated unsigned long get_checksum(AVIOContext *s);
 #endif
 
@@ -350,13 +354,13 @@ attribute_deprecated unsigned long get_checksum(AVIOContext *s);
  * @return Allocated AVIOContext or NULL on failure.
  */
 AVIOContext *avio_alloc_context(
-                  unsigned char *buffer,
-                  int buffer_size,
-                  int write_flag,
-                  void *opaque,
-                  int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  int64_t (*seek)(void *opaque, int64_t offset, int whence));
+    unsigned char *buffer,
+    int buffer_size,
+    int write_flag,
+    void *opaque,
+    int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
+    int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
+    int64_t (*seek)(void *opaque, int64_t offset, int whence));
 
 void avio_w8(AVIOContext *s, int b);
 void avio_write(AVIOContext *s, const unsigned char *buf, int size);
@@ -407,7 +411,7 @@ int avio_put_str16le(AVIOContext *s, const char *str);
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-int64_t avio_seek(AVIOContext *s, int64_t offset, int whence);
+	int64_t avio_seek(AVIOContext *s, int64_t offset, int whence);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
@@ -424,7 +428,7 @@ int64_t avio_skip(AVIOContext *s, int64_t offset);
  */
 static av_always_inline int64_t avio_tell(AVIOContext *s)
 {
-    return avio_seek(s, 0, SEEK_CUR);
+	return avio_seek(s, 0, SEEK_CUR);
 }
 
 /**
@@ -509,7 +513,7 @@ uint64_t     avio_rb64(AVIOContext *s);
  */
 attribute_deprecated static inline int url_is_streamed(AVIOContext *s)
 {
-    return !s->seekable;
+	return !s->seekable;
 }
 #endif
 

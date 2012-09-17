@@ -25,31 +25,33 @@
 
 #include "avcodec.h"
 
-typedef struct ParseContext{
-    uint8_t *buffer;
-    int index;
-    int last_index;
-    unsigned int buffer_size;
-    uint32_t state;             ///< contains the last few bytes in MSB order
-    int frame_start_found;
-    int overread;               ///< the number of bytes which where irreversibly read from the next frame
-    int overread_index;         ///< the index into ParseContext.buffer of the overread bytes
-    uint64_t state64;           ///< contains the last 8 bytes in MSB order
+typedef struct ParseContext
+{
+	uint8_t *buffer;
+	int index;
+	int last_index;
+	unsigned int buffer_size;
+	uint32_t state;             ///< contains the last few bytes in MSB order
+	int frame_start_found;
+	int overread;               ///< the number of bytes which where irreversibly read from the next frame
+	int overread_index;         ///< the index into ParseContext.buffer of the overread bytes
+	uint64_t state64;           ///< contains the last 8 bytes in MSB order
 } ParseContext;
 
 struct MpegEncContext;
 
-typedef struct ParseContext1{
-    ParseContext pc;
-/* XXX/FIXME PC1 vs. PC */
-    /* MPEG-2-specific */
-    AVRational frame_rate;
-    int progressive_sequence;
-    int width, height;
+typedef struct ParseContext1
+{
+	ParseContext pc;
+	/* XXX/FIXME PC1 vs. PC */
+	/* MPEG-2-specific */
+	AVRational frame_rate;
+	int progressive_sequence;
+	int width, height;
 
-    /* XXX: suppress that, needed by MPEG-4 */
-    struct MpegEncContext *enc;
-    int first_picture;
+	/* XXX: suppress that, needed by MPEG-4 */
+	struct MpegEncContext *enc;
+	int first_picture;
 } ParseContext1;
 
 #define END_NOT_FOUND (-100)

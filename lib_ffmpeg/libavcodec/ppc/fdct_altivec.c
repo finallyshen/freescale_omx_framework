@@ -57,10 +57,11 @@
 #define WB (SQRT_2 * ( C5 - C3))
 
 
-static vector float fdctconsts[3] = {
-    { W0, W1, W2, W3 },
-    { W4, W5, W6, W7 },
-    { W8, W9, WA, WB }
+static vector float fdctconsts[3] =
+{
+	{ W0, W1, W2, W3 },
+	{ W4, W5, W6, W7 },
+	{ W8, W9, WA, WB }
 };
 
 #define LD_W0 vec_splat(cnsts0, 0)
@@ -197,90 +198,92 @@ static vector float fdctconsts[3] = {
 
 void fdct_altivec(int16_t *block)
 {
-    vector signed short *bp;
-    vector float *cp;
-    vector float b00, b10, b20, b30, b40, b50, b60, b70;
-    vector float b01, b11, b21, b31, b41, b51, b61, b71;
-    vector float mzero, cnst, cnsts0, cnsts1, cnsts2;
-    vector float x0, x1, x2, x3, x4, x5, x6, x7, x8;
+	vector signed short *bp;
+	vector float *cp;
+	vector float b00, b10, b20, b30, b40, b50, b60, b70;
+	vector float b01, b11, b21, b31, b41, b51, b61, b71;
+	vector float mzero, cnst, cnsts0, cnsts1, cnsts2;
+	vector float x0, x1, x2, x3, x4, x5, x6, x7, x8;
 
-    /* setup constants {{{ */
-    /* mzero = -0.0 */
-    mzero = ((vector float)vec_splat_u32(-1));
-    mzero = ((vector float)vec_sl(vu32(mzero), vu32(mzero)));
-    cp = fdctconsts;
-    cnsts0 = vec_ld(0, cp); cp++;
-    cnsts1 = vec_ld(0, cp); cp++;
-    cnsts2 = vec_ld(0, cp);
-    /* }}} */
+	/* setup constants {{{ */
+	/* mzero = -0.0 */
+	mzero = ((vector float)vec_splat_u32(-1));
+	mzero = ((vector float)vec_sl(vu32(mzero), vu32(mzero)));
+	cp = fdctconsts;
+	cnsts0 = vec_ld(0, cp);
+	cp++;
+	cnsts1 = vec_ld(0, cp);
+	cp++;
+	cnsts2 = vec_ld(0, cp);
+	/* }}} */
 
 
-    /* 8x8 matrix transpose (vector short[8]) {{{ */
+	/* 8x8 matrix transpose (vector short[8]) {{{ */
 #define MERGE_S16(hl,a,b) vec_merge##hl(vs16(a), vs16(b))
 
-    bp = (vector signed short*)block;
-    b00 = ((vector float)vec_ld(0,    bp));
-    b40 = ((vector float)vec_ld(16*4, bp));
-    b01 = ((vector float)MERGE_S16(h, b00, b40));
-    b11 = ((vector float)MERGE_S16(l, b00, b40));
-    bp++;
-    b10 = ((vector float)vec_ld(0,    bp));
-    b50 = ((vector float)vec_ld(16*4, bp));
-    b21 = ((vector float)MERGE_S16(h, b10, b50));
-    b31 = ((vector float)MERGE_S16(l, b10, b50));
-    bp++;
-    b20 = ((vector float)vec_ld(0,    bp));
-    b60 = ((vector float)vec_ld(16*4, bp));
-    b41 = ((vector float)MERGE_S16(h, b20, b60));
-    b51 = ((vector float)MERGE_S16(l, b20, b60));
-    bp++;
-    b30 = ((vector float)vec_ld(0,    bp));
-    b70 = ((vector float)vec_ld(16*4, bp));
-    b61 = ((vector float)MERGE_S16(h, b30, b70));
-    b71 = ((vector float)MERGE_S16(l, b30, b70));
+	bp = (vector signed short*)block;
+	b00 = ((vector float)vec_ld(0,    bp));
+	b40 = ((vector float)vec_ld(16*4, bp));
+	b01 = ((vector float)MERGE_S16(h, b00, b40));
+	b11 = ((vector float)MERGE_S16(l, b00, b40));
+	bp++;
+	b10 = ((vector float)vec_ld(0,    bp));
+	b50 = ((vector float)vec_ld(16*4, bp));
+	b21 = ((vector float)MERGE_S16(h, b10, b50));
+	b31 = ((vector float)MERGE_S16(l, b10, b50));
+	bp++;
+	b20 = ((vector float)vec_ld(0,    bp));
+	b60 = ((vector float)vec_ld(16*4, bp));
+	b41 = ((vector float)MERGE_S16(h, b20, b60));
+	b51 = ((vector float)MERGE_S16(l, b20, b60));
+	bp++;
+	b30 = ((vector float)vec_ld(0,    bp));
+	b70 = ((vector float)vec_ld(16*4, bp));
+	b61 = ((vector float)MERGE_S16(h, b30, b70));
+	b71 = ((vector float)MERGE_S16(l, b30, b70));
 
-    x0 = ((vector float)MERGE_S16(h, b01, b41));
-    x1 = ((vector float)MERGE_S16(l, b01, b41));
-    x2 = ((vector float)MERGE_S16(h, b11, b51));
-    x3 = ((vector float)MERGE_S16(l, b11, b51));
-    x4 = ((vector float)MERGE_S16(h, b21, b61));
-    x5 = ((vector float)MERGE_S16(l, b21, b61));
-    x6 = ((vector float)MERGE_S16(h, b31, b71));
-    x7 = ((vector float)MERGE_S16(l, b31, b71));
+	x0 = ((vector float)MERGE_S16(h, b01, b41));
+	x1 = ((vector float)MERGE_S16(l, b01, b41));
+	x2 = ((vector float)MERGE_S16(h, b11, b51));
+	x3 = ((vector float)MERGE_S16(l, b11, b51));
+	x4 = ((vector float)MERGE_S16(h, b21, b61));
+	x5 = ((vector float)MERGE_S16(l, b21, b61));
+	x6 = ((vector float)MERGE_S16(h, b31, b71));
+	x7 = ((vector float)MERGE_S16(l, b31, b71));
 
-    b00 = ((vector float)MERGE_S16(h, x0, x4));
-    b10 = ((vector float)MERGE_S16(l, x0, x4));
-    b20 = ((vector float)MERGE_S16(h, x1, x5));
-    b30 = ((vector float)MERGE_S16(l, x1, x5));
-    b40 = ((vector float)MERGE_S16(h, x2, x6));
-    b50 = ((vector float)MERGE_S16(l, x2, x6));
-    b60 = ((vector float)MERGE_S16(h, x3, x7));
-    b70 = ((vector float)MERGE_S16(l, x3, x7));
+	b00 = ((vector float)MERGE_S16(h, x0, x4));
+	b10 = ((vector float)MERGE_S16(l, x0, x4));
+	b20 = ((vector float)MERGE_S16(h, x1, x5));
+	b30 = ((vector float)MERGE_S16(l, x1, x5));
+	b40 = ((vector float)MERGE_S16(h, x2, x6));
+	b50 = ((vector float)MERGE_S16(l, x2, x6));
+	b60 = ((vector float)MERGE_S16(h, x3, x7));
+	b70 = ((vector float)MERGE_S16(l, x3, x7));
 
 #undef MERGE_S16
-    /* }}} */
+	/* }}} */
 
 
-/* Some of the initial calculations can be done as vector short before
- * conversion to vector float.  The following code section takes advantage
- * of this.
- */
+	/* Some of the initial calculations can be done as vector short before
+	 * conversion to vector float.  The following code section takes advantage
+	 * of this.
+	 */
 #if 1
-    /* fdct rows {{{ */
-    x0 = ((vector float)vec_add(vs16(b00), vs16(b70)));
-    x7 = ((vector float)vec_sub(vs16(b00), vs16(b70)));
-    x1 = ((vector float)vec_add(vs16(b10), vs16(b60)));
-    x6 = ((vector float)vec_sub(vs16(b10), vs16(b60)));
-    x2 = ((vector float)vec_add(vs16(b20), vs16(b50)));
-    x5 = ((vector float)vec_sub(vs16(b20), vs16(b50)));
-    x3 = ((vector float)vec_add(vs16(b30), vs16(b40)));
-    x4 = ((vector float)vec_sub(vs16(b30), vs16(b40)));
+	/* fdct rows {{{ */
+	x0 = ((vector float)vec_add(vs16(b00), vs16(b70)));
+	x7 = ((vector float)vec_sub(vs16(b00), vs16(b70)));
+	x1 = ((vector float)vec_add(vs16(b10), vs16(b60)));
+	x6 = ((vector float)vec_sub(vs16(b10), vs16(b60)));
+	x2 = ((vector float)vec_add(vs16(b20), vs16(b50)));
+	x5 = ((vector float)vec_sub(vs16(b20), vs16(b50)));
+	x3 = ((vector float)vec_add(vs16(b30), vs16(b40)));
+	x4 = ((vector float)vec_sub(vs16(b30), vs16(b40)));
 
-    b70 = ((vector float)vec_add(vs16(x0), vs16(x3)));
-    b10 = ((vector float)vec_add(vs16(x1), vs16(x2)));
+	b70 = ((vector float)vec_add(vs16(x0), vs16(x3)));
+	b10 = ((vector float)vec_add(vs16(x1), vs16(x2)));
 
-    b00 = ((vector float)vec_add(vs16(b70), vs16(b10)));
-    b40 = ((vector float)vec_sub(vs16(b70), vs16(b10)));
+	b00 = ((vector float)vec_add(vs16(b70), vs16(b10)));
+	b40 = ((vector float)vec_sub(vs16(b70), vs16(b10)));
 
 #define CTF0(n) \
     b##n##1 = ((vector float)vec_unpackl(vs16(b##n##0))); \
@@ -288,180 +291,180 @@ void fdct_altivec(int16_t *block)
     b##n##1 = vec_ctf(vs32(b##n##1), 0); \
     b##n##0 = vec_ctf(vs32(b##n##0), 0);
 
-    CTF0(0);
-    CTF0(4);
+	CTF0(0);
+	CTF0(4);
 
-    b20 = ((vector float)vec_sub(vs16(x0), vs16(x3)));
-    b60 = ((vector float)vec_sub(vs16(x1), vs16(x2)));
+	b20 = ((vector float)vec_sub(vs16(x0), vs16(x3)));
+	b60 = ((vector float)vec_sub(vs16(x1), vs16(x2)));
 
-    CTF0(2);
-    CTF0(6);
+	CTF0(2);
+	CTF0(6);
 
 #undef CTF0
 
-    x0 = vec_add(b60, b20);
-    x1 = vec_add(b61, b21);
+	x0 = vec_add(b60, b20);
+	x1 = vec_add(b61, b21);
 
-    cnst = LD_W2;
-    x0 = vec_madd(cnst, x0, mzero);
-    x1 = vec_madd(cnst, x1, mzero);
-    cnst = LD_W1;
-    b20 = vec_madd(cnst, b20, x0);
-    b21 = vec_madd(cnst, b21, x1);
-    cnst = LD_W0;
-    b60 = vec_madd(cnst, b60, x0);
-    b61 = vec_madd(cnst, b61, x1);
+	cnst = LD_W2;
+	x0 = vec_madd(cnst, x0, mzero);
+	x1 = vec_madd(cnst, x1, mzero);
+	cnst = LD_W1;
+	b20 = vec_madd(cnst, b20, x0);
+	b21 = vec_madd(cnst, b21, x1);
+	cnst = LD_W0;
+	b60 = vec_madd(cnst, b60, x0);
+	b61 = vec_madd(cnst, b61, x1);
 
 #define CTFX(x,b) \
     b##0 = ((vector float)vec_unpackh(vs16(x))); \
     b##1 = ((vector float)vec_unpackl(vs16(x))); \
     b##0 = vec_ctf(vs32(b##0), 0); \
     b##1 = vec_ctf(vs32(b##1), 0); \
-
-    CTFX(x4, b7);
-    CTFX(x5, b5);
-    CTFX(x6, b3);
-    CTFX(x7, b1);
+ 
+	CTFX(x4, b7);
+	CTFX(x5, b5);
+	CTFX(x6, b3);
+	CTFX(x7, b1);
 
 #undef CTFX
 
 
-    x0 = vec_add(b70, b10);
-    x1 = vec_add(b50, b30);
-    x2 = vec_add(b70, b30);
-    x3 = vec_add(b50, b10);
-    x8 = vec_add(x2, x3);
-    cnst = LD_W3;
-    x8 = vec_madd(cnst, x8, mzero);
+	x0 = vec_add(b70, b10);
+	x1 = vec_add(b50, b30);
+	x2 = vec_add(b70, b30);
+	x3 = vec_add(b50, b10);
+	x8 = vec_add(x2, x3);
+	cnst = LD_W3;
+	x8 = vec_madd(cnst, x8, mzero);
 
-    cnst = LD_W8;
-    x0 = vec_madd(cnst, x0, mzero);
-    cnst = LD_W9;
-    x1 = vec_madd(cnst, x1, mzero);
-    cnst = LD_WA;
-    x2 = vec_madd(cnst, x2, x8);
-    cnst = LD_WB;
-    x3 = vec_madd(cnst, x3, x8);
+	cnst = LD_W8;
+	x0 = vec_madd(cnst, x0, mzero);
+	cnst = LD_W9;
+	x1 = vec_madd(cnst, x1, mzero);
+	cnst = LD_WA;
+	x2 = vec_madd(cnst, x2, x8);
+	cnst = LD_WB;
+	x3 = vec_madd(cnst, x3, x8);
 
-    cnst = LD_W4;
-    b70 = vec_madd(cnst, b70, x0);
-    cnst = LD_W5;
-    b50 = vec_madd(cnst, b50, x1);
-    cnst = LD_W6;
-    b30 = vec_madd(cnst, b30, x1);
-    cnst = LD_W7;
-    b10 = vec_madd(cnst, b10, x0);
+	cnst = LD_W4;
+	b70 = vec_madd(cnst, b70, x0);
+	cnst = LD_W5;
+	b50 = vec_madd(cnst, b50, x1);
+	cnst = LD_W6;
+	b30 = vec_madd(cnst, b30, x1);
+	cnst = LD_W7;
+	b10 = vec_madd(cnst, b10, x0);
 
-    b70 = vec_add(b70, x2);
-    b50 = vec_add(b50, x3);
-    b30 = vec_add(b30, x2);
-    b10 = vec_add(b10, x3);
+	b70 = vec_add(b70, x2);
+	b50 = vec_add(b50, x3);
+	b30 = vec_add(b30, x2);
+	b10 = vec_add(b10, x3);
 
 
-    x0 = vec_add(b71, b11);
-    x1 = vec_add(b51, b31);
-    x2 = vec_add(b71, b31);
-    x3 = vec_add(b51, b11);
-    x8 = vec_add(x2, x3);
-    cnst = LD_W3;
-    x8 = vec_madd(cnst, x8, mzero);
+	x0 = vec_add(b71, b11);
+	x1 = vec_add(b51, b31);
+	x2 = vec_add(b71, b31);
+	x3 = vec_add(b51, b11);
+	x8 = vec_add(x2, x3);
+	cnst = LD_W3;
+	x8 = vec_madd(cnst, x8, mzero);
 
-    cnst = LD_W8;
-    x0 = vec_madd(cnst, x0, mzero);
-    cnst = LD_W9;
-    x1 = vec_madd(cnst, x1, mzero);
-    cnst = LD_WA;
-    x2 = vec_madd(cnst, x2, x8);
-    cnst = LD_WB;
-    x3 = vec_madd(cnst, x3, x8);
+	cnst = LD_W8;
+	x0 = vec_madd(cnst, x0, mzero);
+	cnst = LD_W9;
+	x1 = vec_madd(cnst, x1, mzero);
+	cnst = LD_WA;
+	x2 = vec_madd(cnst, x2, x8);
+	cnst = LD_WB;
+	x3 = vec_madd(cnst, x3, x8);
 
-    cnst = LD_W4;
-    b71 = vec_madd(cnst, b71, x0);
-    cnst = LD_W5;
-    b51 = vec_madd(cnst, b51, x1);
-    cnst = LD_W6;
-    b31 = vec_madd(cnst, b31, x1);
-    cnst = LD_W7;
-    b11 = vec_madd(cnst, b11, x0);
+	cnst = LD_W4;
+	b71 = vec_madd(cnst, b71, x0);
+	cnst = LD_W5;
+	b51 = vec_madd(cnst, b51, x1);
+	cnst = LD_W6;
+	b31 = vec_madd(cnst, b31, x1);
+	cnst = LD_W7;
+	b11 = vec_madd(cnst, b11, x0);
 
-    b71 = vec_add(b71, x2);
-    b51 = vec_add(b51, x3);
-    b31 = vec_add(b31, x2);
-    b11 = vec_add(b11, x3);
-    /* }}} */
+	b71 = vec_add(b71, x2);
+	b51 = vec_add(b51, x3);
+	b31 = vec_add(b31, x2);
+	b11 = vec_add(b11, x3);
+	/* }}} */
 #else
-    /* convert to float {{{ */
+	/* convert to float {{{ */
 #define CTF(n) \
     vs32(b##n##1) = vec_unpackl(vs16(b##n##0)); \
     vs32(b##n##0) = vec_unpackh(vs16(b##n##0)); \
     b##n##1 = vec_ctf(vs32(b##n##1), 0); \
     b##n##0 = vec_ctf(vs32(b##n##0), 0); \
-
-    CTF(0);
-    CTF(1);
-    CTF(2);
-    CTF(3);
-    CTF(4);
-    CTF(5);
-    CTF(6);
-    CTF(7);
+ 
+	CTF(0);
+	CTF(1);
+	CTF(2);
+	CTF(3);
+	CTF(4);
+	CTF(5);
+	CTF(6);
+	CTF(7);
 
 #undef CTF
-    /* }}} */
+	/* }}} */
 
-    FDCTROW(b00, b10, b20, b30, b40, b50, b60, b70);
-    FDCTROW(b01, b11, b21, b31, b41, b51, b61, b71);
+	FDCTROW(b00, b10, b20, b30, b40, b50, b60, b70);
+	FDCTROW(b01, b11, b21, b31, b41, b51, b61, b71);
 #endif
 
 
-    /* 8x8 matrix transpose (vector float[8][2]) {{{ */
-    x0 = vec_mergel(b00, b20);
-    x1 = vec_mergeh(b00, b20);
-    x2 = vec_mergel(b10, b30);
-    x3 = vec_mergeh(b10, b30);
+	/* 8x8 matrix transpose (vector float[8][2]) {{{ */
+	x0 = vec_mergel(b00, b20);
+	x1 = vec_mergeh(b00, b20);
+	x2 = vec_mergel(b10, b30);
+	x3 = vec_mergeh(b10, b30);
 
-    b00 = vec_mergeh(x1, x3);
-    b10 = vec_mergel(x1, x3);
-    b20 = vec_mergeh(x0, x2);
-    b30 = vec_mergel(x0, x2);
+	b00 = vec_mergeh(x1, x3);
+	b10 = vec_mergel(x1, x3);
+	b20 = vec_mergeh(x0, x2);
+	b30 = vec_mergel(x0, x2);
 
-    x4 = vec_mergel(b41, b61);
-    x5 = vec_mergeh(b41, b61);
-    x6 = vec_mergel(b51, b71);
-    x7 = vec_mergeh(b51, b71);
+	x4 = vec_mergel(b41, b61);
+	x5 = vec_mergeh(b41, b61);
+	x6 = vec_mergel(b51, b71);
+	x7 = vec_mergeh(b51, b71);
 
-    b41 = vec_mergeh(x5, x7);
-    b51 = vec_mergel(x5, x7);
-    b61 = vec_mergeh(x4, x6);
-    b71 = vec_mergel(x4, x6);
+	b41 = vec_mergeh(x5, x7);
+	b51 = vec_mergel(x5, x7);
+	b61 = vec_mergeh(x4, x6);
+	b71 = vec_mergel(x4, x6);
 
-    x0 = vec_mergel(b01, b21);
-    x1 = vec_mergeh(b01, b21);
-    x2 = vec_mergel(b11, b31);
-    x3 = vec_mergeh(b11, b31);
+	x0 = vec_mergel(b01, b21);
+	x1 = vec_mergeh(b01, b21);
+	x2 = vec_mergel(b11, b31);
+	x3 = vec_mergeh(b11, b31);
 
-    x4 = vec_mergel(b40, b60);
-    x5 = vec_mergeh(b40, b60);
-    x6 = vec_mergel(b50, b70);
-    x7 = vec_mergeh(b50, b70);
+	x4 = vec_mergel(b40, b60);
+	x5 = vec_mergeh(b40, b60);
+	x6 = vec_mergel(b50, b70);
+	x7 = vec_mergeh(b50, b70);
 
-    b40 = vec_mergeh(x1, x3);
-    b50 = vec_mergel(x1, x3);
-    b60 = vec_mergeh(x0, x2);
-    b70 = vec_mergel(x0, x2);
+	b40 = vec_mergeh(x1, x3);
+	b50 = vec_mergel(x1, x3);
+	b60 = vec_mergeh(x0, x2);
+	b70 = vec_mergel(x0, x2);
 
-    b01 = vec_mergeh(x5, x7);
-    b11 = vec_mergel(x5, x7);
-    b21 = vec_mergeh(x4, x6);
-    b31 = vec_mergel(x4, x6);
-    /* }}} */
-
-
-    FDCTCOL(b00, b10, b20, b30, b40, b50, b60, b70);
-    FDCTCOL(b01, b11, b21, b31, b41, b51, b61, b71);
+	b01 = vec_mergeh(x5, x7);
+	b11 = vec_mergel(x5, x7);
+	b21 = vec_mergeh(x4, x6);
+	b31 = vec_mergel(x4, x6);
+	/* }}} */
 
 
-    /* round, convert back to short {{{ */
+	FDCTCOL(b00, b10, b20, b30, b40, b50, b60, b70);
+	FDCTCOL(b01, b11, b21, b31, b41, b51, b61, b71);
+
+
+	/* round, convert back to short {{{ */
 #define CTS(n) \
     b##n##0 = vec_round(b##n##0); \
     b##n##1 = vec_round(b##n##1); \
@@ -470,18 +473,25 @@ void fdct_altivec(int16_t *block)
     b##n##0 = ((vector float)vec_pack(vs32(b##n##0), vs32(b##n##1))); \
     vec_st(vs16(b##n##0), 0, bp);
 
-    bp = (vector signed short*)block;
-    CTS(0); bp++;
-    CTS(1); bp++;
-    CTS(2); bp++;
-    CTS(3); bp++;
-    CTS(4); bp++;
-    CTS(5); bp++;
-    CTS(6); bp++;
-    CTS(7);
+	bp = (vector signed short*)block;
+	CTS(0);
+	bp++;
+	CTS(1);
+	bp++;
+	CTS(2);
+	bp++;
+	CTS(3);
+	bp++;
+	CTS(4);
+	bp++;
+	CTS(5);
+	bp++;
+	CTS(6);
+	bp++;
+	CTS(7);
 
 #undef CTS
-    /* }}} */
+	/* }}} */
 }
 
 /* vim:set foldmethod=marker foldlevel=0: */

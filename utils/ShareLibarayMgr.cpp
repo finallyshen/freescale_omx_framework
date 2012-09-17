@@ -13,7 +13,7 @@
 #include "Log.h"
 #include "ShareLibarayMgr.h"
 
-fsl_osal_ptr ShareLibarayMgr::load(fsl_osal_char *lib_name) 
+fsl_osal_ptr ShareLibarayMgr::load(fsl_osal_char *lib_name)
 {
 	LIB_INFO *pLibInfo;
 
@@ -36,21 +36,21 @@ fsl_osal_ptr ShareLibarayMgr::load(fsl_osal_char *lib_name)
 		{
 			pLibInfo->refCount ++;
 			LOG_DEBUG("The reference times of the lib: %s is: %d\n", pLibInfo->lib_name, \
-					pLibInfo->refCount);
+			          pLibInfo->refCount);
 			return pLibInfo->hlib;
 		}
 	}
 
-    const fsl_osal_char *cError;
+	const fsl_osal_char *cError;
 
 	fsl_osal_ptr pLibHandle = dlopen(lib_name, RTLD_NOW);
 	if (pLibHandle == NULL)
 	{
 		LOG_WARNING("Can't open library: %s\n", lib_name);
 		printf("Can't open library: %s\n", lib_name);
-        cError = dlerror();
-        LOG_WARNING("%s\n", cError);
-        printf("%s\n", cError);
+		cError = dlerror();
+		LOG_WARNING("%s\n", cError);
+		printf("%s\n", cError);
 		return NULL;
 	}
 
@@ -60,7 +60,7 @@ fsl_osal_ptr ShareLibarayMgr::load(fsl_osal_char *lib_name)
 		LOG_ERROR("New LIB_INFO fail.\n");
 		return NULL;
 	}
-	
+
 	fsl_osal_strcpy(pLibInfo->lib_name, lib_name);
 	pLibInfo->hlib = pLibHandle;
 	pLibInfo->refCount = 1;
@@ -70,7 +70,7 @@ fsl_osal_ptr ShareLibarayMgr::load(fsl_osal_char *lib_name)
 	return pLibHandle;
 }
 
-fsl_osal_s32 ShareLibarayMgr::unload(fsl_osal_ptr hlib) 
+fsl_osal_s32 ShareLibarayMgr::unload(fsl_osal_ptr hlib)
 {
 	LIB_INFO *pLibInfo;
 
@@ -93,7 +93,7 @@ fsl_osal_s32 ShareLibarayMgr::unload(fsl_osal_ptr hlib)
 		{
 			pLibInfo->refCount --;
 			LOG_DEBUG("The reference times of the library: %s is: %d\n", pLibInfo->lib_name, \
-					pLibInfo->refCount);
+			          pLibInfo->refCount);
 			if (pLibInfo->refCount == 0)
 			{
 				LOG_DEBUG("Unload the librayr: %s\n", pLibInfo->lib_name);
@@ -105,11 +105,11 @@ fsl_osal_s32 ShareLibarayMgr::unload(fsl_osal_ptr hlib)
 			return pLibInfo->refCount;
 		}
 	}
-	
+
 	return 0;
 }
 
-fsl_osal_ptr ShareLibarayMgr::getSymbol(fsl_osal_ptr hlib, fsl_osal_char *symbol) 
+fsl_osal_ptr ShareLibarayMgr::getSymbol(fsl_osal_ptr hlib, fsl_osal_char *symbol)
 {
 	LIB_INFO *pLibInfo;
 

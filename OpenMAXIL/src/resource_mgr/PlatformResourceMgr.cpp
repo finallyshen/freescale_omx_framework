@@ -12,107 +12,112 @@
 
 OMX_ERRORTYPE PlatformResourceMgr::Init()
 {
-    PlatformDataList = NULL;
-    PlatformDataList = FSL_NEW(List<PLATFORM_DATA>, ());
-    if(PlatformDataList == NULL)
-        return OMX_ErrorInsufficientResources;
+	PlatformDataList = NULL;
+	PlatformDataList = FSL_NEW(List<PLATFORM_DATA>, ());
+	if(PlatformDataList == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    lock = NULL;
-    if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal)) {
-        DeInit();
-        return OMX_ErrorInsufficientResources;
-    }
+	lock = NULL;
+	if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal))
+	{
+		DeInit();
+		return OMX_ErrorInsufficientResources;
+	}
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE PlatformResourceMgr::DeInit()
 {
-    if(PlatformDataList != NULL)
-        FSL_DELETE(PlatformDataList);
+	if(PlatformDataList != NULL)
+		FSL_DELETE(PlatformDataList);
 
-    if(lock != NULL)
-        fsl_osal_mutex_destroy(lock);
+	if(lock != NULL)
+		fsl_osal_mutex_destroy(lock);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE PlatformResourceMgr::AddHwBuffer(
-        OMX_PTR pPhyiscAddr, 
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pPhyiscAddr,
+    OMX_PTR pVirtualAddr)
 {
-    PLATFORM_DATA *pData = NULL;
+	PLATFORM_DATA *pData = NULL;
 
-    pData = (PLATFORM_DATA*)FSL_MALLOC(sizeof(PLATFORM_DATA));
-    if(pData == NULL)
-        return OMX_ErrorInsufficientResources;
+	pData = (PLATFORM_DATA*)FSL_MALLOC(sizeof(PLATFORM_DATA));
+	if(pData == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    pData->pVirtualAddr = pVirtualAddr;
-    pData->pPhyiscAddr = pPhyiscAddr;
+	pData->pVirtualAddr = pVirtualAddr;
+	pData->pPhyiscAddr = pPhyiscAddr;
 
-    fsl_osal_mutex_lock(lock);
-    if(LIST_SUCCESS != PlatformDataList->Add(pData)) {
-        FSL_FREE(pData);
-        fsl_osal_mutex_unlock(lock);
-        return OMX_ErrorUndefined;
-    }
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_lock(lock);
+	if(LIST_SUCCESS != PlatformDataList->Add(pData))
+	{
+		FSL_FREE(pData);
+		fsl_osal_mutex_unlock(lock);
+		return OMX_ErrorUndefined;
+	}
+	fsl_osal_mutex_unlock(lock);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
 OMX_ERRORTYPE PlatformResourceMgr::RemoveHwBuffer(
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pVirtualAddr)
 {
-    PLATFORM_DATA *pData = NULL;
+	PLATFORM_DATA *pData = NULL;
 
-    fsl_osal_mutex_lock(lock);
-    pData = (PLATFORM_DATA*) SearchData(pVirtualAddr);
-    if(pData == NULL) {
-        fsl_osal_mutex_unlock(lock);
-        return OMX_ErrorUndefined;
-    }
-    PlatformDataList->Remove(pData);
-    FSL_FREE(pData);
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_lock(lock);
+	pData = (PLATFORM_DATA*) SearchData(pVirtualAddr);
+	if(pData == NULL)
+	{
+		fsl_osal_mutex_unlock(lock);
+		return OMX_ErrorUndefined;
+	}
+	PlatformDataList->Remove(pData);
+	FSL_FREE(pData);
+	fsl_osal_mutex_unlock(lock);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_PTR PlatformResourceMgr::GetHwBuffer(
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pVirtualAddr)
 {
-    PLATFORM_DATA *pData = NULL;
-    OMX_PTR ptr = NULL;
+	PLATFORM_DATA *pData = NULL;
+	OMX_PTR ptr = NULL;
 
-    fsl_osal_mutex_lock(lock);
-    pData = (PLATFORM_DATA*) SearchData(pVirtualAddr);
-    if(pData == NULL) {
-        fsl_osal_mutex_unlock(lock);
-        return NULL;
-    }
-    ptr = pData->pPhyiscAddr;
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_lock(lock);
+	pData = (PLATFORM_DATA*) SearchData(pVirtualAddr);
+	if(pData == NULL)
+	{
+		fsl_osal_mutex_unlock(lock);
+		return NULL;
+	}
+	ptr = pData->pPhyiscAddr;
+	fsl_osal_mutex_unlock(lock);
 
-    return ptr;
+	return ptr;
 }
 
 OMX_PTR PlatformResourceMgr::SearchData(
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pVirtualAddr)
 {
-    PLATFORM_DATA *pData = NULL;
-    fsl_osal_u32 i = 0, cnt;
+	PLATFORM_DATA *pData = NULL;
+	fsl_osal_u32 i = 0, cnt;
 
-    cnt = PlatformDataList->GetNodeCnt();
-    for(i=0; i<cnt; i++) {
-        pData = PlatformDataList->GetNode(i);
-        if(pData->pVirtualAddr == pVirtualAddr)
-            break;
-        pData = NULL;
-    }
+	cnt = PlatformDataList->GetNodeCnt();
+	for(i=0; i<cnt; i++)
+	{
+		pData = PlatformDataList->GetNode(i);
+		if(pData->pVirtualAddr == pVirtualAddr)
+			break;
+		pData = NULL;
+	}
 
-    return pData;
+	return pData;
 }
 
 
@@ -121,55 +126,57 @@ PlatformResourceMgr *gPlatformResMgr = NULL;
 
 OMX_ERRORTYPE CreatePlatformResMgr()
 {
-    if(NULL == gPlatformResMgr) {
-        gPlatformResMgr = FSL_NEW(PlatformResourceMgr, ());
-        if(NULL == gPlatformResMgr)
-            return OMX_ErrorInsufficientResources;
-        gPlatformResMgr->Init();
-    }
+	if(NULL == gPlatformResMgr)
+	{
+		gPlatformResMgr = FSL_NEW(PlatformResourceMgr, ());
+		if(NULL == gPlatformResMgr)
+			return OMX_ErrorInsufficientResources;
+		gPlatformResMgr->Init();
+	}
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE DestroyPlatformResMgr()
 {
-    if(NULL != gPlatformResMgr) {
-        gPlatformResMgr->DeInit();
-        FSL_DELETE(gPlatformResMgr);
-    }
+	if(NULL != gPlatformResMgr)
+	{
+		gPlatformResMgr->DeInit();
+		FSL_DELETE(gPlatformResMgr);
+	}
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE AddHwBuffer(
-        OMX_PTR pPhyiscAddr, 
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pPhyiscAddr,
+    OMX_PTR pVirtualAddr)
 {
-    if(gPlatformResMgr == NULL)
-        return OMX_ErrorResourcesLost;
+	if(gPlatformResMgr == NULL)
+		return OMX_ErrorResourcesLost;
 
-    return gPlatformResMgr->AddHwBuffer(pPhyiscAddr, pVirtualAddr);
+	return gPlatformResMgr->AddHwBuffer(pPhyiscAddr, pVirtualAddr);
 }
 
 OMX_ERRORTYPE RemoveHwBuffer(
-        OMX_PTR pVirtualAddr)
+    OMX_PTR pVirtualAddr)
 {
-    if(gPlatformResMgr == NULL)
-        return OMX_ErrorResourcesLost;
+	if(gPlatformResMgr == NULL)
+		return OMX_ErrorResourcesLost;
 
-    return gPlatformResMgr->RemoveHwBuffer(pVirtualAddr);
+	return gPlatformResMgr->RemoveHwBuffer(pVirtualAddr);
 }
 
 OMX_ERRORTYPE GetHwBuffer(
-        OMX_PTR pVirtualAddr, 
-        OMX_PTR *ppPhyiscAddr)
+    OMX_PTR pVirtualAddr,
+    OMX_PTR *ppPhyiscAddr)
 {
-    if(gPlatformResMgr == NULL)
-        return OMX_ErrorResourcesLost;
+	if(gPlatformResMgr == NULL)
+		return OMX_ErrorResourcesLost;
 
-    *ppPhyiscAddr = gPlatformResMgr->GetHwBuffer(pVirtualAddr);
+	*ppPhyiscAddr = gPlatformResMgr->GetHwBuffer(pVirtualAddr);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 /* File EOF */

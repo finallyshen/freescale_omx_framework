@@ -22,18 +22,19 @@
 #define IN_PORT 0
 #define OUT_PORT 1
 
-class Template : public ComponentBase {
-    public:
-        Template();
-    private:
-        OMX_BUFFERHEADERTYPE *pInBufferHdr;
-        OMX_BUFFERHEADERTYPE *pOutBufferHdr;
-        OMX_ERRORTYPE InitComponent();
-        OMX_ERRORTYPE DeInitComponent();
-        OMX_ERRORTYPE GetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
-        OMX_ERRORTYPE ProcessDataBuffer();
-        OMX_ERRORTYPE ComponentReturnBuffer(OMX_U32 nPortIndex);
-        OMX_ERRORTYPE FlushComponent(OMX_U32 nPortIndex);
+class Template : public ComponentBase
+{
+public:
+	Template();
+private:
+	OMX_BUFFERHEADERTYPE *pInBufferHdr;
+	OMX_BUFFERHEADERTYPE *pOutBufferHdr;
+	OMX_ERRORTYPE InitComponent();
+	OMX_ERRORTYPE DeInitComponent();
+	OMX_ERRORTYPE GetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
+	OMX_ERRORTYPE ProcessDataBuffer();
+	OMX_ERRORTYPE ComponentReturnBuffer(OMX_U32 nPortIndex);
+	OMX_ERRORTYPE FlushComponent(OMX_U32 nPortIndex);
 };
 
 #endif

@@ -33,15 +33,17 @@
 #define ECONNREFUSED    WSAECONNREFUSED
 #define EINPROGRESS     WSAEINPROGRESS
 
-static inline int ff_neterrno() {
-    int err = WSAGetLastError();
-    switch (err) {
-    case WSAEWOULDBLOCK:
-        return AVERROR(EAGAIN);
-    case WSAEINTR:
-        return AVERROR(EINTR);
-    }
-    return -err;
+static inline int ff_neterrno()
+{
+	int err = WSAGetLastError();
+	switch (err)
+	{
+	case WSAEWOULDBLOCK:
+		return AVERROR(EAGAIN);
+	case WSAEINTR:
+		return AVERROR(EINTR);
+	}
+	return -err;
 }
 #else
 #include <sys/types.h>
@@ -65,55 +67,57 @@ int ff_socket_nonblock(int socket, int enable);
 static inline int ff_network_init(void)
 {
 #if HAVE_WINSOCK2_H
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(1,1), &wsaData))
-        return 0;
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(1,1), &wsaData))
+		return 0;
 #endif
-    return 1;
+	return 1;
 }
 
 static inline int ff_network_wait_fd(int fd, int write)
 {
-    int ev = write ? POLLOUT : POLLIN;
-    struct pollfd p = { .fd = fd, .events = ev, .revents = 0 };
-    int ret;
-    ret = poll(&p, 1, 100);
-    return ret < 0 ? ff_neterrno() : p.revents & ev ? 0 : AVERROR(EAGAIN);
+	int ev = write ? POLLOUT : POLLIN;
+	struct pollfd p = { .fd = fd, .events = ev, .revents = 0 };
+	int ret;
+	ret = poll(&p, 1, 100);
+	return ret < 0 ? ff_neterrno() : p.revents & ev ? 0 : AVERROR(EAGAIN);
 }
 
 static inline void ff_network_close(void)
 {
 #if HAVE_WINSOCK2_H
-    WSACleanup();
+	WSACleanup();
 #endif
 }
 
 int ff_inet_aton (const char * str, struct in_addr * add);
 
 #if !HAVE_STRUCT_SOCKADDR_STORAGE
-struct sockaddr_storage {
+struct sockaddr_storage
+{
 #if HAVE_STRUCT_SOCKADDR_SA_LEN
-    uint8_t ss_len;
-    uint8_t ss_family;
+	uint8_t ss_len;
+	uint8_t ss_family;
 #else
-    uint16_t ss_family;
+	uint16_t ss_family;
 #endif
-    char ss_pad1[6];
-    int64_t ss_align;
-    char ss_pad2[112];
+	char ss_pad1[6];
+	int64_t ss_align;
+	char ss_pad2[112];
 };
 #endif
 
 #if !HAVE_STRUCT_ADDRINFO
-struct addrinfo {
-    int ai_flags;
-    int ai_family;
-    int ai_socktype;
-    int ai_protocol;
-    int ai_addrlen;
-    struct sockaddr *ai_addr;
-    char *ai_canonname;
-    struct addrinfo *ai_next;
+struct addrinfo
+{
+	int ai_flags;
+	int ai_family;
+	int ai_socktype;
+	int ai_protocol;
+	int ai_addrlen;
+	struct sockaddr *ai_addr;
+	char *ai_canonname;
+	struct addrinfo *ai_next;
 };
 #endif
 
@@ -189,16 +193,18 @@ const char *ff_gai_strerror(int ecode);
 
 static inline int ff_is_multicast_address(struct sockaddr *addr)
 {
-    if (addr->sa_family == AF_INET) {
-        return IN_MULTICAST(ntohl(((struct sockaddr_in *)addr)->sin_addr.s_addr));
-    }
+	if (addr->sa_family == AF_INET)
+	{
+		return IN_MULTICAST(ntohl(((struct sockaddr_in *)addr)->sin_addr.s_addr));
+	}
 #if HAVE_STRUCT_SOCKADDR_IN6
-    if (addr->sa_family == AF_INET6) {
-        return IN6_IS_ADDR_MULTICAST(&((struct sockaddr_in6 *)addr)->sin6_addr);
-    }
+	if (addr->sa_family == AF_INET6)
+	{
+		return IN6_IS_ADDR_MULTICAST(&((struct sockaddr_in6 *)addr)->sin6_addr);
+	}
 #endif
 
-    return 0;
+	return 0;
 }
 
 #endif /* AVFORMAT_NETWORK_H */

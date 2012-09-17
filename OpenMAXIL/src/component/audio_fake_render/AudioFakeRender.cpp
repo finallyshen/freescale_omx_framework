@@ -9,18 +9,18 @@
 
 #include <sys/time.h>
 #include "AudioFakeRender.h"
-  
+
 AudioFakeRender::AudioFakeRender()
-{ 
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_render.fake.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_render.fake";
-    bInContext = OMX_FALSE;
-    nPorts = NUM_PORTS;
+{
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_render.fake.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_render.fake";
+	bInContext = OMX_FALSE;
+	nPorts = NUM_PORTS;
 }
 
 OMX_ERRORTYPE AudioFakeRender::OpenDevice()
@@ -52,9 +52,9 @@ OMX_ERRORTYPE AudioFakeRender::WriteDevice(OMX_U8 *pBuffer, OMX_U32 nActuralLen)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	nActuralLen /= nSampleSize;
-   
+
 	usleep(nActuralLen*1000000000/PcmMode.nSamplingRate);
-   
+
 	return ret;
 }
 
@@ -82,24 +82,24 @@ OMX_ERRORTYPE AudioFakeRender::ResetDevice()
 }
 
 /**< C style functions to expose entry point for the shared library */
-	extern "C" {
-		OMX_ERRORTYPE AudioFakeRenderInit(OMX_IN OMX_HANDLETYPE pHandle)
-		{
-			OMX_ERRORTYPE ret = OMX_ErrorNone;
-			AudioFakeRender *obj = NULL;
-			ComponentBase *base = NULL;
+extern "C" {
+	OMX_ERRORTYPE AudioFakeRenderInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		AudioFakeRender *obj = NULL;
+		ComponentBase *base = NULL;
 
-			obj = FSL_NEW(AudioFakeRender, ());
-			if(obj == NULL)
-				return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(AudioFakeRender, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-			base = (ComponentBase*)obj;
-			ret = base->ConstructComponent(pHandle);
-			if(ret != OMX_ErrorNone)
-				return ret;
-
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
 			return ret;
-		}
+
+		return ret;
 	}
+}
 
 /* File EOF */

@@ -32,13 +32,15 @@
 /**
 * Table providing a Dirac chroma format to FFmpeg pixel format mapping.
 */
-static const struct {
-    enum PixelFormat ff_pix_fmt;
-    dirac_chroma_t dirac_pix_fmt;
-} ffmpeg_dirac_pixel_format_map[] = {
-    { PIX_FMT_YUV420P, format420 },
-    { PIX_FMT_YUV422P, format422 },
-    { PIX_FMT_YUV444P, format444 },
+static const struct
+{
+	enum PixelFormat ff_pix_fmt;
+	dirac_chroma_t dirac_pix_fmt;
+} ffmpeg_dirac_pixel_format_map[] =
+{
+	{ PIX_FMT_YUV420P, format420 },
+	{ PIX_FMT_YUV422P, format422 },
+	{ PIX_FMT_YUV444P, format444 },
 };
 
 #endif /* AVCODEC_LIBDIRAC_H */

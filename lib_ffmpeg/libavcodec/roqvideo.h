@@ -26,52 +26,56 @@
 #include "avcodec.h"
 #include "dsputil.h"
 
-typedef struct {
-    unsigned char y[4];
-    unsigned char u, v;
+typedef struct
+{
+	unsigned char y[4];
+	unsigned char u, v;
 } roq_cell;
 
-typedef struct {
-    int idx[4];
+typedef struct
+{
+	int idx[4];
 } roq_qcell;
 
-typedef struct {
-    int d[2];
+typedef struct
+{
+	int d[2];
 } motion_vect;
 
 struct RoqTempData;
 
-typedef struct RoqContext {
+typedef struct RoqContext
+{
 
-    AVCodecContext *avctx;
-    DSPContext dsp;
-    AVFrame frames[2];
-    AVFrame *last_frame;
-    AVFrame *current_frame;
-    int first_frame;
+	AVCodecContext *avctx;
+	DSPContext dsp;
+	AVFrame frames[2];
+	AVFrame *last_frame;
+	AVFrame *current_frame;
+	int first_frame;
 
-    roq_cell cb2x2[256];
-    roq_qcell cb4x4[256];
+	roq_cell cb2x2[256];
+	roq_qcell cb4x4[256];
 
-    const unsigned char *buf;
-    int size;
-    int width, height;
+	const unsigned char *buf;
+	int size;
+	int width, height;
 
-    /* Encoder only data */
-    AVLFG randctx;
-    uint64_t lambda;
+	/* Encoder only data */
+	AVLFG randctx;
+	uint64_t lambda;
 
-    motion_vect *this_motion4;
-    motion_vect *last_motion4;
+	motion_vect *this_motion4;
+	motion_vect *last_motion4;
 
-    motion_vect *this_motion8;
-    motion_vect *last_motion8;
+	motion_vect *this_motion8;
+	motion_vect *last_motion8;
 
-    unsigned int framesSinceKeyframe;
+	unsigned int framesSinceKeyframe;
 
-    AVFrame *frame_to_enc;
-    uint8_t *out_buf;
-    struct RoqTempData *tmpData;
+	AVFrame *frame_to_enc;
+	uint8_t *out_buf;
+	struct RoqTempData *tmpData;
 } RoqContext;
 
 #define RoQ_INFO              0x1001

@@ -17,27 +17,30 @@ static const OMX_U32 sampling_frequency[] = {96000, 88200, 64000, 48000, 44100, 
 
 static const OMX_S32 samplingFrequencyMap[16] = {96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350, 0, 0, 0};
 
-enum {
-  FLAG_SUCCESS,
-  FLAG_NEEDMORE_DATA
+enum
+{
+	FLAG_SUCCESS,
+	FLAG_NEEDMORE_DATA
 };
 
-typedef enum {
-    FILETYPEADTS,
-    FILETYPEADIF,
-    FILETYPERAW
-}AAC_FILETYPE;
+typedef enum
+{
+	FILETYPEADTS,
+	FILETYPEADIF,
+	FILETYPERAW
+} AAC_FILETYPE;
 
-typedef enum {
-    AAC_RETURNSUCESS,
-    AAC_RETURNFAIL
-}AAC_RETURNTYPE;
+typedef enum
+{
+	AAC_RETURNSUCESS,
+	AAC_RETURNFAIL
+} AAC_RETURNTYPE;
 
 typedef struct
 {
-  OMX_U32 nBitConsumered;
-  OMX_U32 nBitTotal;
-  BitstreamParam sBitstreamParam;
+	OMX_U32 nBitConsumered;
+	OMX_U32 nBitTotal;
+	BitstreamParam sBitstreamParam;
 } BitstreamParamExt;
 
 static OMX_S32 AacDec_Bs_ReadInit(OMX_U8 *buf, OMX_S32 bytes, BitstreamParamExt *pBit)
@@ -215,8 +218,8 @@ static FRAME_INFO ParserADTS(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_U32
 	BitstreamParamExt sBitstreamParamExt;
 	BitstreamParamExt *pBit = &sBitstreamParamExt;
 	AacDec_Bs_ReadInit(pBuffer, nBufferLen, pBit);
-       fsl_osal_memset(&ret, 0, sizeof(FRAME_INFO));
-       fsl_osal_memset(p, 0, sizeof(ADTS_Header));
+	fsl_osal_memset(&ret, 0, sizeof(FRAME_INFO));
+	fsl_osal_memset(p, 0, sizeof(ADTS_Header));
 
 	ret.index = nBufferLen;
 	while (1)
@@ -313,8 +316,8 @@ static FRAME_INFO ParserADTS(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_U32
 		AacDec_Bs_Byte_Align(pBit);
 		if (in_info == NULL)
 		{
-			if (pBit->nBitTotal - pBit->nBitConsumered < (OMX_U32)p->frame_length << 3 
-					|| ((*((short *)(pBuffer + (pBit->nBitConsumered >> 3) + p->frame_length - ADTS_FRAME_HEADER_SIZE)) & 0xF0FF) != 0xF0FF ))
+			if (pBit->nBitTotal - pBit->nBitConsumered < (OMX_U32)p->frame_length << 3
+			        || ((*((short *)(pBuffer + (pBit->nBitConsumered >> 3) + p->frame_length - ADTS_FRAME_HEADER_SIZE)) & 0xF0FF) != 0xF0FF ))
 				continue;
 		}
 		break;
@@ -342,14 +345,14 @@ static FRAME_INFO ParserADTS(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_U32
 	params->BufferFullness = (p->adts_buffer_fullness) << 5;
 	params->ProtectionAbsent = p->protection_abs;
 	params->CrcCheck = p->crc_check;
-    params->frame_length = p->frame_length;
+	params->frame_length = p->frame_length;
 
 	ret.flags = FLAG_SUCCESS;
 	ret.index = pBit->nBitConsumered >> 3;
 	if(p->frame_length >= ADTS_FRAME_HEADER_SIZE)
-        	ret.frm_size = p->frame_length - ADTS_FRAME_HEADER_SIZE;
-       else
-              ret.frm_size = 0;
+		ret.frm_size = p->frame_length - ADTS_FRAME_HEADER_SIZE;
+	else
+		ret.frm_size = 0;
 	ret.sampling_rate = sampling_frequency[p->sampling_freq_idx];
 	ret.sample_per_fr = AAC_FRAME_SIZE;
 	ret.b_rate = (p->frame_length << 3) * ret.sampling_rate / ret.sample_per_fr / 1000;
@@ -371,7 +374,7 @@ static FRAME_INFO ParserADIF(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_S32
 	BitstreamParamExt sBitstreamParamExt;
 	BitstreamParamExt *pBit = &sBitstreamParamExt;
 	AacDec_Bs_ReadInit(pBuffer, nBufferLen, pBit);
-       fsl_osal_memset(&ret, 0, sizeof(FRAME_INFO));
+	fsl_osal_memset(&ret, 0, sizeof(FRAME_INFO));
 
 	ret.index = nBufferLen;
 
@@ -412,7 +415,7 @@ static FRAME_INFO ParserADIF(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_S32
 	for (nCount = 0; nCount < nBits; nCount++)
 	{
 		pConfig[nCount].buffer_fullness =
-			(p->bitstream_type == 0) ? AacDec_Bs_Read_Bits(LEN_ADIF_BF, pBit) : 0;
+		    (p->bitstream_type == 0) ? AacDec_Bs_Read_Bits(LEN_ADIF_BF, pBit) : 0;
 
 		if (AacDec_Get_Prog_Config(&pConfig[nCount], pBit))
 		{
@@ -435,33 +438,59 @@ static FRAME_INFO ParserADIF(AACD_Block_Params *params, OMX_U8 *pBuffer, OMX_S32
 	ret.flags = FLAG_SUCCESS;
 	ret.index = pBit->nBitConsumered >> 3;
 
-    return ret;
+	return ret;
 }
 
 static AAC_RETURNTYPE AacDec_InitRaw(AACD_Block_Params * params,OMX_S32 nChannels,OMX_S32 nSamplingFreq)
 {
-    ADTS_Header App_adts_header;
-    ADTS_Header *pHeader = &(App_adts_header);
-    fsl_osal_memset(&App_adts_header, 0, sizeof(ADTS_Header));
-    OMX_S32 bits_used = 0;
+	ADTS_Header App_adts_header;
+	ADTS_Header *pHeader = &(App_adts_header);
+	fsl_osal_memset(&App_adts_header, 0, sizeof(ADTS_Header));
+	OMX_S32 bits_used = 0;
 	OMX_S32 sampling_freq_idx;
 
 	switch( nSamplingFreq )
 	{
-		case 96000:sampling_freq_idx = 0;break;
-		case 88200:sampling_freq_idx = 1;break;
-		case 64000:sampling_freq_idx = 2;break;
-		case 48000:sampling_freq_idx = 3;break;
-		case 44100:sampling_freq_idx = 4;break;
-		case 32000:sampling_freq_idx = 5;break;
-		case 24000:sampling_freq_idx = 6;break;
-		case 22050:sampling_freq_idx = 7;break;
-		case 16000:sampling_freq_idx = 8;break;
-		case 12000:sampling_freq_idx = 9;break;
-		case 11025:sampling_freq_idx = 10;break;
-		case  8000:sampling_freq_idx = 11;break;
+	case 96000:
+		sampling_freq_idx = 0;
+		break;
+	case 88200:
+		sampling_freq_idx = 1;
+		break;
+	case 64000:
+		sampling_freq_idx = 2;
+		break;
+	case 48000:
+		sampling_freq_idx = 3;
+		break;
+	case 44100:
+		sampling_freq_idx = 4;
+		break;
+	case 32000:
+		sampling_freq_idx = 5;
+		break;
+	case 24000:
+		sampling_freq_idx = 6;
+		break;
+	case 22050:
+		sampling_freq_idx = 7;
+		break;
+	case 16000:
+		sampling_freq_idx = 8;
+		break;
+	case 12000:
+		sampling_freq_idx = 9;
+		break;
+	case 11025:
+		sampling_freq_idx = 10;
+		break;
+	case  8000:
+		sampling_freq_idx = 11;
+		break;
 
-		default:sampling_freq_idx = -1;break;
+	default:
+		sampling_freq_idx = -1;
+		break;
 	}
 
 	pHeader->id = 0;
@@ -471,11 +500,11 @@ static AAC_RETURNTYPE AacDec_InitRaw(AACD_Block_Params * params,OMX_S32 nChannel
 	pHeader->sampling_freq_idx = sampling_freq_idx;
 	if (pHeader->sampling_freq_idx == -1)
 	{
-         return AAC_RETURNFAIL;
+		return AAC_RETURNFAIL;
 	}
 
 	pHeader->private_bit = 0;
-    pHeader->channel_config = (unsigned)nChannels;
+	pHeader->channel_config = (unsigned)nChannels;
 	pHeader->original_copy = 0;
 	pHeader->home = 0;
 	pHeader->copyright_id_bit = 0;
@@ -483,21 +512,21 @@ static AAC_RETURNTYPE AacDec_InitRaw(AACD_Block_Params * params,OMX_S32 nChannel
 	pHeader->frame_length = 0;
 	pHeader->adts_buffer_fullness = 0;
 	pHeader->num_of_rdb = 0;
-    pHeader->frame_length += (bits_used / LEN_BYTE) - ADTS_FRAME_HEADER_SIZE;
+	pHeader->frame_length += (bits_used / LEN_BYTE) - ADTS_FRAME_HEADER_SIZE;
 
-    /* Fill in the AACD_Block_Params struct now */
+	/* Fill in the AACD_Block_Params struct now */
 
-    params->num_pce = 0;
-    params->ChannelConfig = pHeader->channel_config;
-    params->SamplingFreqIndex = pHeader->sampling_freq_idx;
-    params->BitstreamType = (pHeader->adts_buffer_fullness == 0x7ff) ? 1 : 0;
+	params->num_pce = 0;
+	params->ChannelConfig = pHeader->channel_config;
+	params->SamplingFreqIndex = pHeader->sampling_freq_idx;
+	params->BitstreamType = (pHeader->adts_buffer_fullness == 0x7ff) ? 1 : 0;
 
-    params->BitRate       = 0; /* Caution !*/
-    params->BufferFullness = (pHeader->adts_buffer_fullness) << 5;
-    params->ProtectionAbsent = pHeader->protection_abs;
-    params->CrcCheck = pHeader->crc_check;
+	params->BitRate       = 0; /* Caution !*/
+	params->BufferFullness = (pHeader->adts_buffer_fullness) << 5;
+	params->ProtectionAbsent = pHeader->protection_abs;
+	params->CrcCheck = pHeader->crc_check;
 
-    return AAC_RETURNSUCESS;
+	return AAC_RETURNSUCESS;
 }
 
 static AAC_FILETYPE Aac_FindFileType(OMX_U8 *pBuffer, OMX_S32 nBufferLen)
@@ -535,51 +564,53 @@ static AAC_FILETYPE Aac_FindFileType(OMX_U8 *pBuffer, OMX_S32 nBufferLen)
 
 AacDec::AacDec()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.aac.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_decoder.aac";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.aac.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_decoder.aac";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = AACD_INPUT_BUF_PUSH_SIZE;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE AacDec::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = CHANS*AAC_FRAME_SIZE*2*4;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = CHANS*AAC_FRAME_SIZE*2*4;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -621,38 +652,42 @@ OMX_ERRORTYPE AacDec::InitComponent()
 
 OMX_ERRORTYPE AacDec::DeInitComponent()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterInstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    libMgr = FSL_NEW(ShareLibarayMgr, ());
-    if(libMgr == NULL)
-        return OMX_ErrorInsufficientResources;
+	libMgr = FSL_NEW(ShareLibarayMgr, ());
+	if(libMgr == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    hLib = libMgr->load((OMX_STRING)"lib_aacplus_dec_v2_arm11_elinux.so");
-    if(hLib == NULL) {
+	hLib = libMgr->load((OMX_STRING)"lib_aacplus_dec_v2_arm11_elinux.so");
+	if(hLib == NULL)
+	{
 		LOG_WARNING("Can't load library lib_aacplus_dec_v2_arm11_elinux.\n");
-        FSL_DELETE(libMgr);
-    }
+		FSL_DELETE(libMgr);
+	}
 
-	if (hLib) {
+	if (hLib)
+	{
 		aacpd_query_dec_mem = (AACD_RET_TYPE (*)( AACD_Decoder_Config *))libMgr->getSymbol(hLib, (OMX_STRING)"aacpd_query_dec_mem");
 		SBRD_decoder_init = (AACD_RET_TYPE (*)(AACD_Decoder_Config *))libMgr->getSymbol(hLib, (OMX_STRING)"SBRD_decoder_init");
 		SBRD_decode_frame = (AACD_RET_TYPE (*)(
-					AACD_Decoder_Config *,
-					AACD_Decoder_info *,
-					AACD_INT32 *,
-					SBR_FRAME_TYPE *))libMgr->getSymbol(hLib,(OMX_STRING)"SBRD_decode_frame");
+		                         AACD_Decoder_Config *,
+		                         AACD_Decoder_info *,
+		                         AACD_INT32 *,
+		                         SBR_FRAME_TYPE *))libMgr->getSymbol(hLib,(OMX_STRING)"SBRD_decode_frame");
 		if(aacpd_query_dec_mem == NULL
-				|| SBRD_decoder_init == NULL
-				|| SBRD_decode_frame == NULL) {
+		        || SBRD_decoder_init == NULL
+		        || SBRD_decode_frame == NULL)
+		{
 			bHaveAACPlusLib = OMX_FALSE;
 			libMgr->unload(hLib);
 			FSL_DELETE(libMgr);
-		} else
+		}
+		else
 			bHaveAACPlusLib = OMX_TRUE;
 
 	}
@@ -719,12 +754,12 @@ OMX_ERRORTYPE AacDec::AudioFilterInstanceInit()
 
 	pAacDecConfig->num_pcm_bits = AACD_16_BIT_OUTPUT;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	AACD_RET_TYPE AacRet = AACD_ERROR_NO_ERROR;
 
 	if (nSampleRateRaw == 0 && nChannelsRaw == 0)
@@ -739,7 +774,8 @@ OMX_ERRORTYPE AacDec::AudioFilterCodecInit()
 		return OMX_ErrorUndefined;
 	}
 
-	if (bHaveAACPlusLib == OMX_TRUE) {
+	if (bHaveAACPlusLib == OMX_TRUE)
+	{
 		AacRet = SBRD_decoder_init(pAacDecConfig);
 		if (AacRet != AACD_ERROR_NO_ERROR)
 		{
@@ -751,7 +787,7 @@ OMX_ERRORTYPE AacDec::AudioFilterCodecInit()
 	AacType.eAACStreamFormat = OMX_AUDIO_AACStreamFormatMax;
 	bStreamHeader = OMX_TRUE;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterInstanceDeInit()
@@ -773,89 +809,92 @@ OMX_ERRORTYPE AacDec::AudioFilterInstanceDeInit()
 	FSL_FREE(pAacDecConfig);
 	FSL_FREE(pAacDecInfo);
 
-	if (libMgr) {
+	if (libMgr)
+	{
 		if (hLib)
 			libMgr->unload(hLib);
 		FSL_DELETE(libMgr);
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioAac:
-            {
-                OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
-                pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pAacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pAacType, &AacType,	sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
-            }
-			return ret;
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioAac:
+	{
+		OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
+		pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pAacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pAacType, &AacType,	sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioAac:
-            {
-                OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
-                pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pAacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				nChannelsRaw = pAacType->nChannels;
-				nSampleRateRaw = pAacType->nSampleRate;
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioAac:
+	{
+		OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
+		pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pAacType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		nChannelsRaw = pAacType->nChannels;
+		nSampleRateRaw = pAacType->nSampleRate;
 
-				LOG_DEBUG("Set AAC para type. Channel: %d, Sample Rate: %d\n", nChannelsRaw, nSampleRateRaw);
-				LOG_DEBUG("AacType.eAACStreamFormat: %d\n", AacType.eAACStreamFormat);
-			}
-			return ret;
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+		LOG_DEBUG("Set AAC para type. Channel: %d, Sample Rate: %d\n", nChannelsRaw, nSampleRateRaw);
+		LOG_DEBUG("AacType.eAACStreamFormat: %d\n", AacType.eAACStreamFormat);
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
- 
+
 AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 {
-    AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
+	AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
 
 	AudioRingBuffer.BufferGet(&pBuffer, AACD_INPUT_BUF_PUSH_SIZE, &nActuralLen);
 	LOG_LOG("Get data = %d\n", nActuralLen);
-  
-    OMX_ERRORTYPE retOMX = OMX_ErrorNone;
+
+	OMX_ERRORTYPE retOMX = OMX_ErrorNone;
 	retOMX = CheckFormatType(pBuffer, nActuralLen);
 	if (retOMX != OMX_ErrorNone)
 	{
@@ -894,13 +933,13 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 	}
 
 	AACD_RET_TYPE AacRet = AACD_ERROR_NO_ERROR;
-    AACD_RET_TYPE SbrRet = AACD_ERROR_NO_ERROR;
+	AACD_RET_TYPE SbrRet = AACD_ERROR_NO_ERROR;
 	SBR_FRAME_TYPE SbrFrameType = NO_SBR_FRAME;
 
 	/* Walkround for ADIF can't return EOS */
 	if ((nActuralLen == 0) \
-			&& (AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatADIF \
-				|| AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatRAW))
+	        && (AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatADIF \
+	            || AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatRAW))
 	{
 		AacRet = AACD_ERROR_EOF;
 	}
@@ -908,7 +947,8 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 	{
 		AacRet = aacd_decode_frame(pAacDecConfig, pAacDecInfo, (AACD_OutputFmtType *)pOutBufferHdr->pBuffer, (AACD_INT8 *)(pBuffer + HeadOffset), (nActuralLen - HeadOffset));
 
-		if (bHaveAACPlusLib == OMX_TRUE) {
+		if (bHaveAACPlusLib == OMX_TRUE)
+		{
 			SbrRet = SBRD_decode_frame(pAacDecConfig, pAacDecInfo, (AACD_INT32 *)pOutBufferHdr->pBuffer, &SbrFrameType);
 		}
 
@@ -917,7 +957,7 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 			nComsumeredLen = nActuralLen;
 
 		if (AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatRAW && AacRet != AACD_ERROR_NO_ERROR)
-		    nComsumeredLen = nActuralLen;
+			nComsumeredLen = nActuralLen;
 
 		LOG_LOG("Consumered data = %d\n", nComsumeredLen);
 
@@ -934,14 +974,18 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 	}
 
 	bAlwaysStereo = OMX_FALSE;
-	if (bHaveAACPlusLib == OMX_TRUE) {
-		if (SbrFrameType!=NO_SBR_FRAME && SbrRet!=AACD_ERROR_NO_ERROR) {
+	if (bHaveAACPlusLib == OMX_TRUE)
+	{
+		if (SbrFrameType!=NO_SBR_FRAME && SbrRet!=AACD_ERROR_NO_ERROR)
+		{
 			AacRet = AACD_ERROR_INVALID_HEADER;
 			LOG_ERROR("SBR decode fail.\n");
 		}
-		if (SbrFrameType == SBR_FRAME) {
+		if (SbrFrameType == SBR_FRAME)
+		{
 			LOG_LOG("Is AAC Plus stream.\n");
-			if (pAacDecInfo->aacd_num_channels == 1) {
+			if (pAacDecInfo->aacd_num_channels == 1)
+			{
 				pAacDecInfo->aacd_num_channels = 2;
 				bAlwaysStereo = OMX_TRUE;
 			}
@@ -953,12 +997,12 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 	{
 		AacType.nBitRate = pAacDecInfo->aacd_bit_rate*1000;
 		if (AacType.nChannels != (OMX_U16)pAacDecInfo->aacd_num_channels
-				|| AacType.nSampleRate != (OMX_U32)pAacDecInfo->aacd_sampling_frequency
-				|| SbrTypeFlag != SbrFrameType)
+		        || AacType.nSampleRate != (OMX_U32)pAacDecInfo->aacd_sampling_frequency
+		        || SbrTypeFlag != SbrFrameType)
 		{
 			SbrTypeFlag = SbrFrameType;
 			LOG_DEBUG("AAC decoder channel: %d sample rate: %d\n", \
-					pAacDecInfo->aacd_num_channels, pAacDecInfo->aacd_sampling_frequency);
+			          pAacDecInfo->aacd_num_channels, pAacDecInfo->aacd_sampling_frequency);
 			if (pAacDecInfo->aacd_num_channels == 0 || pAacDecInfo->aacd_sampling_frequency == 0)
 			{
 				return AUDIO_FILTER_FAILURE;
@@ -974,16 +1018,20 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 
 		OMX_S32 *pS32 = (OMX_S32 *)pOutBufferHdr->pBuffer;
 		OMX_S16 *pS16 = (OMX_S16 *)pOutBufferHdr->pBuffer;
-		if (bAlwaysStereo == OMX_FALSE) {
-			for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len * AacType.nChannels; i ++) {
+		if (bAlwaysStereo == OMX_FALSE)
+		{
+			for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len * AacType.nChannels; i ++)
+			{
 				*pS16++ = *pS32++;
 			}
 #ifdef OMX_STEREO_OUTPUT
-			if (AacType.nChannels > 2) {
+			if (AacType.nChannels > 2)
+			{
 				OMX_S16 *pS16_src = (OMX_S16 *)pOutBufferHdr->pBuffer;
 				OMX_S16 *pS16_dst = (OMX_S16 *)pOutBufferHdr->pBuffer;
 				pS16_dst ++;
-				for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len; i ++) {
+				for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len; i ++)
+				{
 					*pS16_dst = *pS16_src;
 					pS16_src += AacType.nChannels;
 					pS16_dst += AacType.nChannels;
@@ -991,17 +1039,19 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 			}
 #endif
 		}
-		else {
-			for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len; i ++) {
+		else
+		{
+			for (OMX_U32 i = 0; i < pAacDecInfo->aacd_len; i ++)
+			{
 				*pS16++ = *pS32;
 				*pS16++ = *pS32++;
 			}
 		}
 		pOutBufferHdr->nOffset = 0;
 		pOutBufferHdr->nFilledLen = pAacDecInfo->aacd_len * AacType.nChannels*2;
- 
+
 		LOG_LOG("TS_PerFrame: %lld\n", TS_PerFrame);
-		AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+		AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 	}
 	else if (AacRet == AACD_ERROR_EOF)
 	{
@@ -1022,10 +1072,10 @@ AUDIO_FILTERRETURNTYPE AacDec::AudioFilterFrame()
 
 OMX_ERRORTYPE AacDec::CheckFormatType(OMX_U8 *pBuffer, OMX_U32 nBufferLen)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	if (!(AacType.eAACProfile == OMX_AUDIO_AACObjectLC
-	    || AacType.eAACProfile == OMX_AUDIO_AACObjectHE))
+	        || AacType.eAACProfile == OMX_AUDIO_AACObjectHE))
 	{
 		LOG_ERROR("Unimplement AAC profile type: %d\n", AacType.eAACProfile);
 		return OMX_ErrorNotImplemented;
@@ -1052,14 +1102,14 @@ OMX_ERRORTYPE AacDec::CheckFormatType(OMX_U8 *pBuffer, OMX_U32 nBufferLen)
 
 	HeadOffset = 0;
 	if (AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatMP2ADTS
-			|| AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatMP4ADTS)
+	        || AacType.eAACStreamFormat == OMX_AUDIO_AACStreamFormatMP4ADTS)
 	{
 		LOG_DEBUG("AAC ADTS format.\n");
-		if (bGotFirstFrame == OMX_FALSE) 
+		if (bGotFirstFrame == OMX_FALSE)
 		{
 			FrameInfo = ParserADTS(pAacDecConfig->params, pBuffer, nBufferLen, NULL);
 			if (FrameInfo.flags == FLAG_NEEDMORE_DATA
-					||FrameInfo.index >= nBufferLen)
+			        ||FrameInfo.index >= nBufferLen)
 			{
 				LOG_DEBUG("ADTS parser error.\n");
 				return OMX_ErrorStreamCorrupt;
@@ -1068,13 +1118,13 @@ OMX_ERRORTYPE AacDec::CheckFormatType(OMX_U8 *pBuffer, OMX_U32 nBufferLen)
 			HeadOffset = FrameInfo.index;
 			bGotFirstFrame = OMX_TRUE;
 		}
-		else 
+		else
 		{
 
 			FRAME_INFO FrameInfoTmp;
 			FrameInfoTmp = ParserADTS(pAacDecConfig->params, pBuffer, nBufferLen, &FrameInfo);
 			if (FrameInfoTmp.flags == FLAG_NEEDMORE_DATA
-					||FrameInfoTmp.index >= nBufferLen)
+			        ||FrameInfoTmp.index >= nBufferLen)
 			{
 				LOG_DEBUG("ADTS parser error.\n");
 				return OMX_ErrorStreamCorrupt;
@@ -1092,7 +1142,7 @@ OMX_ERRORTYPE AacDec::CheckFormatType(OMX_U8 *pBuffer, OMX_U32 nBufferLen)
 			FRAME_INFO FrameInfoTmp;
 			FrameInfoTmp = ParserADIF(pAacDecConfig->params, pBuffer, nBufferLen);
 			if (FrameInfoTmp.flags == FLAG_NEEDMORE_DATA
-					||FrameInfoTmp.index >= nBufferLen)
+			        ||FrameInfoTmp.index >= nBufferLen)
 			{
 				LOG_DEBUG("ADTS parser error.\n");
 				return OMX_ErrorUndefined;
@@ -1119,12 +1169,12 @@ OMX_ERRORTYPE AacDec::CheckFormatType(OMX_U8 *pBuffer, OMX_U32 nBufferLen)
 		return OMX_ErrorNotImplemented;
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterReset()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	AACD_RET_TYPE AacRet = AACD_ERROR_NO_ERROR;
 
 	OMX_S32 MemoryCnt = pAacDecConfig->aacd_mem_info.aacd_num_reqs;
@@ -1147,7 +1197,8 @@ OMX_ERRORTYPE AacDec::AudioFilterReset()
 		return OMX_ErrorUndefined;
 	}
 
-	if (bHaveAACPlusLib == OMX_TRUE) {
+	if (bHaveAACPlusLib == OMX_TRUE)
+	{
 		AacRet = SBRD_decoder_init(pAacDecConfig);
 		if (AacRet != AACD_ERROR_NO_ERROR)
 		{
@@ -1156,7 +1207,7 @@ OMX_ERRORTYPE AacDec::AudioFilterReset()
 		}
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacDec::AudioFilterCheckCodecConfig()
@@ -1195,28 +1246,28 @@ OMX_ERRORTYPE AacDec::AudioFilterCheckCodecConfig()
 
 	pInBufferHdr->nFilledLen = 0;
 
-    return ret;
+	return ret;
 }
- 
+
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE AacDecInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        AacDec *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE AacDecInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		AacDec *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(AacDec, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(AacDec, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

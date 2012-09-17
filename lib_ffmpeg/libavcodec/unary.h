@@ -32,10 +32,10 @@
  */
 static inline int get_unary(GetBitContext *gb, int stop, int len)
 {
-    int i;
+	int i;
 
-    for(i = 0; i < len && get_bits1(gb) != stop; i++);
-    return i;
+	for(i = 0; i < len && get_bits1(gb) != stop; i++);
+	return i;
 }
 
 /**
@@ -45,12 +45,12 @@ static inline int get_unary(GetBitContext *gb, int stop, int len)
  */
 static inline int get_unary_0_33(GetBitContext *gb)
 {
-    return get_unary(gb, 0, 33);
+	return get_unary(gb, 0, 33);
 }
 
 static inline int get_unary_0_9(GetBitContext *gb)
 {
-    return get_unary(gb, 0, 9);
+	return get_unary(gb, 0, 9);
 }
 
 #endif /* AVCODEC_UNARY_H */

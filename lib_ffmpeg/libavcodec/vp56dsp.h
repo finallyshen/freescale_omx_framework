@@ -24,12 +24,13 @@
 #include <stdint.h>
 #include "avcodec.h"
 
-typedef struct VP56DSPContext {
-    void (*edge_filter_hor)(uint8_t *yuv, int stride, int t);
-    void (*edge_filter_ver)(uint8_t *yuv, int stride, int t);
+typedef struct VP56DSPContext
+{
+	void (*edge_filter_hor)(uint8_t *yuv, int stride, int t);
+	void (*edge_filter_ver)(uint8_t *yuv, int stride, int t);
 
-    void (*vp6_filter_diag4)(uint8_t *dst, uint8_t *src, int stride,
-                             const int16_t *h_weights,const int16_t *v_weights);
+	void (*vp6_filter_diag4)(uint8_t *dst, uint8_t *src, int stride,
+	                         const int16_t *h_weights,const int16_t *v_weights);
 } VP56DSPContext;
 
 void ff_vp6_filter_diag4_c(uint8_t *dst, uint8_t *src, int stride,

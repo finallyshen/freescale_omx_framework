@@ -26,10 +26,11 @@
 #include "avcodec.h"
 #include "get_bits.h"
 
-typedef struct {
-    int16_t  sym;
-    int16_t  n0;
-    uint32_t count;
+typedef struct
+{
+	int16_t  sym;
+	int16_t  n0;
+	uint32_t count;
 } Node;
 
 #define FF_HUFFMAN_FLAG_HNODE_FIRST 0x01

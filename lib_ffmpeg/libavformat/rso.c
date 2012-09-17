@@ -23,8 +23,9 @@
 #include "internal.h"
 #include "rso.h"
 
-const AVCodecTag ff_codec_rso_tags[] = {
-    { CODEC_ID_PCM_U8,          0x0100 },
-    { CODEC_ID_ADPCM_IMA_WAV,   0x0101 },
-    { CODEC_ID_NONE, 0 },
+const AVCodecTag ff_codec_rso_tags[] =
+{
+	{ CODEC_ID_PCM_U8,          0x0100 },
+	{ CODEC_ID_ADPCM_IMA_WAV,   0x0101 },
+	{ CODEC_ID_NONE, 0 },
 };

@@ -31,15 +31,17 @@
 #ifndef AVCODEC_ADX_H
 #define AVCODEC_ADX_H
 
-typedef struct {
-    int s1,s2;
+typedef struct
+{
+	int s1,s2;
 } PREV;
 
-typedef struct {
-    PREV prev[2];
-    int header_parsed;
-    unsigned char dec_temp[18*2];
-    int in_temp;
+typedef struct
+{
+	PREV prev[2];
+	int header_parsed;
+	unsigned char dec_temp[18*2];
+	int in_temp;
 } ADXContext;
 
 #define    BASEVOL   0x4000

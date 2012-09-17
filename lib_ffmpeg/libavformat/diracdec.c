@@ -25,19 +25,20 @@
 
 static int dirac_probe(AVProbeData *p)
 {
-    if (AV_RL32(p->buf) == MKTAG('B', 'B', 'C', 'D'))
-        return AVPROBE_SCORE_MAX;
-    else
-        return 0;
+	if (AV_RL32(p->buf) == MKTAG('B', 'B', 'C', 'D'))
+		return AVPROBE_SCORE_MAX;
+	else
+		return 0;
 }
 
-AVInputFormat ff_dirac_demuxer = {
-    "dirac",
-    NULL_IF_CONFIG_SMALL("raw Dirac"),
-    0,
-    dirac_probe,
-    ff_raw_video_read_header,
-    ff_raw_read_partial_packet,
-    .flags= AVFMT_GENERIC_INDEX,
-    .value = CODEC_ID_DIRAC,
+AVInputFormat ff_dirac_demuxer =
+{
+	"dirac",
+	NULL_IF_CONFIG_SMALL("raw Dirac"),
+	0,
+	dirac_probe,
+	ff_raw_video_read_header,
+	ff_raw_read_partial_packet,
+	.flags= AVFMT_GENERIC_INDEX,
+	.value = CODEC_ID_DIRAC,
 };

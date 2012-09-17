@@ -83,7 +83,7 @@ typedef unsigned int UINT32;
 
 //#define VPU_COMP_DEBUG
 #ifdef VPU_COMP_DEBUG
-#define MAX_NULL_LOOP	(0xFFFFFFF)	
+#define MAX_NULL_LOOP	(0xFFFFFFF)
 #define MAX_DEC_FRAME  (0xFFFFFFF)
 #define MAX_YUV_FRAME  (200)
 #endif
@@ -123,7 +123,7 @@ sem_t* sharedmem_sem_open(fsl_osal_s32 pshared, fsl_osal_u32 value)
 	sem_t *pSem = NULL;
 	char *shm_path, shm_file[256];
 	shm_path = getenv("CODEC_SHM_PATH");      /*the CODEC_SHM_PATH is on a memory map the fs */
-	
+
 	if (shm_path == NULL)
 		strcpy(shm_file, "/dev/shm");   /* default path */
 	else
@@ -179,8 +179,8 @@ efsl_osal_return_type_t fsl_osal_sem_destroy_process(fsl_osal_sem sem_obj)
 #endif
 	if (sem_destroy((sem_t *)sem_obj) != 0)
 	{
-	VPU_COMP_ERR_LOG("\n Error in destroying semaphore.");
-	return E_FSL_OSAL_INVALIDPARAM ;
+		VPU_COMP_ERR_LOG("\n Error in destroying semaphore.");
+		return E_FSL_OSAL_INVALIDPARAM ;
 	}
 	munmap((void *)sem_obj, sizeof(sem_t));
 	return E_FSL_OSAL_SUCCESS;
@@ -195,16 +195,16 @@ void printf_memory(OMX_U8* addr, OMX_S32 width, OMX_S32 height, OMX_S32 stride)
 
 	ptr=addr;
 	VPU_COMP_LOG("addr: 0x%X \r\n",(UINT32)addr);
-	for(i=0;i<height;i++)
+	for(i=0; i<height; i++)
 	{
-		for(j=0;j<width;j++)
+		for(j=0; j<width; j++)
 		{
-			VPU_COMP_LOG("%2X ",ptr[j]);         
+			VPU_COMP_LOG("%2X ",ptr[j]);
 		}
 		VPU_COMP_LOG("\r\n");
 		ptr+=stride;
 	}
-	VPU_COMP_LOG("\r\n");	
+	VPU_COMP_LOG("\r\n");
 	return;
 }
 
@@ -214,7 +214,7 @@ void FileDumpBitstrem(FILE** ppFp, OMX_U8* pBits, OMX_U32 nSize)
 	{
 		return;
 	}
-	
+
 	if(*ppFp==NULL)
 	{
 		*ppFp=fopen("temp.bit","wb");
@@ -237,23 +237,23 @@ void FileDumpYUV(FILE** ppFp, OMX_U8*  pY,OMX_U8*  pU,OMX_U8*  pV, OMX_U32 nYSiz
 
 	switch (colorFormat)
 	{
-		case OMX_COLOR_FormatYUV420SemiPlanar:
-			VPU_COMP_ERR_LOG("interleave 420 color format : %d \r\n",colorFormat);
-		case OMX_COLOR_FormatYUV420Planar:
-			nCScale=1;
-			break;
-		case OMX_COLOR_FormatYUV422SemiPlanar:
-			VPU_COMP_ERR_LOG("interleave 422 color format : %d \r\n",colorFormat);
-		case OMX_COLOR_FormatYUV422Planar:
-			//hor ???
-			nCScale=2;
-			break;
+	case OMX_COLOR_FormatYUV420SemiPlanar:
+		VPU_COMP_ERR_LOG("interleave 420 color format : %d \r\n",colorFormat);
+	case OMX_COLOR_FormatYUV420Planar:
+		nCScale=1;
+		break;
+	case OMX_COLOR_FormatYUV422SemiPlanar:
+		VPU_COMP_ERR_LOG("interleave 422 color format : %d \r\n",colorFormat);
+	case OMX_COLOR_FormatYUV422Planar:
+		//hor ???
+		nCScale=2;
+		break;
 		//FIXME: add 4:0:0/4:4:4/...
-		default:
-			VPU_COMP_ERR_LOG("unsupported color format : %d \r\n",colorFormat);
-			break;
-	}	
-	
+	default:
+		VPU_COMP_ERR_LOG("unsupported color format : %d \r\n",colorFormat);
+		break;
+	}
+
 	if(*ppFp==NULL)
 	{
 		*ppFp=fopen("temp.yuv","wb");
@@ -272,7 +272,7 @@ void FileDumpYUV(FILE** ppFp, OMX_U8*  pY,OMX_U8*  pU,OMX_U8*  pV, OMX_U32 nYSiz
 		fwrite(pV,1,nCSize*nCScale,*ppFp);
 		cnt++;
 	}
-	
+
 	return;
 }
 #endif
@@ -283,7 +283,7 @@ VpuDecRetCode VPU_DecGetMem_Wrapper(VpuMemDesc* pInOutMem,OMX_PARAM_MEM_OPERATOR
 	if((pMemOp->pfMalloc==NULL) || (pMemOp->pfFree==NULL))
 	{
 		//use default method
-		ret=VPU_DecGetMem(pInOutMem);	
+		ret=VPU_DecGetMem(pInOutMem);
 	}
 	else
 	{
@@ -328,7 +328,7 @@ VpuDecRetCode VPU_DecFreeMem_Wrapper(VpuMemDesc* pInMem,OMX_PARAM_MEM_OPERATOR* 
 			ret=VPU_DEC_RET_FAILURE;
 		}
 	}
-	return ret;	
+	return ret;
 }
 
 OMX_S32 MemFreeBlock(VpuDecoderMemInfo* pDecMem,OMX_PARAM_MEM_OPERATOR* pMemOp)
@@ -340,7 +340,7 @@ OMX_S32 MemFreeBlock(VpuDecoderMemInfo* pDecMem,OMX_PARAM_MEM_OPERATOR* pMemOp)
 
 	//free virtual mem
 	//for(i=0;i<pDecMem->nVirtNum;i++)
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		if(pDecMem->virtMem[i])
 		{
@@ -354,7 +354,7 @@ OMX_S32 MemFreeBlock(VpuDecoderMemInfo* pDecMem,OMX_PARAM_MEM_OPERATOR* pMemOp)
 
 	//free physical mem
 	//for(i=0;i<pDecMem->nPhyNum;i++)
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		if(pDecMem->phyMem_phyAddr[i])
 		{
@@ -375,7 +375,7 @@ OMX_S32 MemFreeBlock(VpuDecoderMemInfo* pDecMem,OMX_PARAM_MEM_OPERATOR* pMemOp)
 		}
 	}
 	pDecMem->nPhyNum=0;
-	
+
 	return retOk;
 }
 
@@ -384,7 +384,7 @@ OMX_S32 MemAddPhyBlock(VpuMemDesc* pInMemDesc,VpuDecoderMemInfo* pOutDecMem)
 {
 	OMX_S32 i;
 
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		// insert value into empty node
 		if(NULL==pOutDecMem->phyMem_phyAddr[i])
@@ -404,7 +404,7 @@ OMX_S32 MemAddPhyBlock(VpuMemDesc* pInMemDesc,VpuDecoderMemInfo* pOutDecMem)
 OMX_S32 MemRemovePhyBlock(VpuMemDesc* pInMemDesc,VpuDecoderMemInfo* pOutDecMem)
 {
 	OMX_S32 i;
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		// clear matched node
 		if(pInMemDesc->nPhyAddr==pOutDecMem->phyMem_phyAddr[i])
@@ -416,15 +416,15 @@ OMX_S32 MemRemovePhyBlock(VpuMemDesc* pInMemDesc,VpuDecoderMemInfo* pOutDecMem)
 			pOutDecMem->nPhyNum--;
 			return 1;
 		}
-	}	
-	
+	}
+
 	return 0;
 }
 
 OMX_S32 MemQueryPhyBlock(OMX_PTR pInVirtAddr,VpuMemDesc* pOutMemDesc,VpuDecoderMemInfo* pInDecMem)
 {
 	OMX_S32 i;
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		// find matched node
 		if((OMX_U32)pInVirtAddr==pInDecMem->phyMem_virtAddr[i])
@@ -435,8 +435,8 @@ OMX_S32 MemQueryPhyBlock(OMX_PTR pInVirtAddr,VpuMemDesc* pOutMemDesc,VpuDecoderM
 			pOutMemDesc->nSize=pInDecMem->phyMem_size[i];
 			return 1;
 		}
-	}	
-	
+	}
+
 	return 0;
 }
 
@@ -446,8 +446,8 @@ OMX_S32 MemMallocVpuBlock(VpuMemInfo* pMemBlock,VpuDecoderMemInfo* pVpuMem,OMX_P
 	OMX_S32 i;
 	OMX_U8 * ptr=NULL;
 	OMX_S32 size;
-	
-	for(i=0;i<pMemBlock->nSubBlockNum;i++)
+
+	for(i=0; i<pMemBlock->nSubBlockNum; i++)
 	{
 		size=pMemBlock->MemSubBlock[i].nAlignment+pMemBlock->MemSubBlock[i].nSize;
 		if(pMemBlock->MemSubBlock[i].MemType==VPU_MEM_VIRT)
@@ -457,7 +457,7 @@ OMX_S32 MemMallocVpuBlock(VpuMemInfo* pMemBlock,VpuDecoderMemInfo* pVpuMem,OMX_P
 			{
 				VPU_COMP_LOG("%s: get virtual memory failure, size=%d \r\n",__FUNCTION__,(INT32)size);
 				goto failure;
-			}		
+			}
 			pMemBlock->MemSubBlock[i].pVirtAddr=(OMX_U8*)Align(ptr,pMemBlock->MemSubBlock[i].nAlignment);
 
 			//record virtual base addr
@@ -474,7 +474,7 @@ OMX_S32 MemMallocVpuBlock(VpuMemInfo* pMemBlock,VpuDecoderMemInfo* pVpuMem,OMX_P
 			{
 				VPU_COMP_LOG("%s: get vpu memory failure, size=%d, ret=0x%X \r\n",__FUNCTION__,(INT32)size,ret);
 				goto failure;
-			}		
+			}
 			pMemBlock->MemSubBlock[i].pVirtAddr=(OMX_U8*)Align(vpuMem.nVirtAddr,pMemBlock->MemSubBlock[i].nAlignment);
 			pMemBlock->MemSubBlock[i].pPhyAddr=(OMX_U8*)Align(vpuMem.nPhyAddr,pMemBlock->MemSubBlock[i].nAlignment);
 
@@ -483,22 +483,22 @@ OMX_S32 MemMallocVpuBlock(VpuMemInfo* pMemBlock,VpuDecoderMemInfo* pVpuMem,OMX_P
 			pVpuMem->phyMem_virtAddr[pVpuMem->nPhyNum]=(OMX_U32)vpuMem.nVirtAddr;
 			pVpuMem->phyMem_cpuAddr[pVpuMem->nPhyNum]=(OMX_U32)vpuMem.nCpuAddr;
 			pVpuMem->phyMem_size[pVpuMem->nPhyNum]=size;
-			pVpuMem->nPhyNum++;			
+			pVpuMem->nPhyNum++;
 		}
-	}	
+	}
 
 	return 1;
-	
+
 failure:
 	MemFreeBlock(pVpuMem,pMemOp);
 	return 0;
-	
+
 }
 
 OMX_S32 OutInfoQueryEmptyNode(VpuDecOutFrameInfo** ppOutFrameInfo, VpuDecoderOutMapInfo* pInOutMapInfo)
 {
 	OMX_S32 i;
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	 
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		//find empty node
 		if(pInOutMapInfo->pVirtAddr[i]==NULL)
@@ -512,23 +512,23 @@ OMX_S32 OutInfoQueryEmptyNode(VpuDecOutFrameInfo** ppOutFrameInfo, VpuDecoderOut
 
 OMX_S32 OutInfoRegisterVirtAddr(OMX_S32 index, OMX_PTR pInVirtAddr,VpuDecoderOutMapInfo* pOutOutMapInfo)
 {
-	//set node 
+	//set node
 	pOutOutMapInfo->pVirtAddr[index]=pInVirtAddr;
 	return 1;
 }
 
 OMX_S32 OutInfoMap(OMX_PTR pInVirtAddr,VpuDecOutFrameInfo** ppOutFrameInfo,VpuDecoderOutMapInfo* pInOutMapInfo)
-{	
+{
 	OMX_S32 i;
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	 
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		//find matched node
 		if(pInOutMapInfo->pVirtAddr[i]==pInVirtAddr)
 		{
-			*ppOutFrameInfo=&pInOutMapInfo->outFrameInfo[i];			
+			*ppOutFrameInfo=&pInOutMapInfo->outFrameInfo[i];
 			return i;
 		}
-	}	
+	}
 	return -1;
 }
 
@@ -549,7 +549,7 @@ OMX_S32 OutInfoReSet(VpuDecoderMemInfo* pInDecMem,VpuDecoderOutMapInfo* pOutOutM
 
 	//re-set value
 	ASSERT(nInFrameBufNum==pInDecMem->nPhyNum);
-	for(i=0;i<pInDecMem->nPhyNum;i++)
+	for(i=0; i<pInDecMem->nPhyNum; i++)
 	{
 #if 0
 		if(((OMX_U32)NULL)!=pInDecMem->phyMem_virtAddr[i])
@@ -558,7 +558,7 @@ OMX_S32 OutInfoReSet(VpuDecoderMemInfo* pInDecMem,VpuDecoderOutMapInfo* pOutOutM
 			fsl_osal_memset(&pOutOutMapInfo->outFrameInfo[nCnt],NULL,sizeof(VpuDecOutFrameInfo));
 			nCnt++;
 		}
-#else	
+#else
 		pOutOutMapInfo->outFrameInfo[nCnt].pDisplayFrameBuf=*pInFrameBufInfo++;
 		pOutOutMapInfo->pVirtAddr[nCnt]=pOutOutMapInfo->outFrameInfo[nCnt].pDisplayFrameBuf->pbufVirtY;
 		nCnt++;
@@ -576,7 +576,7 @@ OMX_S32 OutInfoOutputNum(VpuDecoderOutMapInfo* pInOutMapInfo)
 	OMX_S32 nCnt=0;
 
 	//re-set value
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		if(NULL!=pInOutMapInfo->pVirtAddr[i])
 		{
@@ -602,7 +602,7 @@ OMX_S32 FrameBufRegister(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem,OMX_S
 	if(pPhyAddr==NULL)
 	{
 		//1 virtual space ??
-		for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	
+		for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 		{
 			//insert into empty node
 			if(NULL==pOutDecMem->virtMem[i])
@@ -617,7 +617,7 @@ OMX_S32 FrameBufRegister(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem,OMX_S
 	else
 	{
 		//physical space
-		for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	
+		for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 		{
 			//insert into empty node
 			if(NULL==pOutDecMem->phyMem_phyAddr[i])
@@ -625,14 +625,14 @@ OMX_S32 FrameBufRegister(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem,OMX_S
 				pOutDecMem->phyMem_phyAddr[i]=(OMX_U32)pPhyAddr;
 				pOutDecMem->phyMem_virtAddr[i]=(OMX_U32)pInVirtAddr;
 				//pOutDecMem->phyMem_cpuAddr[i]=
-				//pOutDecMem->phyMem_size[i]=	
+				//pOutDecMem->phyMem_size[i]=
 				pOutDecMem->nPhyNum++;
 				*pOutIsPhy=1;
 				return pOutDecMem->nPhyNum;
 			}
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -650,7 +650,7 @@ OMX_S32 FrameBufExist(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem, OMX_S32
 	if(pPhyAddr==NULL)
 	{
 		//1 virtual space ??
-		for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	
+		for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 		{
 			//search matched node
 			if((OMX_U32)pInVirtAddr==pOutDecMem->virtMem[i])
@@ -663,7 +663,7 @@ OMX_S32 FrameBufExist(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem, OMX_S32
 	else
 	{
 		//physical space
-		for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	
+		for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 		{
 			//search matched node
 			if((OMX_U32)pPhyAddr==pOutDecMem->phyMem_phyAddr[i])
@@ -672,7 +672,7 @@ OMX_S32 FrameBufExist(OMX_PTR pInVirtAddr,VpuDecoderMemInfo* pOutDecMem, OMX_S32
 				return 1;
 			}
 		}
-	}	
+	}
 	return 0;
 }
 
@@ -685,25 +685,25 @@ OMX_S32 FrameBufClear(VpuDecoderMemInfo* pOutDecMem)
 {
 	OMX_S32 i;
 	//clear all node
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)	 
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		pOutDecMem->phyMem_virtAddr[i]=NULL;
-	
+
 		pOutDecMem->phyMem_phyAddr[i]=NULL;
 		pOutDecMem->phyMem_virtAddr[i]=NULL;
 		pOutDecMem->phyMem_cpuAddr[i]=NULL;
 		pOutDecMem->phyMem_size[i]=0;
 	}
 	pOutDecMem->nVirtNum=0;
-	pOutDecMem->nPhyNum=0;	
+	pOutDecMem->nPhyNum=0;
 	return 1;
 }
 
 OMX_S32 FrameBufCreateRegisterFrame(
-	VpuFrameBuffer* pOutRegisterFrame,VpuDecoderMemInfo* pInDecMem, 
-	OMX_S32 nInCnt,OMX_S32 nPadW,OMX_S32 nPadH,
-	VpuDecoderMemInfo* pOutDecMemInfo, 
-	OMX_PARAM_MEM_OPERATOR* pMemOp,OMX_COLOR_FORMATTYPE colorFormat,OMX_U32 nInChromaAlign)
+    VpuFrameBuffer* pOutRegisterFrame,VpuDecoderMemInfo* pInDecMem,
+    OMX_S32 nInCnt,OMX_S32 nPadW,OMX_S32 nPadH,
+    VpuDecoderMemInfo* pOutDecMemInfo,
+    OMX_PARAM_MEM_OPERATOR* pMemOp,OMX_COLOR_FORMATTYPE colorFormat,OMX_U32 nInChromaAlign)
 {
 	VpuDecRetCode ret;
 	VpuMemDesc vpuMem;
@@ -723,37 +723,37 @@ OMX_S32 FrameBufCreateRegisterFrame(
 
 	switch (colorFormat)
 	{
-		case OMX_COLOR_FormatYUV420Planar:
-		case OMX_COLOR_FormatYUV420SemiPlanar:
-			uvStride=yStride/2;
-			uvSize=ySize/4;
-			mvSize=ySize/4;
-			break;
-		case OMX_COLOR_FormatYUV422Planar:
-		case OMX_COLOR_FormatYUV422SemiPlanar:
-			//hor ???
-			uvStride=yStride/2;
-			uvSize=ySize/2;
-			mvSize=ySize/2;	//In fact, for MJPG, mv is useless
-			break;
-		//FIXME: add 4:0:0/4:4:4/...			
-		default:
-			VPU_COMP_ERR_LOG("unsupported color format : %d \r\n",colorFormat);
-			uvStride=yStride/2;
-			uvSize=ySize/4;
-			mvSize=ySize/4;
-			break;
+	case OMX_COLOR_FormatYUV420Planar:
+	case OMX_COLOR_FormatYUV420SemiPlanar:
+		uvStride=yStride/2;
+		uvSize=ySize/4;
+		mvSize=ySize/4;
+		break;
+	case OMX_COLOR_FormatYUV422Planar:
+	case OMX_COLOR_FormatYUV422SemiPlanar:
+		//hor ???
+		uvStride=yStride/2;
+		uvSize=ySize/2;
+		mvSize=ySize/2;	//In fact, for MJPG, mv is useless
+		break;
+		//FIXME: add 4:0:0/4:4:4/...
+	default:
+		VPU_COMP_ERR_LOG("unsupported color format : %d \r\n",colorFormat);
+		uvStride=yStride/2;
+		uvSize=ySize/4;
+		mvSize=ySize/4;
+		break;
 	}
 
 	//fill StrideY/StrideC/Y/Cb/Cr info
-	for(i=0;i<VPU_DEC_MAX_NUM_MEM;i++)
+	for(i=0; i<VPU_DEC_MAX_NUM_MEM; i++)
 	{
 		//search valid phy buff
 		if(pInDecMem->phyMem_phyAddr[i]!=NULL)
 		{
 			ptr=(OMX_U8*)pInDecMem->phyMem_phyAddr[i];
 			ptrVirt=(OMX_U8*)pInDecMem->phyMem_virtAddr[i];
-			
+
 			/* fill stride info */
 			pOutRegisterFrame[nCnt].nStrideY=yStride;
 			pOutRegisterFrame[nCnt].nStrideC=uvStride;
@@ -768,7 +768,7 @@ OMX_S32 FrameBufCreateRegisterFrame(
 			pOutRegisterFrame[nCnt].pbufVirtY=(OMX_U8*)Align(ptrVirt,nInChromaAlign);
 			pOutRegisterFrame[nCnt].pbufVirtCb=(OMX_U8*)Align(pOutRegisterFrame[nCnt].pbufVirtY+ySize,nInChromaAlign);
 			pOutRegisterFrame[nCnt].pbufVirtCr=(OMX_U8*)Align(pOutRegisterFrame[nCnt].pbufVirtCb+uvSize,nInChromaAlign);
-			//pOutRegisterFrame[nCnt].pbufVirtMvCol=ptrVirt+ySize+uvSize*2;	
+			//pOutRegisterFrame[nCnt].pbufVirtMvCol=ptrVirt+ySize+uvSize*2;
 
 			nCnt++;
 			//if(nCnt>=nInCnt)
@@ -790,7 +790,7 @@ OMX_S32 FrameBufCreateRegisterFrame(
 	ret=VPU_DecGetMem_Wrapper(&vpuMem,pMemOp);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu malloc frame buf failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu malloc frame buf failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		return -1;//OMX_ErrorInsufficientResources;
 	}
 
@@ -804,7 +804,7 @@ OMX_S32 FrameBufCreateRegisterFrame(
 	//fill mv info
 	ptr=(OMX_U8*)vpuMem.nPhyAddr;
 	ptrVirt=(OMX_U8*)vpuMem.nVirtAddr;
-	for(i=0;i<nCnt;i++)
+	for(i=0; i<nCnt; i++)
 	{
 		pOutRegisterFrame[i].pbufMvCol=ptr;
 		pOutRegisterFrame[i].pbufVirtMvCol=ptrVirt;
@@ -821,11 +821,11 @@ OMX_S32 FrameBufFindOneUnOutputed(OMX_PTR * ppOutVirtBuf,VpuDecoderMemInfo* pInD
 {
 	OMX_S32 i;
 	VpuDecOutFrameInfo* pOutFrameInfo;
-	for(i=0;i<pInDecMem->nPhyNum;i++)	
+	for(i=0; i<pInDecMem->nPhyNum; i++)
 	{
 		//find valid node
 		if(NULL!=pInDecMem->phyMem_virtAddr[i])
-		{	
+		{
 			if(-1==OutInfoMap((OMX_PTR)pInDecMem->phyMem_virtAddr[i],&pOutFrameInfo , pInOutMapInfo))
 			{
 				//find one un-outputed frame
@@ -839,9 +839,9 @@ OMX_S32 FrameBufFindOneUnOutputed(OMX_PTR * ppOutVirtBuf,VpuDecoderMemInfo* pInD
 }
 
 OMX_ERRORTYPE OpenVpu(VpuDecHandle* pOutHandle, VpuMemInfo* pInMemInfo,
-	VpuCodStd eCodeFormat, OMX_S32 nPicWidth,OMX_S32 nPicHeight,OMX_COLOR_FORMATTYPE eColorFormat,OMX_S32 enableFileMode,VPUCompSemaphor psem)
+                      VpuCodStd eCodeFormat, OMX_S32 nPicWidth,OMX_S32 nPicHeight,OMX_COLOR_FORMATTYPE eColorFormat,OMX_S32 enableFileMode,VPUCompSemaphor psem)
 {
-	VpuDecOpenParam decOpenParam;	
+	VpuDecOpenParam decOpenParam;
 	VpuDecRetCode ret;
 	OMX_S32 para;
 
@@ -853,7 +853,7 @@ OMX_ERRORTYPE OpenVpu(VpuDecHandle* pOutHandle, VpuMemInfo* pInMemInfo,
 
 	//FIXME: for MJPG, we need to add check for 4:4:4/4:2:2 ver/4:0:0  !!!
 	if((OMX_COLOR_FormatYUV420SemiPlanar==eColorFormat)
-		||(OMX_COLOR_FormatYUV422SemiPlanar==eColorFormat))
+	        ||(OMX_COLOR_FormatYUV422SemiPlanar==eColorFormat))
 	{
 		decOpenParam.nChromaInterleave=1;
 	}
@@ -864,33 +864,33 @@ OMX_ERRORTYPE OpenVpu(VpuDecHandle* pOutHandle, VpuMemInfo* pInMemInfo,
 	decOpenParam.nReorderEnable=1;	//for H264
 	switch(eCodeFormat)
 	{
-		case VPU_V_MPEG4:
-		case VPU_V_DIVX4:
-		case VPU_V_DIVX56:
-		case VPU_V_XVID:
-		case VPU_V_H263:
-			decOpenParam.nEnableFileMode=enableFileMode;	//FIXME: set 1 in future
-			break;			
-		case VPU_V_AVC:
-			decOpenParam.nEnableFileMode=enableFileMode; 	//FIXME: set 1 in future
-			break;
-		case VPU_V_MPEG2:
-			decOpenParam.nEnableFileMode=enableFileMode; 	//FIXME: set 1 in future
-			break;
-		case VPU_V_VC1:
-		case VPU_V_VC1_AP:
-		case VPU_V_DIVX3:
-		case VPU_V_RV:
-			//for VC1/RV/DivX3: we should use filemode, otherwise, some operations are unstable(such as seek...)
-			decOpenParam.nEnableFileMode=enableFileMode;
-			break;
-		case VPU_V_MJPG:
-			//must file mode ???
-			decOpenParam.nEnableFileMode=enableFileMode;
-			break;
-		default:
-			decOpenParam.nEnableFileMode=enableFileMode;
-			break;
+	case VPU_V_MPEG4:
+	case VPU_V_DIVX4:
+	case VPU_V_DIVX56:
+	case VPU_V_XVID:
+	case VPU_V_H263:
+		decOpenParam.nEnableFileMode=enableFileMode;	//FIXME: set 1 in future
+		break;
+	case VPU_V_AVC:
+		decOpenParam.nEnableFileMode=enableFileMode; 	//FIXME: set 1 in future
+		break;
+	case VPU_V_MPEG2:
+		decOpenParam.nEnableFileMode=enableFileMode; 	//FIXME: set 1 in future
+		break;
+	case VPU_V_VC1:
+	case VPU_V_VC1_AP:
+	case VPU_V_DIVX3:
+	case VPU_V_RV:
+		//for VC1/RV/DivX3: we should use filemode, otherwise, some operations are unstable(such as seek...)
+		decOpenParam.nEnableFileMode=enableFileMode;
+		break;
+	case VPU_V_MJPG:
+		//must file mode ???
+		decOpenParam.nEnableFileMode=enableFileMode;
+		break;
+	default:
+		decOpenParam.nEnableFileMode=enableFileMode;
+		break;
 	}
 
 	//for special formats, such as package VC1 header,...
@@ -905,7 +905,7 @@ OMX_ERRORTYPE OpenVpu(VpuDecHandle* pOutHandle, VpuMemInfo* pInMemInfo,
 	{
 		VPU_COMP_ERR_LOG("%s: vpu open failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		return OMX_ErrorHardware;
-	}			
+	}
 
 	//set default config
 	VPU_COMP_SEM_LOCK(psem);
@@ -952,9 +952,9 @@ OMX_ERRORTYPE ConfigVpu(VpuDecHandle InHandle,OMX_TICKS nTimeStamp,OMX_PTR pCloc
 		{
 			VPU_COMP_ERR_LOG("%s: vpu config failure: config=0x%X, ret=%d \r\n",__FUNCTION__,config,ret);
 			return OMX_ErrorHardware;
-		}	
+		}
 	}
-	
+
 	return OMX_ErrorNone;
 }
 #endif
@@ -966,41 +966,41 @@ OMX_COLOR_FORMATTYPE ConvertMjpgColorFormat(OMX_S32 sourceFormat,OMX_COLOR_FORMA
 
 	switch(oriColorFmt)
 	{
-		case OMX_COLOR_FormatYUV420SemiPlanar:
-		case OMX_COLOR_FormatYUV422SemiPlanar:	
-		//FIXME: add 4:0:0/4:4:4/...	
-			interleave=1;
-			break;
-		default:
-			break;
+	case OMX_COLOR_FormatYUV420SemiPlanar:
+	case OMX_COLOR_FormatYUV422SemiPlanar:
+		//FIXME: add 4:0:0/4:4:4/...
+		interleave=1;
+		break;
+	default:
+		break;
 	}
 	switch(sourceFormat)
 	{
-		case 0:	//4:2:0
-			colorformat=(1==interleave)?OMX_COLOR_FormatYUV420SemiPlanar:OMX_COLOR_FormatYUV420Planar;
-			break;
-		case 1:	//4:2:2 hor
-			colorformat=(1==interleave)?OMX_COLOR_FormatYUV422SemiPlanar:OMX_COLOR_FormatYUV422Planar;
-			break;
+	case 0:	//4:2:0
+		colorformat=(1==interleave)?OMX_COLOR_FormatYUV420SemiPlanar:OMX_COLOR_FormatYUV420Planar;
+		break;
+	case 1:	//4:2:2 hor
+		colorformat=(1==interleave)?OMX_COLOR_FormatYUV422SemiPlanar:OMX_COLOR_FormatYUV422Planar;
+		break;
 #if 0	//FIXME
-		case 2:	//4:2:2 ver
-			VPU_COMP_ERR_LOG("unsupport mjpg 4:2:2 ver color format: %d \r\n",sourceFormat);
-			colorformat=OMX_COLOR_FormatYUV422Planar;
-			break;
-		case 3:	//4:4:4
-			VPU_COMP_ERR_LOG("unsupport mjpg 4:4:4 color format: %d \r\n",sourceFormat);
-			colorformat=OMX_COLOR_FormatYUV444Planar;
-			break;
-		case 4:	//4:0:0
-			VPU_COMP_ERR_LOG("unsupport mjpg 4:0:0 color format: %d \r\n",sourceFormat);
-			colorformat=OMX_COLOR_FormatYUV400Planar;
-			break;
-#endif			
-		default:	//unknow
-			VPU_COMP_ERR_LOG("unknown mjpg color format: %d \r\n",(INT32)sourceFormat);
-			colorformat=OMX_COLOR_FormatYUV420Planar;
-			break;			
-	}	
+	case 2:	//4:2:2 ver
+		VPU_COMP_ERR_LOG("unsupport mjpg 4:2:2 ver color format: %d \r\n",sourceFormat);
+		colorformat=OMX_COLOR_FormatYUV422Planar;
+		break;
+	case 3:	//4:4:4
+		VPU_COMP_ERR_LOG("unsupport mjpg 4:4:4 color format: %d \r\n",sourceFormat);
+		colorformat=OMX_COLOR_FormatYUV444Planar;
+		break;
+	case 4:	//4:0:0
+		VPU_COMP_ERR_LOG("unsupport mjpg 4:0:0 color format: %d \r\n",sourceFormat);
+		colorformat=OMX_COLOR_FormatYUV400Planar;
+		break;
+#endif
+	default:	//unknow
+		VPU_COMP_ERR_LOG("unknown mjpg color format: %d \r\n",(INT32)sourceFormat);
+		colorformat=OMX_COLOR_FormatYUV420Planar;
+		break;
+	}
 	return colorformat;
 }
 
@@ -1014,7 +1014,7 @@ VpuDecoder::VpuDecoder()
 	ComponentVersion.s.nVersionMinor = 0x1;
 	ComponentVersion.s.nRevision = 0x0;
 	ComponentVersion.s.nStep = 0x0;
-	
+
 	//set default
 	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.video_decoder.mpeg4.hw-based");
 
@@ -1040,11 +1040,11 @@ VpuDecoder::VpuDecoder()
 	//clear internal variable 0
 	fsl_osal_memset(&sMemInfo,0,sizeof(VpuMemInfo));
 	fsl_osal_memset(&sVpuMemInfo,0,sizeof(VpuDecoderMemInfo));
-	fsl_osal_memset(&sAllocMemInfo,0,sizeof(VpuDecoderMemInfo));	
-	fsl_osal_memset(&sFrameMemInfo,0,sizeof(VpuDecoderMemInfo));	
-	fsl_osal_memset(&sInitInfo,0,sizeof(VpuDecInitInfo));	
-	fsl_osal_memset(&sOutMapInfo,0,sizeof(VpuDecoderOutMapInfo));	
-	
+	fsl_osal_memset(&sAllocMemInfo,0,sizeof(VpuDecoderMemInfo));
+	fsl_osal_memset(&sFrameMemInfo,0,sizeof(VpuDecoderMemInfo));
+	fsl_osal_memset(&sInitInfo,0,sizeof(VpuDecInitInfo));
+	fsl_osal_memset(&sOutMapInfo,0,sizeof(VpuDecoderOutMapInfo));
+
 	nHandle=0;
 
 #if 0
@@ -1078,7 +1078,7 @@ VpuDecoder::VpuDecoder()
 
 	//pOutBuffer=NULL;
 	//bOutLast=OMX_FALSE;
-	
+
 	eVpuDecoderState=VPU_COM_STATE_NONE;
 
 	pLastOutVirtBuf=NULL;
@@ -1091,25 +1091,25 @@ VpuDecoder::VpuDecoder()
 	fsl_osal_memset(&sMemOperator,0,sizeof(OMX_PARAM_MEM_OPERATOR));
 
 	ePlayMode=DEC_FILE_MODE;
-	nChromaAddrAlign=CHROMA_ALIGN;	
+	nChromaAddrAlign=CHROMA_ALIGN;
 	pClock=NULL;
 	nCapability=0;
 
 	// init semaphore
-#ifdef USE_PROCESS_SEM	
+#ifdef USE_PROCESS_SEM
 	VPU_COMP_SEM_INIT_PROCESS(&psemaphore);
 #else
 	VPU_COMP_SEM_INIT(&psemaphore);
 #endif
 
-	//return OMX_ErrorNone;	
+	//return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE VpuDecoder::SetRoleFormat(OMX_STRING role)
 {
 	OMX_VIDEO_CODINGTYPE CodingType = OMX_VIDEO_CodingUnused;
-	//OMX_PARAM_PORTDEFINITIONTYPE sPortDef;	
-	
+	//OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+
 	VPU_COMP_API_LOG("%s: role: %s \r\n",__FUNCTION__,role);
 
 	if(fsl_osal_strcmp(role, "video_decoder.mpeg2") == 0)
@@ -1128,8 +1128,8 @@ OMX_ERRORTYPE VpuDecoder::SetRoleFormat(OMX_STRING role)
 	{
 		CodingType = (OMX_VIDEO_CODINGTYPE)OMX_VIDEO_SORENSON263;//OMX_VIDEO_CodingH263;
 		eFormat=VPU_V_H263;
-		fsl_osal_strcpy((fsl_osal_char*)name, VPU_COMP_NAME_SORENSONDEC);		
-	}		
+		fsl_osal_strcpy((fsl_osal_char*)name, VPU_COMP_NAME_SORENSONDEC);
+	}
 	else if(fsl_osal_strcmp(role, "video_decoder.mpeg4") == 0)
 	{
 		CodingType = OMX_VIDEO_CodingMPEG4;
@@ -1184,7 +1184,7 @@ OMX_ERRORTYPE VpuDecoder::SetRoleFormat(OMX_STRING role)
 		CodingType = (OMX_VIDEO_CODINGTYPE)OMX_VIDEO_CodingMJPEG;
 		eFormat=VPU_V_MJPG;
 		fsl_osal_strcpy((fsl_osal_char*)name, VPU_COMP_NAME_MJPEGDEC);
-	}	
+	}
 	else if(fsl_osal_strcmp(role, "video_decoder.avs") == 0)
 	{
 		//1 CodingType = (OMX_VIDEO_CODINGTYPE);
@@ -1207,7 +1207,7 @@ OMX_ERRORTYPE VpuDecoder::SetRoleFormat(OMX_STRING role)
 	}
 	else
 	{
-		CodingType = OMX_VIDEO_CodingUnused;		
+		CodingType = OMX_VIDEO_CodingUnused;
 		//eFormat=;
 		VPU_COMP_ERR_LOG("%s: failure: unknow role: %s \r\n",__FUNCTION__,role);
 		return OMX_ErrorUndefined;
@@ -1219,64 +1219,66 @@ OMX_ERRORTYPE VpuDecoder::SetRoleFormat(OMX_STRING role)
 		sInFmt.eCompressionFormat=CodingType;
 		InputFmtChanged();
 	}
-#if 0	
+#if 0
 	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
 	sPortDef.nPortIndex = VPUDEC_IN_PORT;
 	ports[VPUDEC_IN_PORT]->GetPortDefinition(&sPortDef);
 	sPortDef.format.video.eCompressionFormat = CodingType;
 	ports[VPUDEC_IN_PORT]->SetPortDefinition(&sPortDef);
 #endif
-	
+
 	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE VpuDecoder::GetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure) 
-{ 
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
+{
 	VPU_COMP_API_LOG("%s: nParamIndex=0x%X, \r\n",__FUNCTION__,nParamIndex);
 
 	//check state
 	switch(eVpuDecoderState)
 	{
-		default:
-			break;
+	default:
+		break;
 	}
 
 	if(NULL==pComponentParameterStructure)
 	{
-		VPU_COMP_ERR_LOG("%s: failure: param is null \r\n",__FUNCTION__);	
+		VPU_COMP_ERR_LOG("%s: failure: param is null \r\n",__FUNCTION__);
 		return OMX_ErrorBadParameter;
 	}
-	
+
 	if(nParamIndex==OMX_IndexParamStandardComponentRole)
 	{
 		fsl_osal_strcpy((OMX_STRING)((OMX_PARAM_COMPONENTROLETYPE*)pComponentParameterStructure)->cRole,(OMX_STRING)cRole);
 		return OMX_ErrorNone;
 	}
 	else if(nParamIndex ==  OMX_IndexParamVideoWmv)
-	{ 
-		OMX_VIDEO_PARAM_WMVTYPE  *pPara; 
-		pPara = (OMX_VIDEO_PARAM_WMVTYPE *)pComponentParameterStructure; 
+	{
+		OMX_VIDEO_PARAM_WMVTYPE  *pPara;
+		pPara = (OMX_VIDEO_PARAM_WMVTYPE *)pComponentParameterStructure;
 		switch(eFormat)
-		{ 
-			case VPU_V_VC1: 
-				pPara->eFormat = OMX_VIDEO_WMVFormat9; 
-				break; 
-			default:
-				pPara->eFormat = OMX_VIDEO_WMVFormatUnused;
-				break;
+		{
+		case VPU_V_VC1:
+			pPara->eFormat = OMX_VIDEO_WMVFormat9;
+			break;
+		default:
+			pPara->eFormat = OMX_VIDEO_WMVFormatUnused;
+			break;
 		}
 		return OMX_ErrorNone;
 	}
 	else if(nParamIndex ==  OMX_IndexParamVideoProfileLevelQuerySupported)
-	{ 
-		struct CodecProfileLevel {
+	{
+		struct CodecProfileLevel
+		{
 			OMX_U32 mProfile;
 			OMX_U32 mLevel;
 		};
 
-		static const CodecProfileLevel kH263ProfileLevels[] = {
+		static const CodecProfileLevel kH263ProfileLevels[] =
+		{
 			{ OMX_VIDEO_H263ProfileBaseline, OMX_VIDEO_H263Level10 },
 			{ OMX_VIDEO_H263ProfileBaseline, OMX_VIDEO_H263Level20 },
 			{ OMX_VIDEO_H263ProfileBaseline, OMX_VIDEO_H263Level30 },
@@ -1293,7 +1295,8 @@ OMX_ERRORTYPE VpuDecoder::GetParameter(
 			{ OMX_VIDEO_H263ProfileISWV2,    OMX_VIDEO_H263Level70 },
 		};
 
-		static const CodecProfileLevel kProfileLevels[] = {
+		static const CodecProfileLevel kProfileLevels[] =
+		{
 			{ OMX_VIDEO_AVCProfileBaseline, OMX_VIDEO_AVCLevel1  },
 			{ OMX_VIDEO_AVCProfileBaseline, OMX_VIDEO_AVCLevel1b },
 			{ OMX_VIDEO_AVCProfileBaseline, OMX_VIDEO_AVCLevel11 },
@@ -1344,7 +1347,8 @@ OMX_ERRORTYPE VpuDecoder::GetParameter(
 			{ OMX_VIDEO_AVCProfileHigh, OMX_VIDEO_AVCLevel51 },
 		};
 
-		static const CodecProfileLevel kM4VProfileLevels[] = {
+		static const CodecProfileLevel kM4VProfileLevels[] =
+		{
 			{ OMX_VIDEO_MPEG4ProfileSimple, OMX_VIDEO_MPEG4Level0 },
 			{ OMX_VIDEO_MPEG4ProfileSimple, OMX_VIDEO_MPEG4Level0b },
 			{ OMX_VIDEO_MPEG4ProfileSimple, OMX_VIDEO_MPEG4Level1 },
@@ -1360,7 +1364,8 @@ OMX_ERRORTYPE VpuDecoder::GetParameter(
 			{ OMX_VIDEO_MPEG4ProfileAdvancedSimple, OMX_VIDEO_MPEG4Level5 },
 		};
 
-		static const CodecProfileLevel kMpeg2ProfileLevels[] = {
+		static const CodecProfileLevel kMpeg2ProfileLevels[] =
+		{
 			{ OMX_VIDEO_MPEG2ProfileSimple, OMX_VIDEO_MPEG2LevelLL },
 			{ OMX_VIDEO_MPEG2ProfileSimple, OMX_VIDEO_MPEG2LevelML },
 			{ OMX_VIDEO_MPEG2ProfileSimple, OMX_VIDEO_MPEG2LevelH14},
@@ -1371,73 +1376,77 @@ OMX_ERRORTYPE VpuDecoder::GetParameter(
 			{ OMX_VIDEO_MPEG2ProfileMain, OMX_VIDEO_MPEG2LevelHL},
 		};
 
-		OMX_VIDEO_PARAM_PROFILELEVELTYPE  *pPara; 
+		OMX_VIDEO_PARAM_PROFILELEVELTYPE  *pPara;
 		OMX_S32 index;
 		OMX_S32 nProfileLevels;
 
-		pPara = (OMX_VIDEO_PARAM_PROFILELEVELTYPE *)pComponentParameterStructure; 
+		pPara = (OMX_VIDEO_PARAM_PROFILELEVELTYPE *)pComponentParameterStructure;
 		switch(eFormat)
-		{ 
-			case VPU_V_H263: 
-				index = pPara->nProfileIndex;
+		{
+		case VPU_V_H263:
+			index = pPara->nProfileIndex;
 
-				nProfileLevels =sizeof(kH263ProfileLevels) / sizeof(kH263ProfileLevels[0]);
-				if (index >= nProfileLevels) {
-					return OMX_ErrorNoMore;
-				}
+			nProfileLevels =sizeof(kH263ProfileLevels) / sizeof(kH263ProfileLevels[0]);
+			if (index >= nProfileLevels)
+			{
+				return OMX_ErrorNoMore;
+			}
 
-				pPara->eProfile = kH263ProfileLevels[index].mProfile;
-				pPara->eLevel = kH263ProfileLevels[index].mLevel;
-				break; 
-			case VPU_V_AVC: 
-				index = pPara->nProfileIndex;
+			pPara->eProfile = kH263ProfileLevels[index].mProfile;
+			pPara->eLevel = kH263ProfileLevels[index].mLevel;
+			break;
+		case VPU_V_AVC:
+			index = pPara->nProfileIndex;
 
-				nProfileLevels =sizeof(kProfileLevels) / sizeof(kProfileLevels[0]);
-				if (index >= nProfileLevels) {
-					return OMX_ErrorNoMore;
-				}
+			nProfileLevels =sizeof(kProfileLevels) / sizeof(kProfileLevels[0]);
+			if (index >= nProfileLevels)
+			{
+				return OMX_ErrorNoMore;
+			}
 
-				pPara->eProfile = kProfileLevels[index].mProfile;
-				pPara->eLevel = kProfileLevels[index].mLevel;
-				break; 
-			case VPU_V_MPEG4: 
-				index = pPara->nProfileIndex;
+			pPara->eProfile = kProfileLevels[index].mProfile;
+			pPara->eLevel = kProfileLevels[index].mLevel;
+			break;
+		case VPU_V_MPEG4:
+			index = pPara->nProfileIndex;
 
-				nProfileLevels =sizeof(kM4VProfileLevels) / sizeof(kM4VProfileLevels[0]);
-				if (index >= nProfileLevels) {
-					return OMX_ErrorNoMore;
-				}
+			nProfileLevels =sizeof(kM4VProfileLevels) / sizeof(kM4VProfileLevels[0]);
+			if (index >= nProfileLevels)
+			{
+				return OMX_ErrorNoMore;
+			}
 
-				pPara->eProfile = kM4VProfileLevels[index].mProfile;
-				pPara->eLevel = kM4VProfileLevels[index].mLevel;
-				break; 
-			case VPU_V_MPEG2: 
-				index = pPara->nProfileIndex;
+			pPara->eProfile = kM4VProfileLevels[index].mProfile;
+			pPara->eLevel = kM4VProfileLevels[index].mLevel;
+			break;
+		case VPU_V_MPEG2:
+			index = pPara->nProfileIndex;
 
-				nProfileLevels =sizeof(kMpeg2ProfileLevels) / sizeof(kMpeg2ProfileLevels[0]);
-				if (index >= nProfileLevels) {
-					return OMX_ErrorNoMore;
-				}
+			nProfileLevels =sizeof(kMpeg2ProfileLevels) / sizeof(kMpeg2ProfileLevels[0]);
+			if (index >= nProfileLevels)
+			{
+				return OMX_ErrorNoMore;
+			}
 
-				pPara->eProfile = kMpeg2ProfileLevels[index].mProfile;
-				pPara->eLevel = kMpeg2ProfileLevels[index].mLevel;
-				break; 				
-			default:
-				return OMX_ErrorUnsupportedIndex;
-				//break;
+			pPara->eProfile = kMpeg2ProfileLevels[index].mProfile;
+			pPara->eLevel = kMpeg2ProfileLevels[index].mLevel;
+			break;
+		default:
+			return OMX_ErrorUnsupportedIndex;
+			//break;
 		}
 		return OMX_ErrorNone;
-	}	
+	}
 	else
 	{
-		VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);	
+		VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);
 		return OMX_ErrorUnsupportedIndex;
 	}
-} 
+}
 
 OMX_ERRORTYPE VpuDecoder::SetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	VPU_COMP_API_LOG("%s: nParamIndex=0x%X \r\n",__FUNCTION__,nParamIndex);
@@ -1445,17 +1454,17 @@ OMX_ERRORTYPE VpuDecoder::SetParameter(
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_LOADED:
+	case VPU_COM_STATE_LOADED:
+		break;
+	case VPU_COM_STATE_OPENED:
+		if(nParamIndex ==  OMX_IndexParamVideoWmv)
+		{
 			break;
-		case VPU_COM_STATE_OPENED:
-			if(nParamIndex ==  OMX_IndexParamVideoWmv)
-			{
-				break;
-			}			
-		default:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d, nParamIndex=0x%X, role=%s \r\n",__FUNCTION__,eVpuDecoderState,nParamIndex,(OMX_STRING)cRole);
-			return OMX_ErrorIncorrectStateTransition;
+		}
+	default:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d, nParamIndex=0x%X, role=%s \r\n",__FUNCTION__,eVpuDecoderState,nParamIndex,(OMX_STRING)cRole);
+		return OMX_ErrorIncorrectStateTransition;
 	}
 
 
@@ -1481,24 +1490,24 @@ OMX_ERRORTYPE VpuDecoder::SetParameter(
 
 		switch(pPara->eFormat)
 		{
-			case OMX_VIDEO_WMVFormat7:
-			case OMX_VIDEO_WMVFormat8:
-			case OMX_VIDEO_WMVFormat9a:
-				ret = OMX_ErrorBadParameter;
-				break;	
-			case OMX_VIDEO_WMVFormat9:
-				eFormat = VPU_V_VC1;
-				VPU_COMP_LOG("%s: set OMX_VIDEO_WMVFormat9 \r\n",__FUNCTION__);
-				break;
-			case OMX_VIDEO_WMVFormatWVC1:
-				eFormat = VPU_V_VC1_AP;
-				VPU_COMP_LOG("%s: set OMX_VIDEO_WMVFormatWVC1 \r\n",__FUNCTION__);
-				break;
-			default:
-				//eFormat = ;
-				VPU_COMP_ERR_LOG("%s: failure: unsupported format: 0x%X \r\n",__FUNCTION__,pPara->eFormat);
-				ret = OMX_ErrorBadParameter;
-				break;
+		case OMX_VIDEO_WMVFormat7:
+		case OMX_VIDEO_WMVFormat8:
+		case OMX_VIDEO_WMVFormat9a:
+			ret = OMX_ErrorBadParameter;
+			break;
+		case OMX_VIDEO_WMVFormat9:
+			eFormat = VPU_V_VC1;
+			VPU_COMP_LOG("%s: set OMX_VIDEO_WMVFormat9 \r\n",__FUNCTION__);
+			break;
+		case OMX_VIDEO_WMVFormatWVC1:
+			eFormat = VPU_V_VC1_AP;
+			VPU_COMP_LOG("%s: set OMX_VIDEO_WMVFormatWVC1 \r\n",__FUNCTION__);
+			break;
+		default:
+			//eFormat = ;
+			VPU_COMP_ERR_LOG("%s: failure: unsupported format: 0x%X \r\n",__FUNCTION__,pPara->eFormat);
+			ret = OMX_ErrorBadParameter;
+			break;
 		}
 	}
 	else if (nParamIndex==OMX_IndexParamMemOperator)
@@ -1507,7 +1516,7 @@ OMX_ERRORTYPE VpuDecoder::SetParameter(
 		if(VPU_COM_STATE_LOADED!=eVpuDecoderState)
 		{
 			ret=OMX_ErrorInvalidState;
-		}		
+		}
 		else
 		{
 			OMX_PARAM_MEM_OPERATOR * pPara;
@@ -1521,7 +1530,7 @@ OMX_ERRORTYPE VpuDecoder::SetParameter(
 		OMX_DECODE_MODE* pMode=(OMX_DECODE_MODE*)pComponentParameterStructure;
 		ePlayMode=*pMode;
 		VPU_COMP_LOG("%s: set OMX_IndexParamDecoderPlayMode: %d \r\n",__FUNCTION__,*pMode);
-	}	
+	}
 	else if(nParamIndex==OMX_IndexParamVideoDecChromaAlign)
 	{
 		OMX_U32* pAlignVal=(OMX_U32*)pComponentParameterStructure;
@@ -1531,7 +1540,7 @@ OMX_ERRORTYPE VpuDecoder::SetParameter(
 	}
 	else
 	{
-		VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);	
+		VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);
 		ret = OMX_ErrorUnsupportedIndex;
 	}
 
@@ -1545,70 +1554,70 @@ OMX_ERRORTYPE VpuDecoder::GetConfig(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponen
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-		case VPU_COM_STATE_LOADED:
-		case VPU_COM_STATE_OPENED:	//allow user get wrong value before opened ???
-			//forbidden
-			VPU_COMP_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
-		default:
-			break;
+	case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_LOADED:
+	case VPU_COM_STATE_OPENED:	//allow user get wrong value before opened ???
+		//forbidden
+		VPU_COMP_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	default:
+		break;
 	}
 
 	if(NULL==pComponentParameterStructure)
 	{
-		VPU_COMP_ERR_LOG("%s: failure: param is null  \r\n",__FUNCTION__);			
+		VPU_COMP_ERR_LOG("%s: failure: param is null  \r\n",__FUNCTION__);
 		return OMX_ErrorBadParameter;
 	}
 
 	switch (nParamIndex)
 	{
-		case OMX_IndexConfigCommonOutputCrop:
-			{
-				OMX_CONFIG_RECTTYPE *pRecConf = (OMX_CONFIG_RECTTYPE*)pComponentParameterStructure;
-				if(pRecConf->nPortIndex == VPUDEC_OUT_PORT)
-				{
-					pRecConf->nTop = sOutCrop.nTop;
-					pRecConf->nLeft = sOutCrop.nLeft;
-					pRecConf->nWidth = sOutCrop.nWidth;
-					pRecConf->nHeight = sOutCrop.nHeight;
-					VPU_COMP_LOG("%s: [top,left,width,height]=[%d,%d,%d,%d], \r\n",__FUNCTION__,(INT32)pRecConf->nTop,(INT32)pRecConf->nLeft,(INT32)pRecConf->nWidth,(INT32)pRecConf->nHeight);
-				}
-			}
-			break;
-		case OMX_IndexConfigCommonScale:
-			{
-				OMX_CONFIG_SCALEFACTORTYPE *pDispRatio = (OMX_CONFIG_SCALEFACTORTYPE *)pComponentParameterStructure;
-				if(pDispRatio->nPortIndex == VPUDEC_OUT_PORT)
-				{
-					pDispRatio->xWidth = sDispRatio.xWidth;
-					pDispRatio->xHeight = sDispRatio.xHeight;
-				}
-			}
-			break;
-		case OMX_IndexConfigVideoOutBufPhyAddr:
-			{
-				OMX_CONFIG_VIDEO_OUTBUFTYPE * param = (OMX_CONFIG_VIDEO_OUTBUFTYPE *)pComponentParameterStructure;
-				if(OMX_ErrorNone!=GetHwBuffer(param->pBufferHdr->pBuffer,&param->nPhysicalAddr))
-				{
-					return OMX_ErrorBadParameter;
-				}
-			}
-			break;
-		default:
-			VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);			
-			return OMX_ErrorUnsupportedIndex;
-			//break;
+	case OMX_IndexConfigCommonOutputCrop:
+	{
+		OMX_CONFIG_RECTTYPE *pRecConf = (OMX_CONFIG_RECTTYPE*)pComponentParameterStructure;
+		if(pRecConf->nPortIndex == VPUDEC_OUT_PORT)
+		{
+			pRecConf->nTop = sOutCrop.nTop;
+			pRecConf->nLeft = sOutCrop.nLeft;
+			pRecConf->nWidth = sOutCrop.nWidth;
+			pRecConf->nHeight = sOutCrop.nHeight;
+			VPU_COMP_LOG("%s: [top,left,width,height]=[%d,%d,%d,%d], \r\n",__FUNCTION__,(INT32)pRecConf->nTop,(INT32)pRecConf->nLeft,(INT32)pRecConf->nWidth,(INT32)pRecConf->nHeight);
+		}
 	}
-	
-	return OMX_ErrorNone;	
+	break;
+	case OMX_IndexConfigCommonScale:
+	{
+		OMX_CONFIG_SCALEFACTORTYPE *pDispRatio = (OMX_CONFIG_SCALEFACTORTYPE *)pComponentParameterStructure;
+		if(pDispRatio->nPortIndex == VPUDEC_OUT_PORT)
+		{
+			pDispRatio->xWidth = sDispRatio.xWidth;
+			pDispRatio->xHeight = sDispRatio.xHeight;
+		}
+	}
+	break;
+	case OMX_IndexConfigVideoOutBufPhyAddr:
+	{
+		OMX_CONFIG_VIDEO_OUTBUFTYPE * param = (OMX_CONFIG_VIDEO_OUTBUFTYPE *)pComponentParameterStructure;
+		if(OMX_ErrorNone!=GetHwBuffer(param->pBufferHdr->pBuffer,&param->nPhysicalAddr))
+		{
+			return OMX_ErrorBadParameter;
+		}
+	}
+	break;
+	default:
+		VPU_COMP_ERR_LOG("%s: failure: unsupported index: 0x%X \r\n",__FUNCTION__,nParamIndex);
+		return OMX_ErrorUnsupportedIndex;
+		//break;
+	}
+
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE VpuDecoder::SetConfig(OMX_INDEXTYPE nIndex, OMX_PTR pComponentConfigStructure)
 {
 	OMX_ERRORTYPE eRetVal = OMX_ErrorNone;
 	OMX_CONFIG_CLOCK *pC;
-	
+
 	if(pComponentConfigStructure == NULL)
 	{
 		return OMX_ErrorBadParameter;
@@ -1616,12 +1625,12 @@ OMX_ERRORTYPE VpuDecoder::SetConfig(OMX_INDEXTYPE nIndex, OMX_PTR pComponentConf
 	}
 	switch(nIndex)
 	{
-		case OMX_IndexConfigClock:
-			pC = (OMX_CONFIG_CLOCK*) pComponentConfigStructure;
-			pClock = pC->hClock;
-			break;
-		default:
-			return eRetVal;
+	case OMX_IndexConfigClock:
+		pC = (OMX_CONFIG_CLOCK*) pComponentConfigStructure;
+		pClock = pC->hClock;
+		break;
+	default:
+		return eRetVal;
 	}
 	return OMX_ErrorNone;
 }
@@ -1631,21 +1640,21 @@ OMX_ERRORTYPE VpuDecoder::InitFilterComponent()
 	VpuDecRetCode ret;
 	//VpuVersionInfo ver;
 	//VpuMemInfo sMemInfo;
-	
+
 	VPU_COMP_API_LOG("%s: \r\n",__FUNCTION__);
 
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-			break;
-		default:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_NONE:
+		break;
+	default:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
 
 	}
-	
+
 	//load vpu
 	VPU_COMP_SEM_LOCK(psemaphore);
 	ret=VPU_DecLoad();
@@ -1668,13 +1677,13 @@ OMX_ERRORTYPE VpuDecoder::InitFilterComponent()
 	}
 	VPU_COMP_SEM_UNLOCK(psemaphore);
 	VPU_COMP_LOG("vpu lib version : rel.major.minor=%d.%d.%d \r\n",sVpuVer.nLibRelease,sVpuVer.nLibMajor,sVpuVer.nLibMinor);
-	VPU_COMP_LOG("vpu fw version : rel.major.minor=%d.%d.%d \r\n",sVpuVer.nFwRelease,sVpuVer.nFwMajor,sVpuVer.nFwMinor);	
+	VPU_COMP_LOG("vpu fw version : rel.major.minor=%d.%d.%d \r\n",sVpuVer.nFwRelease,sVpuVer.nFwMajor,sVpuVer.nFwMinor);
 
 	//move memory and open related operations into FilterOneBuffer() to allow user to set some parameters before allocate mem or open vpu.
 
 	//update state
 	eVpuDecoderState=VPU_COM_STATE_LOADED;
-	
+
 	return OMX_ErrorNone;
 }
 
@@ -1682,20 +1691,20 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilterComponent()
 {
 	VpuDecRetCode ret;
 	OMX_ERRORTYPE omx_ret=OMX_ErrorNone;
-	VPU_COMP_API_LOG("%s: \r\n",__FUNCTION__);	
+	VPU_COMP_API_LOG("%s: \r\n",__FUNCTION__);
 
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
-		default:
-			break;
+	case VPU_COM_STATE_NONE:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	default:
+		break;
 	}
 
-	//1 TODO: for error case, we need to check state. 
+	//1 TODO: for error case, we need to check state.
 	//such as, vpu may be not opened at all, so we should not call vpu close.
 
 	//close vpu
@@ -1712,7 +1721,7 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilterComponent()
 		{
 			VPU_COMP_ERR_LOG("%s: vpu close failure: ret=0x%X \r\n",__FUNCTION__,ret);
 			omx_ret=OMX_ErrorHardware;
-		}	
+		}
 	}
 
 	//release mem
@@ -1727,7 +1736,7 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilterComponent()
 	{
 		VPU_COMP_ERR_LOG("%s: free memory failure !!!  \r\n",__FUNCTION__);
 		omx_ret=OMX_ErrorHardware;
-	}	
+	}
 
 	//it is released by user(In fact, it may be overlay with 'sAllocMemInfo')
 	//if(0==MemFreeBlock(&sFrameMemInfo))
@@ -1746,7 +1755,7 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilterComponent()
 	if (ret!=VPU_DEC_RET_SUCCESS)
 	{
 		VPU_COMP_ERR_LOG("%s: vpu unload failure: ret=0x%X \r\n",__FUNCTION__,ret);
-#ifdef USE_PROCESS_SEM	
+#ifdef USE_PROCESS_SEM
 		VPU_COMP_SEM_DESTROY_PROCESS(psemaphore);
 #else
 		VPU_COMP_SEM_DESTROY(psemaphore);
@@ -1754,12 +1763,12 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilterComponent()
 		omx_ret=OMX_ErrorHardware;
 	}
 
-#ifdef USE_PROCESS_SEM	
+#ifdef USE_PROCESS_SEM
 	VPU_COMP_SEM_DESTROY_PROCESS(psemaphore);
 #else
 	VPU_COMP_SEM_DESTROY(psemaphore);
 #endif
-	//update state 
+	//update state
 	eVpuDecoderState=VPU_COM_STATE_NONE;
 
 	return omx_ret;
@@ -1776,19 +1785,19 @@ OMX_ERRORTYPE VpuDecoder::SetInputBuffer(OMX_PTR pBuffer, OMX_S32 nSize, OMX_BOO
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
-		case VPU_COM_STATE_EOS:
-			//if user want to repeat play, user should call the last getoutput (to make state change from eos to decode)
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
-		default:
-			break;
+	case VPU_COM_STATE_NONE:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_EOS:
+		//if user want to repeat play, user should call the last getoutput (to make state change from eos to decode)
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	default:
+		break;
 	}
-	
+
 	//check data length, we don't allow zero-length-buf
 	if(0>=nInSize)
 	{
@@ -1820,17 +1829,17 @@ OMX_ERRORTYPE VpuDecoder::SetOutputBuffer(OMX_PTR pBuffer)
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
-			return OMX_ErrorIncorrectStateTransition;
-		case VPU_COM_STATE_EOS:
-			//if user want to repeat play, user should call the last getoutput (to make state change from eos to decode)
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
-			return OMX_ErrorIncorrectStateTransition;
-		default:
-			break;
+	case VPU_COM_STATE_NONE:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_EOS:
+		//if user want to repeat play, user should call the last getoutput (to make state change from eos to decode)
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	default:
+		break;
 	}
 
 	//pOutBuffer=pBuffer;
@@ -1862,18 +1871,18 @@ OMX_ERRORTYPE VpuDecoder::SetOutputBuffer(OMX_PTR pBuffer)
 			{
 				if(NULL!=pFrameInfo->pDisplayFrameBuf)  //it will be cleared to NULL at state: VPU_COM_STATE_RE_WAIT_FRM
 				{
-					//clear displayed frame			
+					//clear displayed frame
 					//TODO: check frame to avoid clear repeatedly ?? It is important for (1) nFreeOutBufCnt and (2) state of VPU_COM_STATE_RE_WAIT_FRM
 					VPU_COMP_SEM_LOCK(psemaphore);
 					ret=VPU_DecOutFrameDisplayed(nHandle,pFrameInfo->pDisplayFrameBuf);
 					VPU_COMP_SEM_UNLOCK(psemaphore);
 					if(VPU_DEC_RET_SUCCESS!=ret)
 					{
-						VPU_COMP_ERR_LOG("%s: vpu clear frame display failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+						VPU_COMP_ERR_LOG("%s: vpu clear frame display failure: ret=0x%X \r\n",__FUNCTION__,ret);
 						return OMX_ErrorHardware;
-					}			
+					}
 				}
-				//clear info 
+				//clear info
 				OutInfoUnregisterVirtAddr(index, &sOutMapInfo);
 
 				//update buffer state
@@ -1901,7 +1910,7 @@ OMX_ERRORTYPE VpuDecoder::SetOutputBuffer(OMX_PTR pBuffer)
 		return OMX_ErrorUnsupportedSetting;
 	}
 
-	return OMX_ErrorNone;	
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE VpuDecoder::InitFilter()
@@ -1910,25 +1919,25 @@ OMX_ERRORTYPE VpuDecoder::InitFilter()
 	VpuFrameBuffer frameBuf[MAX_FRAME_NUM];
 	OMX_S32 BufNum;
 
-	VPU_COMP_API_LOG("%s: \r\n",__FUNCTION__);	
+	VPU_COMP_API_LOG("%s: \r\n",__FUNCTION__);
 
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_DO_INIT:
-			break;
-		default:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_DO_INIT:
+		break;
+	default:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
 	}
-	
+
 	//fill frameBuf[]
 	ASSERT(nOutBufferCnt<=MAX_FRAME_NUM);
 	BufNum=FrameBufCreateRegisterFrame(frameBuf, &sFrameMemInfo,nOutBufferCnt,nPadWidth, nPadHeight, &sVpuMemInfo,&sMemOperator,sOutFmt.eColorFormat,nChromaAddrAlign);
 	if(-1==BufNum)
 	{
-		VPU_COMP_ERR_LOG("%s: create register frame failure \r\n",__FUNCTION__);	
+		VPU_COMP_ERR_LOG("%s: create register frame failure \r\n",__FUNCTION__);
 		return OMX_ErrorInsufficientResources;
 	}
 
@@ -1938,16 +1947,16 @@ OMX_ERRORTYPE VpuDecoder::InitFilter()
 	VPU_COMP_SEM_UNLOCK(psemaphore);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu register frame failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu register frame failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		return OMX_ErrorHardware;
-	}	
+	}
 
 	//update state
 	eVpuDecoderState=VPU_COM_STATE_DO_DEC;
 
 	//update buffer state
 	nFreeOutBufCnt=nOutBufferCnt;
-	
+
 	return OMX_ErrorNone;
 }
 
@@ -1959,21 +1968,21 @@ OMX_ERRORTYPE VpuDecoder::DeInitFilter()
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-		case VPU_COM_STATE_LOADED:
-		case VPU_COM_STATE_OPENED:
-		case VPU_COM_STATE_WAIT_FRM:	
-		case VPU_COM_STATE_DO_INIT:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
-		default:
-			break;
+	case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_LOADED:
+	case VPU_COM_STATE_OPENED:
+	case VPU_COM_STATE_WAIT_FRM:
+	case VPU_COM_STATE_DO_INIT:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
+	default:
+		break;
 	}
 
 	//release vpu's registered frame ??
-	
-	//update state 
+
+	//update state
 	//eVpuDecoderState=VPU_COM_STATE_OPENED; //???
 
 	return omx_ret;
@@ -1984,14 +1993,14 @@ FilterBufRetCode VpuDecoder::FilterOneBuffer()
 	VpuDecRetCode ret;
 	VpuBufferNode InData;
 	OMX_S32 bufRetCode;
-	FilterBufRetCode bufRet=FILTER_OK;	
-	
+	FilterBufRetCode bufRet=FILTER_OK;
+
 	OMX_U8* pBitstream;
 	OMX_S32 readbytes;
 	OMX_U8  dummy;
 	OMX_S32 enableFileMode=0;
 	OMX_S32 capability=0;
-#ifdef VPU_COMP_DEBUG	
+#ifdef VPU_COMP_DEBUG
 	static OMX_U32 nNotUsedCnt=0;
 	static OMX_U32 nOutFrameCnt=0;
 	static FILE* fpBitstream=NULL;
@@ -2005,105 +2014,105 @@ FilterBufRetCode VpuDecoder::FilterOneBuffer()
 		nNeedSkip=0;
 		return FILTER_SKIP_OUTPUT;
 	}
-	
+
 RepeatPlay:
 	//check state
 	switch(eVpuDecoderState)
 	{
 		//forbidden state
-		case VPU_COM_STATE_NONE:
-		case VPU_COM_STATE_DO_INIT:	
-		case VPU_COM_STATE_DO_OUT:
-		case VPU_COM_STATE_EOS:
-			bufRet=FILTER_ERROR;
-			VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return bufRet;
-		//allowed state	
-		case VPU_COM_STATE_WAIT_FRM:
-			if(FrameBufPhyNum(&sFrameMemInfo)>=(OMX_S32)nOutBufferCnt)
-			{
-				//ready to call InitFilter()
-				eVpuDecoderState=VPU_COM_STATE_DO_INIT;
-				bufRet =FILTER_DO_INIT;
-			}
-			else
-			{
-				//do nothing, wait for more output buffer
-				bufRet=FILTER_NO_OUTPUT_BUFFER; 
-			}
-			VPU_COMP_LOG("%s: waiting frames ready, return and do nothing \r\n",__FUNCTION__);	
-			return bufRet;//OMX_ErrorNone;
-		case VPU_COM_STATE_LOADED:	
-			//query memory
-			VPU_COMP_SEM_LOCK(psemaphore);
-			ret=VPU_DecQueryMem(&sMemInfo);
-			VPU_COMP_SEM_UNLOCK(psemaphore);
-			if (ret!=VPU_DEC_RET_SUCCESS)
-			{
-				VPU_COMP_ERR_LOG("%s: vpu query memory failure: ret=0x%X \r\n",__FUNCTION__,ret);
-				return FILTER_ERROR;
-			}
-			//malloc memory for vpu wrapper
-			if(0==MemMallocVpuBlock(&sMemInfo,&sVpuMemInfo,&sMemOperator))
-			{
-				VPU_COMP_ERR_LOG("%s: malloc memory failure: \r\n",__FUNCTION__);
-				return FILTER_ERROR;
-			}
-			//open vpu
-			enableFileMode=(ePlayMode==DEC_FILE_MODE)?1:0;
-			if(OMX_ErrorNone!=OpenVpu(&nHandle, &sMemInfo, eFormat, sInFmt.nFrameWidth, sInFmt.nFrameHeight,sOutFmt.eColorFormat,enableFileMode,psemaphore)) //1 sInFmt is valid ???
-			{
-				VPU_COMP_ERR_LOG("%s: open vpu failure \r\n",__FUNCTION__);
-				return FILTER_ERROR;
-			}
-			//check capability
-			VPU_COMP_SEM_LOCK(psemaphore);
-			ret=VPU_DecGetCapability(nHandle, VPU_DEC_CAP_FRAMESIZE, (INT32*)&capability);
-			if((ret==VPU_DEC_RET_SUCCESS)&&capability)
-			{
-				nCapability|=VPU_COM_CAPABILITY_FRMSIZE;
-				bFilterSupportFrmSizeRpt=OMX_TRUE;
-			}
-			VPU_COMP_SEM_UNLOCK(psemaphore);			
-			//update state
-			eVpuDecoderState=VPU_COM_STATE_OPENED;
-		case VPU_COM_STATE_OPENED:
-			break;
-		case VPU_COM_STATE_DO_DEC:
-			//check buffer state
-			//if(nFreeOutBufCnt<=0)	//1 not enough, may hang up ???
-			if((OMX_S32)nFreeOutBufCnt<=(OMX_S32)FRAME_MIN_FREE_THD)			
-			{
-				//notify user release outputed buffer
-				VPU_COMP_LOG("%s: no output buffer, do nothing, current free buf numbers: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt);	
-				return FILTER_NO_OUTPUT_BUFFER;
-			}			
-			break;
-		case VPU_COM_STATE_RE_WAIT_FRM:
-			//FIXME: for iMX6(now its major version==2), we needn't to return all frame buffers.
-			if(sVpuVer.nFwMajor!=2)
-			{			
-				//need to user SetOutputBuffer() for left buffers, otherwise vpu may return one buffer which is not set by user 
-				if((OMX_U32)nFreeOutBufCnt<nOutBufferCnt)
-				{
-					VPU_COMP_LOG("%s: no output buffer, do nothing, current free buf numbers: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt);
-					return FILTER_NO_OUTPUT_BUFFER;
-				}		
-			}
-			else
-			{
-				VPU_COMP_LOG("for iMX6: needn't return all frame buffers \r\n");
-			}
-			eVpuDecoderState=VPU_COM_STATE_DO_DEC;
-			goto RepeatPlay;
-			break;
-		//unknow state 
-		default:
-			VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+	case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_DO_INIT:
+	case VPU_COM_STATE_DO_OUT:
+	case VPU_COM_STATE_EOS:
+		bufRet=FILTER_ERROR;
+		VPU_COMP_ERR_LOG("%s: failure: error state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return bufRet;
+		//allowed state
+	case VPU_COM_STATE_WAIT_FRM:
+		if(FrameBufPhyNum(&sFrameMemInfo)>=(OMX_S32)nOutBufferCnt)
+		{
+			//ready to call InitFilter()
+			eVpuDecoderState=VPU_COM_STATE_DO_INIT;
+			bufRet =FILTER_DO_INIT;
+		}
+		else
+		{
+			//do nothing, wait for more output buffer
+			bufRet=FILTER_NO_OUTPUT_BUFFER;
+		}
+		VPU_COMP_LOG("%s: waiting frames ready, return and do nothing \r\n",__FUNCTION__);
+		return bufRet;//OMX_ErrorNone;
+	case VPU_COM_STATE_LOADED:
+		//query memory
+		VPU_COMP_SEM_LOCK(psemaphore);
+		ret=VPU_DecQueryMem(&sMemInfo);
+		VPU_COMP_SEM_UNLOCK(psemaphore);
+		if (ret!=VPU_DEC_RET_SUCCESS)
+		{
+			VPU_COMP_ERR_LOG("%s: vpu query memory failure: ret=0x%X \r\n",__FUNCTION__,ret);
 			return FILTER_ERROR;
+		}
+		//malloc memory for vpu wrapper
+		if(0==MemMallocVpuBlock(&sMemInfo,&sVpuMemInfo,&sMemOperator))
+		{
+			VPU_COMP_ERR_LOG("%s: malloc memory failure: \r\n",__FUNCTION__);
+			return FILTER_ERROR;
+		}
+		//open vpu
+		enableFileMode=(ePlayMode==DEC_FILE_MODE)?1:0;
+		if(OMX_ErrorNone!=OpenVpu(&nHandle, &sMemInfo, eFormat, sInFmt.nFrameWidth, sInFmt.nFrameHeight,sOutFmt.eColorFormat,enableFileMode,psemaphore)) //1 sInFmt is valid ???
+		{
+			VPU_COMP_ERR_LOG("%s: open vpu failure \r\n",__FUNCTION__);
+			return FILTER_ERROR;
+		}
+		//check capability
+		VPU_COMP_SEM_LOCK(psemaphore);
+		ret=VPU_DecGetCapability(nHandle, VPU_DEC_CAP_FRAMESIZE, (INT32*)&capability);
+		if((ret==VPU_DEC_RET_SUCCESS)&&capability)
+		{
+			nCapability|=VPU_COM_CAPABILITY_FRMSIZE;
+			bFilterSupportFrmSizeRpt=OMX_TRUE;
+		}
+		VPU_COMP_SEM_UNLOCK(psemaphore);
+		//update state
+		eVpuDecoderState=VPU_COM_STATE_OPENED;
+	case VPU_COM_STATE_OPENED:
+		break;
+	case VPU_COM_STATE_DO_DEC:
+		//check buffer state
+		//if(nFreeOutBufCnt<=0)	//1 not enough, may hang up ???
+		if((OMX_S32)nFreeOutBufCnt<=(OMX_S32)FRAME_MIN_FREE_THD)
+		{
+			//notify user release outputed buffer
+			VPU_COMP_LOG("%s: no output buffer, do nothing, current free buf numbers: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt);
+			return FILTER_NO_OUTPUT_BUFFER;
+		}
+		break;
+	case VPU_COM_STATE_RE_WAIT_FRM:
+		//FIXME: for iMX6(now its major version==2), we needn't to return all frame buffers.
+		if(sVpuVer.nFwMajor!=2)
+		{
+			//need to user SetOutputBuffer() for left buffers, otherwise vpu may return one buffer which is not set by user
+			if((OMX_U32)nFreeOutBufCnt<nOutBufferCnt)
+			{
+				VPU_COMP_LOG("%s: no output buffer, do nothing, current free buf numbers: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt);
+				return FILTER_NO_OUTPUT_BUFFER;
+			}
+		}
+		else
+		{
+			VPU_COMP_LOG("for iMX6: needn't return all frame buffers \r\n");
+		}
+		eVpuDecoderState=VPU_COM_STATE_DO_DEC;
+		goto RepeatPlay;
+		break;
+		//unknow state
+	default:
+		VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return FILTER_ERROR;
 	}
 
-	//for all codecs 
+	//for all codecs
 	pBitstream=(pInBuffer==(OMX_PTR)INVALID)?NULL:(OMX_U8*)pInBuffer;
 	readbytes=nInSize;
 
@@ -2131,7 +2140,7 @@ RepeatPlay:
 
 	//reset bOutLast for any non-zero data ??
 	//bOutLast=OMX_FALSE;
-	
+
 	//seq init
 	//decode bitstream buf
 	VPU_COMP_LOG("%s: pBitstream=0x%X, readbytes=%d  \r\n",__FUNCTION__,(UINT32)pBitstream,(INT32)readbytes);
@@ -2142,17 +2151,17 @@ RepeatPlay:
 	InData.sCodecData.nSize=nCodecDataLen;
 
 #ifdef VPU_DEC_COMP_DROP_B
-        {
-            OMX_TICKS nTimeStamp;
-            nTimeStamp=QueryStreamTs();
-            if(nTimeStamp >= 0) 
-            {
-                if(OMX_ErrorNone!=ConfigVpu(nHandle,nTimeStamp,pClock,psemaphore))
-                {
-                    return FILTER_ERROR;
-                }
-            }
-        }
+	{
+		OMX_TICKS nTimeStamp;
+		nTimeStamp=QueryStreamTs();
+		if(nTimeStamp >= 0)
+		{
+			if(OMX_ErrorNone!=ConfigVpu(nHandle,nTimeStamp,pClock,psemaphore))
+			{
+				return FILTER_ERROR;
+			}
+		}
+	}
 #endif
 
 	VPU_COMP_SEM_LOCK(psemaphore);
@@ -2160,7 +2169,7 @@ RepeatPlay:
 	//VPU_COMP_SEM_UNLOCK(&sSemaphore);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu dec buf failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu dec buf failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		if(VPU_DEC_RET_FAILURE_TIMEOUT==ret)
 		{
 			//VPU_COMP_SEM_LOCK(psemaphore);
@@ -2172,7 +2181,7 @@ RepeatPlay:
 	}
 	VPU_COMP_SEM_UNLOCK(psemaphore);
 	VPU_COMP_LOG("%s: bufRetCode: 0x%X  \r\n",__FUNCTION__,bufRetCode);
-	//check input buff	
+	//check input buff
 	if(bufRetCode&VPU_DEC_INPUT_USED)
 	{
 #ifdef VPU_COMP_DEBUG
@@ -2182,7 +2191,7 @@ RepeatPlay:
 		if(pInBuffer!=(OMX_PTR)INVALID)
 		{
 			bufRet=(FilterBufRetCode)(bufRet|FILTER_INPUT_CONSUMED);
-			pInBuffer=(OMX_PTR)INVALID;  //clear input 
+			pInBuffer=(OMX_PTR)INVALID;  //clear input
 			nInSize=0;
 		}
 	}
@@ -2190,14 +2199,14 @@ RepeatPlay:
 	{
 		//not used
 		VPU_COMP_LOG("%s: not used  \r\n",__FUNCTION__);
-#ifdef VPU_COMP_DEBUG	
+#ifdef VPU_COMP_DEBUG
 		nNotUsedCnt++;
 		if(nNotUsedCnt>MAX_NULL_LOOP)
 		{
 			VPU_COMP_ERR_LOG("%s: too many(%d times) null loop: return failure \r\n",__FUNCTION__, (INT32)nNotUsedCnt);
 			return FILTER_ERROR;
 		}
-#endif		
+#endif
 	}
 
 	//check init info
@@ -2215,7 +2224,7 @@ RepeatPlay:
 		if(bufRetCode&VPU_DEC_ONE_FRM_CONSUMED)
 		{
 			VPU_COMP_LOG("%s: one frame is decoded \r\n");
-			bufRet=(FilterBufRetCode)(bufRet|FILTER_ONE_FRM_DECODED);			
+			bufRet=(FilterBufRetCode)(bufRet|FILTER_ONE_FRM_DECODED);
 		}
 	}
 
@@ -2225,7 +2234,7 @@ RepeatPlay:
 	{
 		bufRet=(FilterBufRetCode)(bufRet|FILTER_HAS_OUTPUT);
 		eVpuDecoderState=VPU_COM_STATE_DO_OUT;
-#ifdef VPU_COMP_DEBUG			
+#ifdef VPU_COMP_DEBUG
 		nOutFrameCnt++;
 		if(nOutFrameCnt>MAX_DEC_FRAME)
 		{
@@ -2238,7 +2247,7 @@ RepeatPlay:
 	else if (bufRetCode&VPU_DEC_OUTPUT_MOSAIC_DIS)
 	{
 		bufRet=(FilterBufRetCode)(bufRet|FILTER_HAS_OUTPUT);
-		eVpuDecoderState=VPU_COM_STATE_DO_OUT;	
+		eVpuDecoderState=VPU_COM_STATE_DO_OUT;
 		//send out one frame with length=0
 		nOutBufferSize=0;
 	}
@@ -2272,13 +2281,13 @@ RepeatPlay:
 		//only consider VPU_DEC_OUTPUT_MOSAIC_DIS/VPU_DEC_OUTPUT_DIS/VPU_DEC_OUTPUT_NODIS
 		if(bufRetCode&VPU_DEC_OUTPUT_NODIS)
 		{
-			bufRet=(FilterBufRetCode)(bufRet|FILTER_NO_OUTPUT_BUFFER);		
+			bufRet=(FilterBufRetCode)(bufRet|FILTER_NO_OUTPUT_BUFFER);
 		}
 		else if(bufRetCode&VPU_DEC_OUTPUT_DIS)
 		{
 			bufRet=(FilterBufRetCode)(bufRet|FILTER_HAS_OUTPUT);
 			eVpuDecoderState=VPU_COM_STATE_DO_OUT;
-			nOutBufferSize=sOutFmt.nFrameWidth * sOutFmt.nFrameHeight*pxlfmt2bpp(sOutFmt.eColorFormat)/8;		
+			nOutBufferSize=sOutFmt.nFrameWidth * sOutFmt.nFrameHeight*pxlfmt2bpp(sOutFmt.eColorFormat)/8;
 		}
 		else if(bufRetCode&VPU_DEC_OUTPUT_MOSAIC_DIS)
 		{
@@ -2304,7 +2313,7 @@ RepeatPlay:
 			bufRet=(FilterBufRetCode)(bufRet|FILTER_NO_INPUT_BUFFER);
 		}
 		else if((bufRet==FILTER_OK)&&(pInBuffer==(OMX_PTR)INVALID))  //check this since we added one state for pInBuffer=INVALID
-		//else if((bufRet==FILTER_OK)&&(bufRetCode&VPU_DEC_INPUT_USED))  //check this since we added one state for pInBuffer=INVALID
+			//else if((bufRet==FILTER_OK)&&(bufRetCode&VPU_DEC_INPUT_USED))  //check this since we added one state for pInBuffer=INVALID
 		{
 			bufRet=(FilterBufRetCode)(bufRet|FILTER_NO_INPUT_BUFFER);
 		}
@@ -2327,22 +2336,22 @@ OMX_ERRORTYPE VpuDecoder:: GetDecBuffer(OMX_PTR *ppBuffer,OMX_S32 * pOutStuffSiz
 	VpuDecRetCode ret;
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_DO_DEC:
-		case VPU_COM_STATE_DO_OUT:
-			break;
-		default:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
-			//return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_DO_DEC:
+	case VPU_COM_STATE_DO_OUT:
+		break;
+	default:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		//return OMX_ErrorIncorrectStateTransition;
 	}
 	VPU_COMP_SEM_LOCK(psemaphore);
 	ret=VPU_DecGetConsumedFrameInfo(nHandle, &sLengthInfo);
-	VPU_COMP_SEM_UNLOCK(psemaphore);	
+	VPU_COMP_SEM_UNLOCK(psemaphore);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu get decoded frame info failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu get decoded frame info failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		return OMX_ErrorHardware;
-	}		
+	}
 	*pOutStuffSize=sLengthInfo.nStuffLength;
 	*pOutFrmSize=sLengthInfo.nFrameLength;
 	if(sLengthInfo.pFrame==NULL)
@@ -2356,14 +2365,14 @@ OMX_ERRORTYPE VpuDecoder:: GetDecBuffer(OMX_PTR *ppBuffer,OMX_S32 * pOutStuffSiz
 	return OMX_ErrorNone;
 }
 
-OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSize)	
+OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSize)
 {
 	VpuDecRetCode ret;
-	VpuDecOutFrameInfo* pFrameInfo;	
+	VpuDecOutFrameInfo* pFrameInfo;
 	OMX_S32 index;
 	OMX_BOOL bOutLast=OMX_FALSE;
 
-#ifdef VPU_COMP_DEBUG	
+#ifdef VPU_COMP_DEBUG
 	static FILE* fpYUV=NULL;
 #endif
 
@@ -2372,29 +2381,29 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_DO_OUT:
-			//update state
-			eVpuDecoderState=VPU_COM_STATE_DO_DEC;
-			break;
-		case VPU_COM_STATE_EOS:
-			bOutLast=OMX_TRUE;
-			//update to decode state for repeat play ??
-			//eVpuDecoderState=VPU_COM_STATE_DO_DEC; 
-			eVpuDecoderState=VPU_COM_STATE_RE_WAIT_FRM; 
-			VPU_COMP_LOG("%s: nFreeOutBufCnt: %d, outputed num: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt, (INT32)OutInfoOutputNum(&sOutMapInfo));
-			//we should not re set out map info
-			//OutInfoReSet(&sFrameMemInfo,&sOutMapInfo,nOutBufferCnt);
-			//nFreeOutBufCnt=0;	
-			break;			
-		default:
-			//forbidden
-			VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_DO_OUT:
+		//update state
+		eVpuDecoderState=VPU_COM_STATE_DO_DEC;
+		break;
+	case VPU_COM_STATE_EOS:
+		bOutLast=OMX_TRUE;
+		//update to decode state for repeat play ??
+		//eVpuDecoderState=VPU_COM_STATE_DO_DEC;
+		eVpuDecoderState=VPU_COM_STATE_RE_WAIT_FRM;
+		VPU_COMP_LOG("%s: nFreeOutBufCnt: %d, outputed num: %d \r\n",__FUNCTION__,(INT32)nFreeOutBufCnt, (INT32)OutInfoOutputNum(&sOutMapInfo));
+		//we should not re set out map info
+		//OutInfoReSet(&sFrameMemInfo,&sOutMapInfo,nOutBufferCnt);
+		//nFreeOutBufCnt=0;
+		break;
+	default:
+		//forbidden
+		VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorIncorrectStateTransition;
 	}
 
 	if(ppOutVirtBuf==NULL)
 	{
-		VPU_COMP_ERR_LOG("%s: failure: ppOutVirtBuf==NULL !!! \r\n",__FUNCTION__);		
+		VPU_COMP_ERR_LOG("%s: failure: ppOutVirtBuf==NULL !!! \r\n",__FUNCTION__);
 		return OMX_ErrorBadParameter;
 	}
 
@@ -2402,7 +2411,7 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 	if(OMX_TRUE==bOutLast)
 	{
 #if 0
-		VPU_COMP_LOG("%s:  reach EOS, repeat the last output frame: 0x%X  \r\n",__FUNCTION__,(UINT32)pLastOutVirtBuf);	
+		VPU_COMP_LOG("%s:  reach EOS, repeat the last output frame: 0x%X  \r\n",__FUNCTION__,(UINT32)pLastOutVirtBuf);
 		//return last output frame for the EOS case
 		*ppOutVirtBuf=pLastOutVirtBuf;
 #else
@@ -2415,24 +2424,24 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 		if(-1==index)
 		{
 			//sOutMapInfo is full
-			VPU_COMP_ERR_LOG("%s: query empty node failure ! \r\n",__FUNCTION__);	
+			VPU_COMP_ERR_LOG("%s: query empty node failure ! \r\n",__FUNCTION__);
 			return OMX_ErrorInsufficientResources;
-		}	
+		}
 
 		if(-1==FrameBufFindOneUnOutputed(ppOutVirtBuf,&sFrameMemInfo,&sOutMapInfo))
 		{
 			//not find one unoutputed buffer
-			VPU_COMP_ERR_LOG("%s: find unoutputed frame failure \r\n",__FUNCTION__);	
+			VPU_COMP_ERR_LOG("%s: find unoutputed frame failure \r\n",__FUNCTION__);
 			return OMX_ErrorInsufficientResources;
-		}	
+		}
 		//set pDisplayFrameBuf to NULL to avoid clear operation in SetOutputBuffer()
 		pFrameInfo->pDisplayFrameBuf=NULL;
 		//record out frame info
 		OutInfoRegisterVirtAddr(index, *ppOutVirtBuf, &sOutMapInfo);
-		//update buffer state		
+		//update buffer state
 		nFreeOutBufCnt--;
 #endif
-		VPU_COMP_LOG("%s:  reach EOS , set OK  \r\n",__FUNCTION__);	
+		VPU_COMP_LOG("%s:  reach EOS , set OK  \r\n",__FUNCTION__);
 		//In theory, for eos, user should call getouput only once !!!
 		//We can set pLastOutVirtBuf=NULL to avoid user call getoutput repeatedly(dead loop) ???
 		//pLastOutVirtBuf=NULL;
@@ -2444,26 +2453,26 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 		if(-1==index)
 		{
 			//sOutMapInfo is full
-			VPU_COMP_ERR_LOG("%s: query empty node failure !!! \r\n",__FUNCTION__);	
+			VPU_COMP_ERR_LOG("%s: query empty node failure !!! \r\n",__FUNCTION__);
 			return OMX_ErrorInsufficientResources;
-		}		
+		}
 
 		VPU_COMP_SEM_LOCK(psemaphore);
 		ret=VPU_DecGetOutputFrame(nHandle, pFrameInfo);
 		VPU_COMP_SEM_UNLOCK(psemaphore);
 		if(VPU_DEC_RET_SUCCESS!=ret)
 		{
-			VPU_COMP_ERR_LOG("%s: vpu get output frame failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+			VPU_COMP_ERR_LOG("%s: vpu get output frame failure: ret=0x%X \r\n",__FUNCTION__,ret);
 			return OMX_ErrorHardware;
-		}			
+		}
 		*ppOutVirtBuf=(OMX_PTR)pFrameInfo->pDisplayFrameBuf->pbufVirtY;
 		//*pSize=nPadWidth*nPadHeight*3/2;
 
 #ifdef VPU_COMP_DEBUG
 		FileDumpYUV(&fpYUV,pFrameInfo->pDisplayFrameBuf->pbufVirtY,
-			pFrameInfo->pDisplayFrameBuf->pbufVirtCb,
-			pFrameInfo->pDisplayFrameBuf->pbufVirtCr,
-			nPadWidth*nPadHeight,nPadWidth*nPadHeight/4,sOutFmt.eColorFormat);
+		            pFrameInfo->pDisplayFrameBuf->pbufVirtCb,
+		            pFrameInfo->pDisplayFrameBuf->pbufVirtCr,
+		            nPadWidth*nPadHeight,nPadWidth*nPadHeight/4,sOutFmt.eColorFormat);
 #endif
 
 		//record out frame info
@@ -2472,9 +2481,9 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 		//update the last output frame
 		pLastOutVirtBuf=(OMX_PTR)pFrameInfo->pDisplayFrameBuf->pbufVirtY;
 
-		//update buffer state		
+		//update buffer state
 		nFreeOutBufCnt--;
-		VPU_COMP_LOG("%s: return output: 0x%X, nFreeOutBufCnt: %d \r\n",__FUNCTION__,(UINT32)(*ppOutVirtBuf),(UINT32)nFreeOutBufCnt);		
+		VPU_COMP_LOG("%s: return output: 0x%X, nFreeOutBufCnt: %d \r\n",__FUNCTION__,(UINT32)(*ppOutVirtBuf),(UINT32)nFreeOutBufCnt);
 		*pOutSize=nOutBufferSize;
 	}
 
@@ -2484,7 +2493,7 @@ OMX_ERRORTYPE VpuDecoder:: GetOutputBuffer(OMX_PTR *ppOutVirtBuf,OMX_S32* pOutSi
 OMX_ERRORTYPE VpuDecoder::FlushFilter()
 {
 	VpuDecRetCode ret;
-	VPU_COMP_LOG("%s: \r\n",__FUNCTION__);	
+	VPU_COMP_LOG("%s: \r\n",__FUNCTION__);
 
 	VPU_COMP_SEM_LOCK(psemaphore);
 	ret=VPU_DecFlushAll(nHandle);
@@ -2495,7 +2504,7 @@ OMX_ERRORTYPE VpuDecoder::FlushFilter()
 		if(VPU_DEC_RET_FAILURE_TIMEOUT==ret)
 		{
 			VPU_DecReset(nHandle);
-			SendEvent(OMX_EventError, OMX_ErrorStreamCorrupt, 0, NULL);			
+			SendEvent(OMX_EventError, OMX_ErrorStreamCorrupt, 0, NULL);
 		}
 		VPU_COMP_SEM_UNLOCK(psemaphore);
 		return OMX_ErrorHardware;
@@ -2522,38 +2531,38 @@ OMX_ERRORTYPE VpuDecoder::FlushInputBuffer()
 	nInSize=0;
 
 	//need to clear bInEos
-	//fixed case: SetInputBuffer(,bInEos), and FlushInputBuffer(), then FilterOneBuffer() before SetInputBuffer(). 
-	//As result, user will get one output(EOS) without calling SetInputBuffer(). 
+	//fixed case: SetInputBuffer(,bInEos), and FlushInputBuffer(), then FilterOneBuffer() before SetInputBuffer().
+	//As result, user will get one output(EOS) without calling SetInputBuffer().
 	bInEos=OMX_FALSE;
 
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-		case VPU_COM_STATE_LOADED:
-		case VPU_COM_STATE_OPENED:			
-		case VPU_COM_STATE_WAIT_FRM:	// have not registered frames, so can not call flushfilter 
-		case VPU_COM_STATE_DO_INIT:
-		case VPU_COM_STATE_DO_OUT:	
-			//forbidden !!!
-			VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
-		case VPU_COM_STATE_DO_DEC:
-		case VPU_COM_STATE_EOS:	
-		case VPU_COM_STATE_RE_WAIT_FRM:
-			break;
-		default:
-			VPU_COMP_ERR_LOG("%s: unknown state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);			
-			return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
-	}	
+	case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_LOADED:
+	case VPU_COM_STATE_OPENED:
+	case VPU_COM_STATE_WAIT_FRM:	// have not registered frames, so can not call flushfilter
+	case VPU_COM_STATE_DO_INIT:
+	case VPU_COM_STATE_DO_OUT:
+		//forbidden !!!
+		VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_DO_DEC:
+	case VPU_COM_STATE_EOS:
+	case VPU_COM_STATE_RE_WAIT_FRM:
+		break;
+	default:
+		VPU_COMP_ERR_LOG("%s: unknown state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
+	}
 
 	//flush vpu input/output
 	ret=FlushFilter();
 
 	//should not re-set(or clear) out map info !!!
 	//OutInfoReSet(sFrameMemInfo,&sOutMapInfo,nOutBufferCnt);
-	//nFreeOutBufCnt=0;	
-	
+	//nFreeOutBufCnt=0;
+
 	return ret;
 }
 
@@ -2567,46 +2576,46 @@ OMX_ERRORTYPE VpuDecoder::FlushOutputBuffer()
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
-		case VPU_COM_STATE_LOADED:	
-		case VPU_COM_STATE_OPENED:
-		case VPU_COM_STATE_WAIT_FRM:
-			break;
-#if 1			
-		case VPU_COM_STATE_DO_DEC:
-		case VPU_COM_STATE_EOS:	
-		case VPU_COM_STATE_RE_WAIT_FRM:
-			//flush vpu input/output
-			ret=FlushFilter();
-			
-			//re set out map info: simulate: all frames have been returned by vpu and been recorded into sOutMapInfo
-			VPU_COMP_SEM_LOCK(psemaphore);
-			VPU_DecAllRegFrameInfo(nHandle, vpuFrameBuffer, (INT32*)&num);
-			VPU_COMP_SEM_UNLOCK(psemaphore);	
-			if(num<=0)
-			{
-				//in theory, shouldn't enter here if all states are protected correctly.
-				VPU_COMP_ERR_LOG("%s: no buffers registered \r\n",__FUNCTION__);
-				return OMX_ErrorNone; 
-			}
-			OutInfoReSet(&sFrameMemInfo,&sOutMapInfo,nOutBufferCnt,vpuFrameBuffer, num);			
-			nFreeOutBufCnt=0;			
-			return ret;
+	case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_LOADED:
+	case VPU_COM_STATE_OPENED:
+	case VPU_COM_STATE_WAIT_FRM:
+		break;
+#if 1
+	case VPU_COM_STATE_DO_DEC:
+	case VPU_COM_STATE_EOS:
+	case VPU_COM_STATE_RE_WAIT_FRM:
+		//flush vpu input/output
+		ret=FlushFilter();
+
+		//re set out map info: simulate: all frames have been returned by vpu and been recorded into sOutMapInfo
+		VPU_COMP_SEM_LOCK(psemaphore);
+		VPU_DecAllRegFrameInfo(nHandle, vpuFrameBuffer, (INT32*)&num);
+		VPU_COMP_SEM_UNLOCK(psemaphore);
+		if(num<=0)
+		{
+			//in theory, shouldn't enter here if all states are protected correctly.
+			VPU_COMP_ERR_LOG("%s: no buffers registered \r\n",__FUNCTION__);
+			return OMX_ErrorNone;
+		}
+		OutInfoReSet(&sFrameMemInfo,&sOutMapInfo,nOutBufferCnt,vpuFrameBuffer, num);
+		nFreeOutBufCnt=0;
+		return ret;
 #endif
-		case VPU_COM_STATE_DO_INIT:
-		case VPU_COM_STATE_DO_OUT:
-			//forbidden !!!
-			VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
-			return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
-		default: 
-			//forbidden !!!
-			VPU_COMP_ERR_LOG("%s: unknown state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
-			return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
+	case VPU_COM_STATE_DO_INIT:
+	case VPU_COM_STATE_DO_OUT:
+		//forbidden !!!
+		VPU_COMP_ERR_LOG("%s: failure state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
+	default:
+		//forbidden !!!
+		VPU_COMP_ERR_LOG("%s: unknown state transition, current state=%d \r\n",__FUNCTION__,eVpuDecoderState);
+		return OMX_ErrorNone; //for conformance test: don't return OMX_ErrorIncorrectStateTransition;
 	}
 
 	//clear out frame info
 	FrameBufClear(&sFrameMemInfo);
-	
+
 	return ret;
 
 }
@@ -2621,30 +2630,30 @@ OMX_PTR VpuDecoder::AllocateOutputBuffer(OMX_U32 nSize)
 	//check state
 	switch(eVpuDecoderState)
 	{
-		case VPU_COM_STATE_NONE:
+	case VPU_COM_STATE_NONE:
 		// case VPU_COM_STATE_LOADED:
 		//case VPU_COM_STATE_OPENED:
-			//1 how to avoid conflict memory operators
-			VPU_COMP_ERR_LOG("%s: error state: %d \r\n",__FUNCTION__,eVpuDecoderState);	
-			return (OMX_PTR)NULL;
-		default: 
-			break;
+		//1 how to avoid conflict memory operators
+		VPU_COMP_ERR_LOG("%s: error state: %d \r\n",__FUNCTION__,eVpuDecoderState);
+		return (OMX_PTR)NULL;
+	default:
+		break;
 	}
 
-	//malloc physical memory through vpu 
+	//malloc physical memory through vpu
 	vpuMem.nSize=nSize;
 	ret=VPU_DecGetMem_Wrapper(&vpuMem,&sMemOperator);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu malloc frame buf failure: size=%d, ret=0x%X \r\n",__FUNCTION__,(INT32)nSize,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu malloc frame buf failure: size=%d, ret=0x%X \r\n",__FUNCTION__,(INT32)nSize,ret);
 		return (OMX_PTR)NULL;//OMX_ErrorInsufficientResources;
-	}	
+	}
 
 	//record memory for release
 	if(0==MemAddPhyBlock(&vpuMem, &sAllocMemInfo))
 	{
 		VPU_DecFreeMem_Wrapper(&vpuMem,&sMemOperator);
-		VPU_COMP_ERR_LOG("%s:add phy block failure \r\n",__FUNCTION__);	
+		VPU_COMP_ERR_LOG("%s:add phy block failure \r\n",__FUNCTION__);
 		return (OMX_PTR)NULL;
 	}
 
@@ -2653,7 +2662,7 @@ OMX_PTR VpuDecoder::AllocateOutputBuffer(OMX_U32 nSize)
 	{
 		MemRemovePhyBlock(&vpuMem, &sAllocMemInfo);
 		VPU_DecFreeMem_Wrapper(&vpuMem,&sMemOperator);
-		VPU_COMP_ERR_LOG("%s:add hw buffer failure \r\n",__FUNCTION__);	
+		VPU_COMP_ERR_LOG("%s:add hw buffer failure \r\n",__FUNCTION__);
 		return (OMX_PTR)NULL;
 	}
 
@@ -2687,7 +2696,7 @@ OMX_ERRORTYPE VpuDecoder::FreeOutputBuffer(OMX_PTR pBuffer)
 	if(0==MemRemovePhyBlock(&vpuMem, &sAllocMemInfo))
 	{
 		VPU_COMP_ERR_LOG("%s: remove phy block failure \r\n",__FUNCTION__);
-		return OMX_ErrorResourcesLost;	
+		return OMX_ErrorResourcesLost;
 	}
 
 	//unregister memory info from resource manager
@@ -2696,24 +2705,24 @@ OMX_ERRORTYPE VpuDecoder::FreeOutputBuffer(OMX_PTR pBuffer)
 		VPU_COMP_ERR_LOG("%s: remove hw buffer failure \r\n",__FUNCTION__);
 		return OMX_ErrorResourcesLost;
 	}
-		
+
 	return OMX_ErrorNone;
 }
 
 FilterBufRetCode VpuDecoder::ProcessVpuInitInfo()
 {
 	FilterBufRetCode bufRet=FILTER_OK;
-	VpuDecRetCode ret;	
+	VpuDecRetCode ret;
 	OMX_S32 nChanged=0;
 	//process init info
 	VPU_COMP_SEM_LOCK(psemaphore);
 	ret=VPU_DecGetInitialInfo(nHandle, &sInitInfo);
-	VPU_COMP_SEM_UNLOCK(psemaphore);	
+	VPU_COMP_SEM_UNLOCK(psemaphore);
 	if(VPU_DEC_RET_SUCCESS!=ret)
 	{
-		VPU_COMP_ERR_LOG("%s: vpu get init info failure: ret=0x%X \r\n",__FUNCTION__,ret);	
+		VPU_COMP_ERR_LOG("%s: vpu get init info failure: ret=0x%X \r\n",__FUNCTION__,ret);
 		return FILTER_ERROR;//OMX_ErrorHardware;
-	}		
+	}
 
 	//set resolution info
 	sInFmt.nFrameWidth=sInitInfo.nPicWidth;
@@ -2754,7 +2763,7 @@ FilterBufRetCode VpuDecoder::ProcessVpuInitInfo()
 
 	//set crop info
 	VPU_COMP_LOG("%s: original init info: [top,left,bottom,right]=[%d,%d,%d,%d], \r\n",__FUNCTION__,
-		(INT32)sInitInfo.PicCropRect.nTop,(INT32)sInitInfo.PicCropRect.nLeft,(INT32)sInitInfo.PicCropRect.nBottom,(INT32)sInitInfo.PicCropRect.nRight);
+	             (INT32)sInitInfo.PicCropRect.nTop,(INT32)sInitInfo.PicCropRect.nLeft,(INT32)sInitInfo.PicCropRect.nBottom,(INT32)sInitInfo.PicCropRect.nRight);
 
 	sOutCrop.nLeft = sInitInfo.PicCropRect.nLeft;
 	sOutCrop.nTop = sInitInfo.PicCropRect.nTop;
@@ -2786,18 +2795,18 @@ FilterBufRetCode VpuDecoder::ProcessVpuInitInfo()
 		sInitInfo.nMinFrameBufferCount++;
 		nChanged=1;
 	}
-#endif	
+#endif
 
 	VPU_COMP_LOG("%s: Init OK, [width x height]=[%d x %d] \r\n",__FUNCTION__,sInitInfo.nPicWidth,sInitInfo.nPicHeight);
 	VPU_COMP_LOG("%s: [top,left,width,height]=[%d,%d,%d,%d], \r\n",__FUNCTION__,
-		(INT32)sOutCrop.nLeft,(INT32)sOutCrop.nTop,(INT32)sOutCrop.nWidth,(INT32)sOutCrop.nHeight);
+	             (INT32)sOutCrop.nLeft,(INT32)sOutCrop.nTop,(INT32)sOutCrop.nWidth,(INT32)sOutCrop.nHeight);
 	VPU_COMP_LOG("nOutBufferCnt:%d ,nPadWidth: %d, nPadHeight: %d \r\n",(INT32)nOutBufferCnt, (INT32)nPadWidth, (INT32)nPadHeight);
 
 	//get aspect ratio info
 	sDispRatio.xWidth=sInitInfo.nQ16ShiftWidthDivHeightRatio;
 	sDispRatio.xHeight=Q16_SHIFT;
 	VPU_COMP_LOG("%s: ratio: width: 0x%X, height: 0x%X \r\n",__FUNCTION__,sDispRatio.xWidth,sDispRatio.xHeight);
-	
+
 	if(nChanged)
 	{
 		nOutBufferSize=sOutFmt.nFrameWidth * sOutFmt.nFrameHeight*pxlfmt2bpp(sOutFmt.eColorFormat)/8;
@@ -2806,7 +2815,7 @@ FilterBufRetCode VpuDecoder::ProcessVpuInitInfo()
 
 	//bufRet|=FILTER_DO_INIT;
 	bufRet=(FilterBufRetCode)(bufRet|FILTER_NO_OUTPUT_BUFFER); //request enough output buffer before do InitFilter() operation
-	
+
 	//update state
 	eVpuDecoderState=VPU_COM_STATE_WAIT_FRM;
 	VPU_COMP_LOG("%s: enter wait frame state \r\n",__FUNCTION__);
@@ -2814,7 +2823,7 @@ FilterBufRetCode VpuDecoder::ProcessVpuInitInfo()
 }
 
 /**< C style functions to expose entry point for the shared library */
-extern "C" 
+extern "C"
 {
 	OMX_ERRORTYPE VpuDecoderInit(OMX_IN OMX_HANDLETYPE pHandle)
 	{
@@ -2838,7 +2847,7 @@ extern "C"
 			return ret;
 		}
 		return ret;
-	}	
+	}
 }
 
 /* File EOF */

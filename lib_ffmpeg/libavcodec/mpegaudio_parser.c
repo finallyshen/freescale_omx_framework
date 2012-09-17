@@ -25,11 +25,12 @@
 #include "mpegaudiodecheader.h"
 
 
-typedef struct MpegAudioParseContext {
-    ParseContext pc;
-    int frame_size;
-    uint32_t header;
-    int header_count;
+typedef struct MpegAudioParseContext
+{
+	ParseContext pc;
+	int frame_size;
+	uint32_t header;
+	int header_count;
 } MpegAudioParseContext;
 
 #define MPA_HEADER_SIZE 4
@@ -43,39 +44,41 @@ typedef struct MpegAudioParseContext {
    header, otherwise the coded frame size in bytes */
 int ff_mpa_decode_header(AVCodecContext *avctx, uint32_t head, int *sample_rate, int *channels, int *frame_size, int *bit_rate)
 {
-    MPADecodeHeader s1, *s = &s1;
+	MPADecodeHeader s1, *s = &s1;
 
-    if (ff_mpa_check_header(head) != 0)
-        return -1;
+	if (ff_mpa_check_header(head) != 0)
+		return -1;
 
-    if (ff_mpegaudio_decode_header(s, head) != 0) {
-        return -1;
-    }
+	if (ff_mpegaudio_decode_header(s, head) != 0)
+	{
+		return -1;
+	}
 
-    switch(s->layer) {
-    case 1:
-        avctx->codec_id = CODEC_ID_MP1;
-        *frame_size = 384;
-        break;
-    case 2:
-        avctx->codec_id = CODEC_ID_MP2;
-        *frame_size = 1152;
-        break;
-    default:
-    case 3:
-        avctx->codec_id = CODEC_ID_MP3;
-        if (s->lsf)
-            *frame_size = 576;
-        else
-            *frame_size = 1152;
-        break;
-    }
+	switch(s->layer)
+	{
+	case 1:
+		avctx->codec_id = CODEC_ID_MP1;
+		*frame_size = 384;
+		break;
+	case 2:
+		avctx->codec_id = CODEC_ID_MP2;
+		*frame_size = 1152;
+		break;
+	default:
+	case 3:
+		avctx->codec_id = CODEC_ID_MP3;
+		if (s->lsf)
+			*frame_size = 576;
+		else
+			*frame_size = 1152;
+		break;
+	}
 
-    *sample_rate = s->sample_rate;
-    *channels = s->nb_channels;
-    *bit_rate = s->bit_rate;
-    avctx->sub_id = s->layer;
-    return s->frame_size;
+	*sample_rate = s->sample_rate;
+	*channels = s->nb_channels;
+	*bit_rate = s->bit_rate;
+	avctx->sub_id = s->layer;
+	return s->frame_size;
 }
 
 static int mpegaudio_parse(AVCodecParserContext *s1,
@@ -83,67 +86,79 @@ static int mpegaudio_parse(AVCodecParserContext *s1,
                            const uint8_t **poutbuf, int *poutbuf_size,
                            const uint8_t *buf, int buf_size)
 {
-    MpegAudioParseContext *s = s1->priv_data;
-    ParseContext *pc = &s->pc;
-    uint32_t state= pc->state;
-    int i;
-    int next= END_NOT_FOUND;
+	MpegAudioParseContext *s = s1->priv_data;
+	ParseContext *pc = &s->pc;
+	uint32_t state= pc->state;
+	int i;
+	int next= END_NOT_FOUND;
 
-    for(i=0; i<buf_size; ){
-        if(s->frame_size){
-            int inc= FFMIN(buf_size - i, s->frame_size);
-            i += inc;
-            s->frame_size -= inc;
+	for(i=0; i<buf_size; )
+	{
+		if(s->frame_size)
+		{
+			int inc= FFMIN(buf_size - i, s->frame_size);
+			i += inc;
+			s->frame_size -= inc;
 
-            if(!s->frame_size){
-                next= i;
-                break;
-            }
-        }else{
-            while(i<buf_size){
-                int ret, sr, channels, bit_rate, frame_size;
+			if(!s->frame_size)
+			{
+				next= i;
+				break;
+			}
+		}
+		else
+		{
+			while(i<buf_size)
+			{
+				int ret, sr, channels, bit_rate, frame_size;
 
-                state= (state<<8) + buf[i++];
+				state= (state<<8) + buf[i++];
 
-                ret = ff_mpa_decode_header(avctx, state, &sr, &channels, &frame_size, &bit_rate);
-                if (ret < 4) {
-                    s->header_count= -2;
-                } else {
-                    if((state&SAME_HEADER_MASK) != (s->header&SAME_HEADER_MASK) && s->header)
-                        s->header_count= -3;
-                    s->header= state;
-                    s->header_count++;
-                    s->frame_size = ret-4;
+				ret = ff_mpa_decode_header(avctx, state, &sr, &channels, &frame_size, &bit_rate);
+				if (ret < 4)
+				{
+					s->header_count= -2;
+				}
+				else
+				{
+					if((state&SAME_HEADER_MASK) != (s->header&SAME_HEADER_MASK) && s->header)
+						s->header_count= -3;
+					s->header= state;
+					s->header_count++;
+					s->frame_size = ret-4;
 
-                    if(s->header_count > 1){
-                        avctx->sample_rate= sr;
-                        avctx->channels   = channels;
-                        avctx->frame_size = frame_size;
-                        avctx->bit_rate   = bit_rate;
-                    }
-                    break;
-                }
-            }
-        }
-    }
+					if(s->header_count > 1)
+					{
+						avctx->sample_rate= sr;
+						avctx->channels   = channels;
+						avctx->frame_size = frame_size;
+						avctx->bit_rate   = bit_rate;
+					}
+					break;
+				}
+			}
+		}
+	}
 
-    pc->state= state;
-    if (ff_combine_frame(pc, next, &buf, &buf_size) < 0) {
-        *poutbuf = NULL;
-        *poutbuf_size = 0;
-        return buf_size;
-    }
+	pc->state= state;
+	if (ff_combine_frame(pc, next, &buf, &buf_size) < 0)
+	{
+		*poutbuf = NULL;
+		*poutbuf_size = 0;
+		return buf_size;
+	}
 
-    *poutbuf = buf;
-    *poutbuf_size = buf_size;
-    return next;
+	*poutbuf = buf;
+	*poutbuf_size = buf_size;
+	return next;
 }
 
 
-AVCodecParser ff_mpegaudio_parser = {
-    { CODEC_ID_MP1, CODEC_ID_MP2, CODEC_ID_MP3 },
-    sizeof(MpegAudioParseContext),
-    NULL,
-    mpegaudio_parse,
-    ff_parse_close,
+AVCodecParser ff_mpegaudio_parser =
+{
+	{ CODEC_ID_MP1, CODEC_ID_MP2, CODEC_ID_MP3 },
+	sizeof(MpegAudioParseContext),
+	NULL,
+	mpegaudio_parse,
+	ff_parse_close,
 };

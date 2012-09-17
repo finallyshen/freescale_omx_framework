@@ -63,14 +63,15 @@ typedef uint8_t ff_asf_guid[16];
 
 static av_always_inline int ff_guidcmp(const void *g1, const void *g2)
 {
-    return memcmp(g1, g2, sizeof(ff_asf_guid));
+	return memcmp(g1, g2, sizeof(ff_asf_guid));
 }
 
 void ff_get_guid(AVIOContext *s, ff_asf_guid *g);
 
-typedef struct {
-    enum CodecID id;
-    ff_asf_guid guid;
+typedef struct
+{
+	enum CodecID id;
+	ff_asf_guid guid;
 } AVCodecGuid;
 
 enum CodecID ff_codec_guid_get_id(const AVCodecGuid *guids, ff_asf_guid guid);

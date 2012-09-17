@@ -36,7 +36,7 @@
  */
 static av_cold void mdct_end(AC3MDCTContext *mdct)
 {
-    ff_fft_end(&mdct->fft);
+	ff_fft_end(&mdct->fft);
 }
 
 
@@ -47,9 +47,9 @@ static av_cold void mdct_end(AC3MDCTContext *mdct)
 static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
                              int nbits)
 {
-    int ret = ff_mdct_init(&mdct->fft, nbits, 0, 1.0);
-    mdct->window = ff_ac3_window;
-    return ret;
+	int ret = ff_mdct_init(&mdct->fft, nbits, 0, 1.0);
+	mdct->window = ff_ac3_window;
+	return ret;
 }
 
 
@@ -59,7 +59,7 @@ static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
 static void apply_window(DSPContext *dsp, int16_t *output, const int16_t *input,
                          const int16_t *window, unsigned int len)
 {
-    dsp->apply_window_int16(output, input, window, len);
+	dsp->apply_window_int16(output, input, window, len);
 }
 
 
@@ -71,8 +71,8 @@ static void apply_window(DSPContext *dsp, int16_t *output, const int16_t *input,
  */
 static int log2_tab(AC3EncodeContext *s, int16_t *src, int len)
 {
-    int v = s->ac3dsp.ac3_max_msb_abs_int16(src, len);
-    return av_log2(v);
+	int v = s->ac3dsp.ac3_max_msb_abs_int16(src, len);
+	return av_log2(v);
 }
 
 
@@ -84,11 +84,11 @@ static int log2_tab(AC3EncodeContext *s, int16_t *src, int len)
  */
 static int normalize_samples(AC3EncodeContext *s)
 {
-    int v = 14 - log2_tab(s, s->windowed_samples, AC3_WINDOW_SIZE);
-    if (v > 0)
-        s->ac3dsp.ac3_lshift_int16(s->windowed_samples, AC3_WINDOW_SIZE, v);
-    /* +6 to right-shift from 31-bit to 25-bit */
-    return v + 6;
+	int v = 14 - log2_tab(s, s->windowed_samples, AC3_WINDOW_SIZE);
+	if (v > 0)
+		s->ac3dsp.ac3_lshift_int16(s->windowed_samples, AC3_WINDOW_SIZE, v);
+	/* +6 to right-shift from 31-bit to 25-bit */
+	return v + 6;
 }
 
 
@@ -97,29 +97,35 @@ static int normalize_samples(AC3EncodeContext *s)
  */
 static void scale_coefficients(AC3EncodeContext *s)
 {
-    int blk, ch;
+	int blk, ch;
 
-    for (blk = 0; blk < AC3_MAX_BLOCKS; blk++) {
-        AC3Block *block = &s->blocks[blk];
-        for (ch = 0; ch < s->channels; ch++) {
-            s->ac3dsp.ac3_rshift_int32(block->mdct_coef[ch], AC3_MAX_COEFS,
-                                       block->coeff_shift[ch]);
-        }
-    }
+	for (blk = 0; blk < AC3_MAX_BLOCKS; blk++)
+	{
+		AC3Block *block = &s->blocks[blk];
+		for (ch = 0; ch < s->channels; ch++)
+		{
+			s->ac3dsp.ac3_rshift_int32(block->mdct_coef[ch], AC3_MAX_COEFS,
+			                           block->coeff_shift[ch]);
+		}
+	}
 }
 
 
-AVCodec ff_ac3_fixed_encoder = {
-    "ac3_fixed",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_AC3,
-    sizeof(AC3EncodeContext),
-    ac3_encode_init,
-    ac3_encode_frame,
-    ac3_encode_close,
-    NULL,
-    .sample_fmts = (const enum AVSampleFormat[]){AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE},
-    .long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
-    .priv_class = &ac3enc_class,
-    .channel_layouts = ac3_channel_layouts,
+AVCodec ff_ac3_fixed_encoder =
+{
+	"ac3_fixed",
+	AVMEDIA_TYPE_AUDIO,
+	CODEC_ID_AC3,
+	sizeof(AC3EncodeContext),
+	ac3_encode_init,
+	ac3_encode_frame,
+	ac3_encode_close,
+	NULL,
+	.sample_fmts = (const enum AVSampleFormat[])
+	{
+		AV_SAMPLE_FMT_S16,AV_SAMPLE_FMT_NONE
+	},
+	.long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
+	.priv_class = &ac3enc_class,
+	.channel_layouts = ac3_channel_layouts,
 };

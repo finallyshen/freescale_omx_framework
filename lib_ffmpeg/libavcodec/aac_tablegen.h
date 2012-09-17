@@ -33,9 +33,9 @@ float ff_aac_pow2sf_tab[428];
 
 void ff_aac_tableinit(void)
 {
-    int i;
-    for (i = 0; i < 428; i++)
-        ff_aac_pow2sf_tab[i] = pow(2, (i - 200) / 4.);
+	int i;
+	for (i = 0; i < 428; i++)
+		ff_aac_pow2sf_tab[i] = pow(2, (i - 200) / 4.);
 }
 #endif /* CONFIG_HARDCODED_TABLES */
 

@@ -33,8 +33,9 @@
 
 #define AV_INTEGER_SIZE 8
 
-typedef struct AVInteger{
-    uint16_t v[AV_INTEGER_SIZE];
+typedef struct AVInteger
+{
+	uint16_t v[AV_INTEGER_SIZE];
 } AVInteger;
 
 AVInteger av_add_i(AVInteger a, AVInteger b) av_const;

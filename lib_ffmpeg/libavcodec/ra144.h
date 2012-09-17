@@ -32,28 +32,29 @@
 #define FRAMESIZE       20      ///< size of encoded frame
 #define LPC_ORDER       10      ///< order of LPC filter
 
-typedef struct {
-    AVCodecContext *avctx;
-    LPCContext lpc_ctx;
+typedef struct
+{
+	AVCodecContext *avctx;
+	LPCContext lpc_ctx;
 
-    unsigned int     old_energy;        ///< previous frame energy
+	unsigned int     old_energy;        ///< previous frame energy
 
-    unsigned int     lpc_tables[2][10];
+	unsigned int     lpc_tables[2][10];
 
-    /** LPC coefficients: lpc_coef[0] is the coefficients of the current frame
-     *  and lpc_coef[1] of the previous one. */
-    unsigned int    *lpc_coef[2];
+	/** LPC coefficients: lpc_coef[0] is the coefficients of the current frame
+	 *  and lpc_coef[1] of the previous one. */
+	unsigned int    *lpc_coef[2];
 
-    unsigned int     lpc_refl_rms[2];
+	unsigned int     lpc_refl_rms[2];
 
-    int16_t curr_block[NBLOCKS * BLOCKSIZE];
+	int16_t curr_block[NBLOCKS * BLOCKSIZE];
 
-    /** The current subblock padded by the last 10 values of the previous one. */
-    int16_t curr_sblock[50];
+	/** The current subblock padded by the last 10 values of the previous one. */
+	int16_t curr_sblock[50];
 
-    /** Adaptive codebook, its size is two units bigger to avoid a
-     *  buffer overflow. */
-    uint16_t adapt_cb[146+2];
+	/** Adaptive codebook, its size is two units bigger to avoid a
+	 *  buffer overflow. */
+	uint16_t adapt_cb[146+2];
 } RA144Context;
 
 void ff_copy_and_dup(int16_t *target, const int16_t *source, int offset);

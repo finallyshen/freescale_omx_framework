@@ -9,7 +9,7 @@
 
 /**
  *  @file ComponentCommon.h
- *  @brief Components common defines 
+ *  @brief Components common defines
  *  @ingroup ComponentCommon
  */
 
@@ -23,7 +23,7 @@
 #include "Log.h"
 
 #include "OMX_Core.h"
-#include "OMX_Component.h"    
+#include "OMX_Component.h"
 
 #define MAX_COMPONENT_ROLE 8
 #define MAX_ROLE_NAME_LEN 128
@@ -68,41 +68,47 @@
         } \
     } while(0);
 
-typedef enum{
-    COMMAND = 1,
-    BUFFER
-}MSG_TYPE;
+typedef enum
+{
+	COMMAND = 1,
+	BUFFER
+} MSG_TYPE;
 
-typedef enum {
-    PORT_ON = 1,
-    PORT_OFF,
-    BUFFER_RETURNED
-}PORT_NOTIFY_TYPE;
+typedef enum
+{
+	PORT_ON = 1,
+	PORT_OFF,
+	BUFFER_RETURNED
+} PORT_NOTIFY_TYPE;
 
-typedef struct {
-    OMX_COMMANDTYPE Cmd;
-    OMX_U32 nParam;
-    OMX_PTR pCmdData;
-}CMD_MSG;
+typedef struct
+{
+	OMX_COMMANDTYPE Cmd;
+	OMX_U32 nParam;
+	OMX_PTR pCmdData;
+} CMD_MSG;
 
-typedef struct {
-    OMX_COMMANDTYPE cmd;
-    OMX_U32 nParam;
-    OMX_PTR pCmdData;
-    OMX_BOOL bProcessed;
-}PENDING_CMD;
+typedef struct
+{
+	OMX_COMMANDTYPE cmd;
+	OMX_U32 nParam;
+	OMX_PTR pCmdData;
+	OMX_BOOL bProcessed;
+} PENDING_CMD;
 
-typedef struct {
-    OMX_HANDLETYPE hTunneledComp;
-    OMX_U32 nTunneledPort;
-}TUNNEL_INFO;
+typedef struct
+{
+	OMX_HANDLETYPE hTunneledComp;
+	OMX_U32 nTunneledPort;
+} TUNNEL_INFO;
 
-typedef struct {
-    OMX_U32 nSize; 
-    OMX_VERSIONTYPE nVersion; 
-    OMX_U32 nPortIndex;
-    OMX_BOOL bLate;
-}OMX_TIME_CONFIG_TIMEVIDEOLATE;
+typedef struct
+{
+	OMX_U32 nSize;
+	OMX_VERSIONTYPE nVersion;
+	OMX_U32 nPortIndex;
+	OMX_BOOL bLate;
+} OMX_TIME_CONFIG_TIMEVIDEOLATE;
 
 class ComponentBase;
 class Port;
@@ -112,24 +118,25 @@ static OMX_U32 pxlfmt2bpp(OMX_COLOR_FORMATTYPE omx_pxlfmt)
 {
 	OMX_U32 bpp; // bit per pixel
 
-	switch(omx_pxlfmt) {
+	switch(omx_pxlfmt)
+	{
 	case OMX_COLOR_FormatMonochrome:
-	  bpp = 1;
-	  break;
+		bpp = 1;
+		break;
 	case OMX_COLOR_FormatL2:
-	  bpp = 2;
+		bpp = 2;
 	case OMX_COLOR_FormatL4:
-	  bpp = 4;
-	  break;
+		bpp = 4;
+		break;
 	case OMX_COLOR_FormatL8:
 	case OMX_COLOR_Format8bitRGB332:
 	case OMX_COLOR_FormatRawBayer8bit:
 	case OMX_COLOR_FormatRawBayer8bitcompressed:
-	  bpp = 8;
-	  break;
+		bpp = 8;
+		break;
 	case OMX_COLOR_FormatRawBayer10bit:
-	  bpp = 10;
-	  break;
+		bpp = 10;
+		break;
 	case OMX_COLOR_FormatYUV411Planar:
 	case OMX_COLOR_FormatYUV411PackedPlanar:
 	case OMX_COLOR_Format12bitRGB444:
@@ -137,8 +144,8 @@ static OMX_U32 pxlfmt2bpp(OMX_COLOR_FORMATTYPE omx_pxlfmt)
 	case OMX_COLOR_FormatYUV420PackedPlanar:
 	case OMX_COLOR_FormatYUV420SemiPlanar:
 	case OMX_COLOR_FormatYUV444Interleaved:
-	  bpp = 12;
-	  break;
+		bpp = 12;
+		break;
 	case OMX_COLOR_FormatL16:
 	case OMX_COLOR_Format16bitARGB4444:
 	case OMX_COLOR_Format16bitARGB1555:
@@ -151,32 +158,32 @@ static OMX_U32 pxlfmt2bpp(OMX_COLOR_FORMATTYPE omx_pxlfmt)
 	case OMX_COLOR_FormatYCrYCb:
 	case OMX_COLOR_FormatCbYCrY:
 	case OMX_COLOR_FormatCrYCbY:
-	  bpp = 16;
-	  break;
+		bpp = 16;
+		break;
 	case OMX_COLOR_Format18bitRGB666:
 	case OMX_COLOR_Format18bitARGB1665:
-	  bpp = 18;
-	  break;
+		bpp = 18;
+		break;
 	case OMX_COLOR_Format19bitARGB1666:
-	  bpp = 19;
-	  break;
+		bpp = 19;
+		break;
 	case OMX_COLOR_FormatL24:
 	case OMX_COLOR_Format24bitRGB888:
 	case OMX_COLOR_Format24bitBGR888:
 	case OMX_COLOR_Format24bitARGB1887:
-	  bpp = 24;
-	  break;
+		bpp = 24;
+		break;
 	case OMX_COLOR_Format25bitARGB1888:
-	  bpp = 25;
-	  break;
+		bpp = 25;
+		break;
 	case OMX_COLOR_FormatL32:
 	case OMX_COLOR_Format32bitBGRA8888:
 	case OMX_COLOR_Format32bitARGB8888:
-	  bpp = 32;
-	  break;
+		bpp = 32;
+		break;
 	default:
-	  bpp = 0;
-	  break;
+		bpp = 0;
+		break;
 	}
 	return bpp;
 }

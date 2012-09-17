@@ -24,9 +24,10 @@
 
 #include <stdint.h>
 
-struct AVDES {
-    uint64_t round_keys[3][16];
-    int triple_des;
+struct AVDES
+{
+	uint64_t round_keys[3][16];
+	int triple_des;
 };
 
 /**

@@ -18,13 +18,14 @@
 
 #include "VideoRender.h"
 
-class FakeVideoRender : public VideoRender {
-    public:
-        FakeVideoRender();
-    private:
-        OMX_ERRORTYPE OpenDevice();
-        OMX_ERRORTYPE CloseDevice();
-        OMX_ERRORTYPE WriteDevice(OMX_BUFFERHEADERTYPE *pBufferHdr);
+class FakeVideoRender : public VideoRender
+{
+public:
+	FakeVideoRender();
+private:
+	OMX_ERRORTYPE OpenDevice();
+	OMX_ERRORTYPE CloseDevice();
+	OMX_ERRORTYPE WriteDevice(OMX_BUFFERHEADERTYPE *pBufferHdr);
 };
 
 #endif

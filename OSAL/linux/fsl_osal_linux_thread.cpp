@@ -16,9 +16,9 @@
  * @ingroup osal
  */
 
- #include <unistd.h> 
- #include <fsl_osal.h>
- #include <pthread.h>
+#include <unistd.h>
+#include <fsl_osal.h>
+#include <pthread.h>
 
 /*! Creates a thread.
  *
@@ -33,13 +33,13 @@
  *		E_FSL_OSAL_FAILURE if thread creation is failure
  */
 efsl_osal_return_type_t fsl_osal_thread_create(fsl_osal_ptr *thread, fsl_osal_ptr *ATTR, thread_func func, void *arg)
- {
+{
 	/* Create a new thread. The new thread will run the function start_routine. */
 
-    pthread_create((pthread_t *)thread, (const pthread_attr_t *)ATTR, func, arg);
-    
-    return E_FSL_OSAL_SUCCESS;
- }
+	pthread_create((pthread_t *)thread, (const pthread_attr_t *)ATTR, func, arg);
+
+	return E_FSL_OSAL_SUCCESS;
+}
 
 
 /*! De-initializes and Releases the mutex object.
@@ -51,11 +51,11 @@ efsl_osal_return_type_t fsl_osal_thread_create(fsl_osal_ptr *thread, fsl_osal_pt
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_thread_destroy(fsl_osal_ptr thread)
- {
+{
 
 	pthread_join((pthread_t)thread, NULL);
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Get the current task/thread id.
  *  *
@@ -66,8 +66,8 @@ efsl_osal_return_type_t fsl_osal_thread_destroy(fsl_osal_ptr thread)
  */
 efsl_osal_return_type_t fsl_osal_thread_self(fsl_osal_u32 *id)
 {
-    *id = pthread_self();
-    return E_FSL_OSAL_SUCCESS;
+	*id = pthread_self();
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! Sleep the current task/thread.
@@ -80,7 +80,7 @@ efsl_osal_return_type_t fsl_osal_thread_self(fsl_osal_u32 *id)
  */
 efsl_osal_return_type_t fsl_osal_sleep(fsl_osal_u32 delay)
 {
-    usleep(delay);
-    return E_FSL_OSAL_SUCCESS;
+	usleep(delay);
+	return E_FSL_OSAL_SUCCESS;
 }
 

@@ -17,8 +17,8 @@ using namespace android;
 
 OMX_ERRORTYPE AudioParserBase::InstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    bHasAudioTrack = OMX_TRUE;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	bHasAudioTrack = OMX_TRUE;
 
 	nBeginPoint = 0;
 	nReadPoint = 0;
@@ -32,7 +32,7 @@ OMX_ERRORTYPE AudioParserBase::InstanceInit()
 	bTOCSeek = OMX_FALSE;
 	nOneSecondSample = 0;
 	nSampleRate = 44100;
-	bCBR = OMX_FALSE; 
+	bCBR = OMX_FALSE;
 	bVBRDurationReady = OMX_FALSE;
 	fsl_osal_memset(SeekTable, 0, sizeof(OMX_U64 **) * MAXAUDIODURATIONHOUR);
 #ifndef ANDROID_BUILD
@@ -48,8 +48,8 @@ OMX_ERRORTYPE AudioParserBase::InstanceInit()
 
 	nFileSize = fileOps.Size(sourceFileHandle, this);
 	nEndPoint = nFileSize;
-        if(nEndPoint == 0 && isStreamingSource == OMX_TRUE)
-            nEndPoint = -1L;
+	if(nEndPoint == 0 && isStreamingSource == OMX_TRUE)
+		nEndPoint = -1L;
 
 	ret = GetCoreParser();
 	if (ret != OMX_ErrorNone)
@@ -69,14 +69,14 @@ OMX_ERRORTYPE AudioParserBase::InstanceInit()
 	}
 
 	SetMetadata((OMX_STRING)"mime", GetMimeFromComponentRole(sCompRole.cRole), 32);
-	// The duration value is a string representing the duration in ms. 
+	// The duration value is a string representing the duration in ms.
 	char tmp[32];
-	sprintf(tmp, "%lld", (usDuration + 500) / 1000); 
+	sprintf(tmp, "%lld", (usDuration + 500) / 1000);
 	SetMetadata((OMX_STRING)"duration", tmp, 32);
 	gettimeofday (&tv1, NULL);
 	LOG_DEBUG("Audio Parser Time: %d\n", (tv1.tv_sec-tv.tv_sec)*1000+(tv1.tv_usec-tv.tv_usec)/1000);
 
-    return ret;
+	return ret;
 }
 
 void *ParserCalculateVBRDurationFunc(void *arg);
@@ -140,14 +140,16 @@ OMX_ERRORTYPE AudioParserBase::AudioParserInstanceInit()
 	usDuration = nAudioDuration;
 	LOG_DEBUG("Audio Duration: %lld\n", usDuration);
 
-	if (bCBR == OMX_FALSE && FrameInfo.FrameInfo.total_bytes && FrameInfo.FrameInfo.TOC[1]) {
+	if (bCBR == OMX_FALSE && FrameInfo.FrameInfo.total_bytes && FrameInfo.FrameInfo.TOC[1])
+	{
 		bTOCSeek = OMX_TRUE;
 		bVBRDurationReady = OMX_TRUE;
-	} else if (bCBR == OMX_FALSE && isStreamingSource != OMX_TRUE && isLiveSource != OMX_TRUE && bGetMetadata != OMX_TRUE)
+	}
+	else if (bCBR == OMX_FALSE && isStreamingSource != OMX_TRUE && isLiveSource != OMX_TRUE && bGetMetadata != OMX_TRUE)
 	{
 		/** Calculate accurate duration and seek table in background thread */
 		if(E_FSL_OSAL_SUCCESS != fsl_osal_thread_create(&pThreadId, NULL, \
-					ParserCalculateVBRDurationFunc, this))
+		        ParserCalculateVBRDurationFunc, this))
 		{
 			LOG_ERROR("Create audio parser calculate duration thread failed.\n");
 			return OMX_ErrorInsufficientResources;
@@ -234,7 +236,7 @@ DoneDuration:
 		fileOps.Seek(sourceFileHandle, nBeginPoint, SEEK_SET, this);
 		/** Calculate accurate duration and seek table in background thread */
 		if(E_FSL_OSAL_SUCCESS != fsl_osal_thread_create(&pThreadId, NULL, \
-					ParserCalculateVBRDurationFunc, this))
+		        ParserCalculateVBRDurationFunc, this))
 		{
 			LOG_ERROR("Create audio parser calculate duration thread failed.\n");
 			return OMX_ErrorInsufficientResources;
@@ -274,13 +276,14 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 
 	ID3 id3;
 	bool isValid;
-	if (!fsl_osal_memcmp((void *)("ID3"), pTmpBuffer, 3)) {
+	if (!fsl_osal_memcmp((void *)("ID3"), pTmpBuffer, 3))
+	{
 		// Skip the ID3v2 header.
 		OMX_U32 len =
-			((pTmpBuffer[6] & 0x7f) << 21)
-			| ((pTmpBuffer[7] & 0x7f) << 14)
-			| ((pTmpBuffer[8] & 0x7f) << 7)
-			| (pTmpBuffer[9] & 0x7f);
+		    ((pTmpBuffer[6] & 0x7f) << 21)
+		    | ((pTmpBuffer[7] & 0x7f) << 14)
+		    | ((pTmpBuffer[8] & 0x7f) << 7)
+		    | (pTmpBuffer[9] & 0x7f);
 
 		if (len > 3 * 1024 * 1024)
 			len = 3 * 1024 * 1024;
@@ -291,7 +294,7 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 
 		LOG_DEBUG("Begin point: %lld\n", nBeginPoint);
 
-		if (nBeginPoint > AUDIO_PARSER_READ_SIZE) 
+		if (nBeginPoint > AUDIO_PARSER_READ_SIZE)
 		{
 			FSL_FREE(pTmpBuffer);
 
@@ -304,7 +307,7 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 			fsl_osal_memset(pTmpBuffer, 0, nBeginPoint);
 		}
 
-		fileOps.Seek(sourceFileHandle, 0, SEEK_SET, this); 
+		fileOps.Seek(sourceFileHandle, 0, SEEK_SET, this);
 		nReadLen = nBeginPoint;
 
 		if (nReadLen > nFileSize)
@@ -316,115 +319,127 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 
 		OMX_BOOL bGetV2 = OMX_FALSE;
 
-		isValid = id3.parseV2((const char *)pTmpBuffer); 
+		isValid = id3.parseV2((const char *)pTmpBuffer);
 
-	} else {
+	}
+	else
+	{
 		isValid = false;
 	}
 
-	if (!isValid) {
+	if (!isValid)
+	{
 		nReadLen = 128;
 		fsl_osal_memset(pTmpBuffer, 0, AUDIO_PARSER_READ_SIZE);
 		fileOps.Seek(sourceFileHandle, -128, SEEK_END, this); /*< ID3v1 */
 		nActuralRead = fileOps.Read(sourceFileHandle, pTmpBuffer, nReadLen, this);
 
 		LOG_DEBUG("Parser ID3 TAG V1.\n");
-		isValid = id3.parseV1((const char *)pTmpBuffer); 
+		isValid = id3.parseV1((const char *)pTmpBuffer);
 
-		if (!isValid) {
+		if (!isValid)
+		{
 			LOG_DEBUG("No any metadata.\n");
 			FSL_FREE(pTmpBuffer);
 			return ret;
 		}
 	}
 
-    struct Map {
-        const char *key;
-        const char *tag1;
-        const char *tag2;
-    };
-    static const Map kMap[] = {
-        { "album", "TALB", "TAL" },
-        { "artist", "TPE1", "TP1" },
-        { "albumartist", "TPE2", "TP2" },
-        { "composer", "TCOM", "TCM" },
-        { "genre", "TCON", "TCO" },
-        { "title", "TIT2", "TT2" },
-        { "year", "TYE", "TYER" },
-        { "tracknumber", "TRK", "TRCK" },
-        { "discnumber", "TPA", "TPOS" },
-    };
-	
-    static const OMX_U32 kNumMapEntries = sizeof(kMap) / sizeof(kMap[0]);
+	struct Map
+	{
+		const char *key;
+		const char *tag1;
+		const char *tag2;
+	};
+	static const Map kMap[] =
+	{
+		{ "album", "TALB", "TAL" },
+		{ "artist", "TPE1", "TP1" },
+		{ "albumartist", "TPE2", "TP2" },
+		{ "composer", "TCOM", "TCM" },
+		{ "genre", "TCON", "TCO" },
+		{ "title", "TIT2", "TT2" },
+		{ "year", "TYE", "TYER" },
+		{ "tracknumber", "TRK", "TRCK" },
+		{ "discnumber", "TPA", "TPOS" },
+	};
 
-    for (OMX_U32 i = 0; i < kNumMapEntries; ++i) {
-        ID3::Iterator *it = FSL_NEW(ID3::Iterator, (id3, kMap[i].tag1));
-        if (it->done()) {
+	static const OMX_U32 kNumMapEntries = sizeof(kMap) / sizeof(kMap[0]);
+
+	for (OMX_U32 i = 0; i < kNumMapEntries; ++i)
+	{
+		ID3::Iterator *it = FSL_NEW(ID3::Iterator, (id3, kMap[i].tag1));
+		if (it->done())
+		{
 			FSL_DELETE(it);
 			it = FSL_NEW(ID3::Iterator, (id3, kMap[i].tag2));
-        }
+		}
 
-        if (it->done()) {
+		if (it->done())
+		{
 			FSL_DELETE(it);
 			continue;
-        }
+		}
 
-        String8 s;
-        it->getString(&s);
-        FSL_DELETE(it);
+		String8 s;
+		it->getString(&s);
+		FSL_DELETE(it);
 
 		SetMetadata((char *)kMap[i].key, (char *)s.string(), s.length());
 		LOG_DEBUG("Key: %s  metadate: %s\n", (char *)kMap[i].key, (char *)s.string());
-    }
+	}
 
-    size_t dataSize;
-    String8 mime;
-    const void *data = id3.getAlbumArt(&dataSize, &mime);
+	size_t dataSize;
+	String8 mime;
+	const void *data = id3.getAlbumArt(&dataSize, &mime);
 
-    if (data) {
+	if (data)
+	{
 		SetMetadata((OMX_STRING)"albumart", (char *)data, dataSize);
 		LOG_DEBUG("albumart format: %s\n", mime.string());
-    }
+	}
 
 	FSL_FREE(pTmpBuffer);
 #else
-    ShareLibarayMgr *libMgr = NULL;
-    OMX_PTR hLibId3 = NULL;
+	ShareLibarayMgr *libMgr = NULL;
+	OMX_PTR hLibId3 = NULL;
 	int (*parse_id3_v2_size)(char *);
 	id3_err (*parse_id3_v2)(meta_data_v2 *, unsigned char *);
 	id3_err (*parse_id3_albumart)(meta_data_v2 *, unsigned char *);
 	id3_err (*parse_id3_v1_metadata)(meta_data_v1 *,char *);
 
-    libMgr = FSL_NEW(ShareLibarayMgr, ());
-    if(libMgr == NULL)
-        return OMX_ErrorInsufficientResources;
+	libMgr = FSL_NEW(ShareLibarayMgr, ());
+	if(libMgr == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    hLibId3 = libMgr->load("lib_id3_parser_arm11_elinux.so");
-    if(hLibId3 == NULL) {
-        FSL_DELETE(libMgr);
-        return OMX_ErrorUndefined;
-    }
+	hLibId3 = libMgr->load("lib_id3_parser_arm11_elinux.so");
+	if(hLibId3 == NULL)
+	{
+		FSL_DELETE(libMgr);
+		return OMX_ErrorUndefined;
+	}
 
-    parse_id3_v2_size = (int (*)(char *))libMgr->getSymbol(hLibId3, "id3_parser_get_id3_v2_size");
-    parse_id3_v2 = (id3_err (*)(meta_data_v2 *, unsigned char *))libMgr->getSymbol(hLibId3, "id3_parser_parse_v2");
-    parse_id3_albumart = (id3_err (*)(meta_data_v2 *, unsigned char *))libMgr->getSymbol(hLibId3, "id3_parser_parse_albumart_v2");
-    parse_id3_v1_metadata = (id3_err (*)(meta_data_v1 *,char *))libMgr->getSymbol(hLibId3, "get_metadata_v1");
-    if(parse_id3_v2_size == NULL
-			|| parse_id3_v2 == NULL
-			|| parse_id3_albumart == NULL
-			|| parse_id3_v1_metadata == NULL) {
-        libMgr->unload(hLibId3);
-        FSL_DELETE(libMgr);
-        return OMX_ErrorUndefined;
-    }
+	parse_id3_v2_size = (int (*)(char *))libMgr->getSymbol(hLibId3, "id3_parser_get_id3_v2_size");
+	parse_id3_v2 = (id3_err (*)(meta_data_v2 *, unsigned char *))libMgr->getSymbol(hLibId3, "id3_parser_parse_v2");
+	parse_id3_albumart = (id3_err (*)(meta_data_v2 *, unsigned char *))libMgr->getSymbol(hLibId3, "id3_parser_parse_albumart_v2");
+	parse_id3_v1_metadata = (id3_err (*)(meta_data_v1 *,char *))libMgr->getSymbol(hLibId3, "get_metadata_v1");
+	if(parse_id3_v2_size == NULL
+	        || parse_id3_v2 == NULL
+	        || parse_id3_albumart == NULL
+	        || parse_id3_v1_metadata == NULL)
+	{
+		libMgr->unload(hLibId3);
+		FSL_DELETE(libMgr);
+		return OMX_ErrorUndefined;
+	}
 
 
 	OMX_U8 *pTmpBuffer = (OMX_U8 *)FSL_MALLOC(AUDIO_PARSER_READ_SIZE);
 	if (pTmpBuffer == NULL)
 	{
 		LOG_ERROR("Can't get memory.\n");
-        libMgr->unload(hLibId3);
-        FSL_DELETE(libMgr);
+		libMgr->unload(hLibId3);
+		FSL_DELETE(libMgr);
 		return OMX_ErrorInsufficientResources;
 	}
 	fsl_osal_memset(pTmpBuffer, 0, AUDIO_PARSER_READ_SIZE);
@@ -444,7 +459,7 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 	LOG_DEBUG("Begin point: %lld\n", nBeginPoint);
 	id3_err retID3 = ID3_OK;
 
-	if (nBeginPoint > AUDIO_PARSER_READ_SIZE) 
+	if (nBeginPoint > AUDIO_PARSER_READ_SIZE)
 	{
 		FSL_FREE(pTmpBuffer);
 
@@ -459,7 +474,7 @@ OMX_ERRORTYPE AudioParserBase::ParserID3Tag()
 		fsl_osal_memset(pTmpBuffer, 0, nBeginPoint);
 	}
 
-	fileOps.Seek(sourceFileHandle, 0, SEEK_SET, this); 
+	fileOps.Seek(sourceFileHandle, 0, SEEK_SET, this);
 	nReadLen = nBeginPoint;
 
 	if (nReadLen > nFileSize)
@@ -768,7 +783,7 @@ OMX_ERRORTYPE AudioParserBase::ParserFindBeginPoint()
 	return ret;
 }
 
-void *ParserCalculateVBRDurationFunc(void *arg) 
+void *ParserCalculateVBRDurationFunc(void *arg)
 {
 	AudioParserBase *AudioParserBasePtr = (AudioParserBase *)arg;
 
@@ -777,7 +792,7 @@ void *ParserCalculateVBRDurationFunc(void *arg)
 	return NULL;
 }
 
-OMX_ERRORTYPE AudioParserBase::ParserCalculateVBRDuration() 
+OMX_ERRORTYPE AudioParserBase::ParserCalculateVBRDuration()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	FslFileStream fileOps2;
@@ -858,7 +873,7 @@ OMX_ERRORTYPE AudioParserBase::ParserCalculateVBRDuration()
 	AudioParserFreeBuffer(pTmpBuffer);
 
 	nAudioDuration = ((hourctr * 60 + minctr) * 60 + (secctr-1)) * (OMX_U64) OMX_TICKS_PER_SECOND + \
-					 (OMX_U64)nOneSecondSample * OMX_TICKS_PER_SECOND / nSampleRate;
+	                 (OMX_U64)nOneSecondSample * OMX_TICKS_PER_SECOND / nSampleRate;
 	usDuration = nAudioDuration;
 	LOG_DEBUG("Audio Duration: %lld\n", usDuration);
 
@@ -869,7 +884,7 @@ OMX_ERRORTYPE AudioParserBase::ParserCalculateVBRDuration()
 
 OMX_ERRORTYPE AudioParserBase::ParserAudioFrame(OMX_U8 *pBuffer, OMX_U32 nActuralRead, OMX_U32 nSegmentCnt)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U8 *pBuffer2 = pBuffer;
 	OMX_U32 nActuralRead2;
 
@@ -896,7 +911,7 @@ OMX_ERRORTYPE AudioParserBase::ParserAudioFrame(OMX_U8 *pBuffer, OMX_U32 nActura
 
 OMX_ERRORTYPE AudioParserBase::ParserAudioFrameOverlap(OMX_U8 *pBuffer, OMX_U32 nActuralRead, OMX_U32 nSegmentCnt)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 offset = 0;
 
 	while (offset < nActuralRead)
@@ -928,7 +943,7 @@ OMX_ERRORTYPE AudioParserBase::ParserAudioFrameOverlap(OMX_U8 *pBuffer, OMX_U32 
 		if (nSegmentCnt == PARSERAUDIO_VBRDURATION )
 		{
 			AudioParserBuildSeekTable(offset - nOverlap + FrameInfo.nFrameHeaderConsumed - \
-					FileInfo.nFrameHeaderSize, FrameInfo.nSamplesPerFrame, FrameInfo.nSamplingRate);
+			                          FileInfo.nFrameHeaderSize, FrameInfo.nSamplesPerFrame, FrameInfo.nSamplingRate);
 		}
 		offset += nFrameLen;
 
@@ -970,7 +985,7 @@ OMX_U32 AudioParserBase::GetAvrageBitRate()
 		nAvrageBitRate = nTotalBitRate / FrameInfo.nFrameCount;
 		LOG_DEBUG("nAvrageBitRate: %d\n", nAvrageBitRate);
 	}
-	else 
+	else
 	{
 		nAvrageBitRate = 0;
 	}
@@ -1047,21 +1062,21 @@ OMX_ERRORTYPE AudioParserBase::SetupPortMediaFormat()
 	sPortDef.nPortIndex = AUDIO_OUTPUT_PORT;
 	ports[AUDIO_OUTPUT_PORT]->GetPortDefinition(&sPortDef);
 
-    OMX_AUDIO_CODINGTYPE CodingType = OMX_AUDIO_CodingUnused;
+	OMX_AUDIO_CODINGTYPE CodingType = OMX_AUDIO_CodingUnused;
 
 	CodingType = GetAudioCodingType();
 
 	sPortDef.format.audio.eEncoding = CodingType;
 	ports[AUDIO_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-        nNumAvailAudioStream = 1;
+	nNumAvailAudioStream = 1;
 	SendEvent(OMX_EventPortFormatDetected, AUDIO_OUTPUT_PORT, 0, NULL);
 	SendEvent(OMX_EventPortSettingsChanged, AUDIO_OUTPUT_PORT, 0, NULL);
 
 	sPortDef.nPortIndex = VIDEO_OUTPUT_PORT;
 	ports[VIDEO_OUTPUT_PORT]->GetPortDefinition(&sPortDef);
-        sPortDef.format.video.eCompressionFormat = OMX_VIDEO_CodingMax;
+	sPortDef.format.video.eCompressionFormat = OMX_VIDEO_CodingMax;
 	ports[VIDEO_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-        nNumAvailVideoStream = 0;
+	nNumAvailVideoStream = 0;
 	SendEvent(OMX_EventPortFormatDetected, VIDEO_OUTPUT_PORT, 0, NULL);
 
 	return ret;
@@ -1071,7 +1086,8 @@ OMX_ERRORTYPE AudioParserBase::InstanceDeInit()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-	if(pThreadId != NULL) {
+	if(pThreadId != NULL)
+	{
 		bStopVBRDurationThread = OMX_TRUE;
 		fsl_osal_thread_destroy(pThreadId);
 	}
@@ -1090,12 +1106,12 @@ OMX_ERRORTYPE AudioParserBase::InstanceDeInit()
 	}
 	sourceFileHandle = NULL;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AudioParserBase::AudioParserInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	// Free seek table.
 	OMX_U32 nSec, nMin, nHour;
@@ -1118,14 +1134,14 @@ OMX_ERRORTYPE AudioParserBase::AudioParserInstanceDeInit()
 
 OMX_ERRORTYPE AudioParserBase::AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    return ret;
+	return ret;
 }
- 
+
 OMX_ERRORTYPE AudioParserBase::GetNextSample(Port *pPort, OMX_BUFFERHEADERTYPE *pOutBuffer)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 nReadLen = pOutBuffer->nAllocLen;
 	OMX_U32 nActuralRead;
 
@@ -1177,7 +1193,7 @@ OMX_U64 AudioParserBase::FrameBound(OMX_U64 nSkip)
 
 OMX_ERRORTYPE AudioParserBase::DoSeek(OMX_U32 nPortIndex, OMX_U32 nSeekFlag)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	if (nPortIndex != AUDIO_OUTPUT_PORT)
 	{
@@ -1201,31 +1217,46 @@ OMX_ERRORTYPE AudioParserBase::DoSeek(OMX_U32 nPortIndex, OMX_U32 nSeekFlag)
 		LOG_DEBUG("Stream Len = %lld\n", (nEndPoint - nBeginPoint));
 		nGetTimeStamp(&nSeekPoint);
 		LOG_DEBUG("After adjust Seek Position: %lld\t Audio Duration: %lld\n", sAudioSeekPos, nAudioDuration);
-	} else if (bTOCSeek == OMX_TRUE) {
+	}
+	else if (bTOCSeek == OMX_TRUE)
+	{
 		float percent = (float)sAudioSeekPos * 100 / nAudioDuration;
 		float fx;
-		if( percent <= 0.0f ) {
+		if( percent <= 0.0f )
+		{
 			fx = 0.0f;
-		} else if( percent >= 100.0f ) {
+		}
+		else if( percent >= 100.0f )
+		{
 			fx = 256.0f;
-		} else {
+		}
+		else
+		{
 			OMX_S32 a = (OMX_S32)percent;
 			float fa, fb;
-			if ( a == 0 ) {
+			if ( a == 0 )
+			{
 				fa = 0.0f;
-			} else {
+			}
+			else
+			{
 				fa = (float)FrameInfo.FrameInfo.TOC[a];
 			}
-			if ( a < 99 ) {
+			if ( a < 99 )
+			{
 				fb = (float)FrameInfo.FrameInfo.TOC[a+1];
-			} else {
+			}
+			else
+			{
 				fb = 256.0f;
 			}
 			fx = fa + (fb-fa)*(percent-a);
 		}
 		nSeekPoint = nBeginPoint + (OMX_S32)((1.0f/256.0f)*fx*FrameInfo.FrameInfo.total_bytes);
 		LOG_DEBUG("Seek Point = %lld\n", nSeekPoint);
-	} else {
+	}
+	else
+	{
 		OMX_U32 nSec = (sAudioSeekPos / OMX_TICKS_PER_SECOND) % 60;
 		OMX_U32 nMin = (sAudioSeekPos / (OMX_TICKS_PER_SECOND * 60)) % 60;
 		OMX_U32 nHour = sAudioSeekPos / (OMX_TICKS_PER_SECOND * 60) / 60;

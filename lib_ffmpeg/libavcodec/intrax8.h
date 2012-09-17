@@ -22,32 +22,33 @@
 #include "get_bits.h"
 #include "mpegvideo.h"
 
-typedef struct{
-    VLC * j_ac_vlc[4];//they point to the static j_mb_vlc
-    VLC * j_orient_vlc;
-    VLC * j_dc_vlc[3];
+typedef struct
+{
+	VLC * j_ac_vlc[4];//they point to the static j_mb_vlc
+	VLC * j_orient_vlc;
+	VLC * j_dc_vlc[3];
 
-    int use_quant_matrix;
+	int use_quant_matrix;
 //set by ff_intrax8_common_init
-    uint8_t * prediction_table;//2*(mb_w*2)
-    ScanTable scantable[3];
+	uint8_t * prediction_table;//2*(mb_w*2)
+	ScanTable scantable[3];
 //set by the caller codec
-    MpegEncContext * s;
-    int quant;
-    int dquant;
-    int qsum;
+	MpegEncContext * s;
+	int quant;
+	int dquant;
+	int qsum;
 //calculated per frame
-    int quant_dc_chroma;
-    int divide_quant_dc_luma;
-    int divide_quant_dc_chroma;
+	int quant_dc_chroma;
+	int divide_quant_dc_luma;
+	int divide_quant_dc_chroma;
 //changed per block
-    int edges;
-    int flat_dc;
-    int predicted_dc;
-    int raw_orient;
-    int chroma_orient;
-    int orient;
-    int est_run;
+	int edges;
+	int flat_dc;
+	int predicted_dc;
+	int raw_orient;
+	int chroma_orient;
+	int orient;
+	int est_run;
 } IntraX8Context;
 
 void ff_intrax8_common_init(IntraX8Context * w, MpegEncContext * const s);

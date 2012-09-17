@@ -25,7 +25,8 @@
 #include <signal.h>
 
 
-typedef struct {
+typedef struct
+{
 	char * debugLevel;
 	char * debugFile;
 	char *pFilename;
@@ -46,7 +47,7 @@ typedef struct {
 	OMX_S32 profile;
 	OMX_S32 level;
 	OMX_BOOL quiet;
-}RECORDER_Options;
+} RECORDER_Options;
 
 #define START_PLAYTIME_INFO_THREAD(thread, mRecorder)\
 	do{\
@@ -69,12 +70,12 @@ typedef struct {
 #define START_SHOW_PLAYTIME_INFO \
 	do{\
 		bstartuserinput = OMX_TRUE;\
-	}while(0) 
+	}while(0)
 
 #define STOP_SHOW_PLAYTIME_INFO \
 	do{\
 		bstartuserinput = OMX_FALSE;\
-	}while(0) 
+	}while(0)
 
 #define FILE_NAME_LEN 1024
 
@@ -91,25 +92,26 @@ void my_int_signal_handler(int signum)
 int eventhandler(void* context, RECORDER_EVENT eventID, void* Eventpayload)
 {
 	OMX_Recorder* mRecorder = (OMX_Recorder*) context;
-	switch(eventID) {
-		case RECORDER_EVENT_MAX_DURATION_REACHED:
-			{
-				STOP_SHOW_PLAYTIME_INFO;
-				mRecorder->stop(mRecorder);
-				mRecorder->close(mRecorder);
-				printf("\nRecorder done, choose next command\n");
-				break;
-			}
-		case RECORDER_EVENT_MAX_FILESIZE_REACHED:
-			{
-				STOP_SHOW_PLAYTIME_INFO;
-				mRecorder->stop(mRecorder);
-				mRecorder->close(mRecorder);
-				printf("\nRecorder done, choose next command\n");
-				break;
-			}
-		default:
-			break;
+	switch(eventID)
+	{
+	case RECORDER_EVENT_MAX_DURATION_REACHED:
+	{
+		STOP_SHOW_PLAYTIME_INFO;
+		mRecorder->stop(mRecorder);
+		mRecorder->close(mRecorder);
+		printf("\nRecorder done, choose next command\n");
+		break;
+	}
+	case RECORDER_EVENT_MAX_FILESIZE_REACHED:
+	{
+		STOP_SHOW_PLAYTIME_INFO;
+		mRecorder->stop(mRecorder);
+		mRecorder->close(mRecorder);
+		printf("\nRecorder done, choose next command\n");
+		break;
+	}
+	default:
+		break;
 	}
 
 	return 1;
@@ -124,7 +126,7 @@ void* userinput(void* param)
 	OMX_U32 Seconds;
 	OMX_S32 max;
 
-	while(bexituserinput == OMX_FALSE) 
+	while(bexituserinput == OMX_FALSE)
 	{
 		if (bstartuserinput)
 		{
@@ -137,8 +139,8 @@ void* userinput(void* param)
 
 				mRecorder->getMaxAmplitude(mRecorder, &max);
 #if 1
-				printf("\r[Current Media Time] %03d:%02d:%02d    [Max Audio Amplitude] %d", 
-						Hours, Minutes, Seconds, max);
+				printf("\r[Current Media Time] %03d:%02d:%02d    [Max Audio Amplitude] %d",
+				       Hours, Minutes, Seconds, max);
 				fflush(stdout);
 #endif
 			}
@@ -195,104 +197,126 @@ int recorder_parse_options(int argc, char* argv[], RECORDER_Options * pOpt)
 	int parseindex = 0;
 
 	memset(pOpt, 0, sizeof(RECORDER_Options));
-	for (i=1;i<argc;i++){
-		if ((strlen(argv[i])) && (argv[i][0]=='-')){
-			if ((strcmp(argv[i], "-h")==0)||(strcmp(argv[i], "--help")==0)){
+	for (i=1; i<argc; i++)
+	{
+		if ((strlen(argv[i])) && (argv[i][0]=='-'))
+		{
+			if ((strcmp(argv[i], "-h")==0)||(strcmp(argv[i], "--help")==0))
+			{
 				ret = 1;
 				goto parseOptionErr;
 			}
 
-			if ((strcmp(argv[i], "--log_level")==0)){
+			if ((strcmp(argv[i], "--log_level")==0))
+			{
 				parseindex=1;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--log_file")==0)){
+			if ((strcmp(argv[i], "--log_file")==0))
+			{
 				parseindex=2;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--width")==0)){
+			if ((strcmp(argv[i], "--width")==0))
+			{
 				parseindex=3;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--height")==0)){
+			if ((strcmp(argv[i], "--height")==0))
+			{
 				parseindex=4;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--framerate")==0)){
+			if ((strcmp(argv[i], "--framerate")==0))
+			{
 				parseindex=5;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--timeUs")==0)){
+			if ((strcmp(argv[i], "--timeUs")==0))
+			{
 				parseindex=6;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--bytes")==0)){
+			if ((strcmp(argv[i], "--bytes")==0))
+			{
 				parseindex=7;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--durationUs")==0)){
+			if ((strcmp(argv[i], "--durationUs")==0))
+			{
 				parseindex=8;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--sampleRate")==0)){
+			if ((strcmp(argv[i], "--sampleRate")==0))
+			{
 				parseindex=9;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--channels")==0)){
+			if ((strcmp(argv[i], "--channels")==0))
+			{
 				parseindex=10;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--audiobitRate")==0)){
+			if ((strcmp(argv[i], "--audiobitRate")==0))
+			{
 				parseindex=11;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--videobitRate")==0)){
+			if ((strcmp(argv[i], "--videobitRate")==0))
+			{
 				parseindex=12;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--degrees")==0)){
+			if ((strcmp(argv[i], "--degrees")==0))
+			{
 				parseindex=13;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--seconds")==0)){
+			if ((strcmp(argv[i], "--seconds")==0))
+			{
 				parseindex=14;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--profile")==0)){
+			if ((strcmp(argv[i], "--profile")==0))
+			{
 				parseindex=15;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--level")==0)){
+			if ((strcmp(argv[i], "--level")==0))
+			{
 				parseindex=16;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--audio_format")==0)){
+			if ((strcmp(argv[i], "--audio_format")==0))
+			{
 				parseindex=17;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--video_format")==0)){
+			if ((strcmp(argv[i], "--video_format")==0))
+			{
 				parseindex=18;
 				continue;
 			}
 
-			if ((strcmp(argv[i], "--quiet")==0)){
+			if ((strcmp(argv[i], "--quiet")==0))
+			{
 				pOpt->quiet = OMX_TRUE;
 				continue;
 			}
@@ -301,106 +325,108 @@ int recorder_parse_options(int argc, char* argv[], RECORDER_Options * pOpt)
 			continue;
 		}
 
-		switch (parseindex){
-			case 1:
-				pOpt->debugLevel=argv[i];
-				parseindex=0;
-				continue;
-				break;
-			case 2:
-				pOpt->debugFile=argv[i];
-				parseindex=0;
-				continue;
-				break;
-			case 3:
-				pOpt->width=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 4:
-				pOpt->height=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 5:
-				pOpt->framerate=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 6:
-				pOpt->timeUs=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 7:
-				pOpt->bytes=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 8:
-				pOpt->durationUs=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 9:
-				pOpt->sampleRate=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 10:
-				pOpt->channels=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 11:
-				pOpt->audiobitRate=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 12:
-				pOpt->videobitRate=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 13:
-				pOpt->degrees=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 14:
-				pOpt->seconds=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 15:
-				pOpt->profile=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 16:
-				pOpt->level=atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 17:
-				pOpt->audioFormat=(audio_encoder_gm)atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
-			case 18:
-				pOpt->videoFormat=(video_encoder_gm)atoi(argv[i]);
-				parseindex=0;
-				continue;
-				break;
+		switch (parseindex)
+		{
+		case 1:
+			pOpt->debugLevel=argv[i];
+			parseindex=0;
+			continue;
+			break;
+		case 2:
+			pOpt->debugFile=argv[i];
+			parseindex=0;
+			continue;
+			break;
+		case 3:
+			pOpt->width=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 4:
+			pOpt->height=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 5:
+			pOpt->framerate=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 6:
+			pOpt->timeUs=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 7:
+			pOpt->bytes=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 8:
+			pOpt->durationUs=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 9:
+			pOpt->sampleRate=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 10:
+			pOpt->channels=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 11:
+			pOpt->audiobitRate=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 12:
+			pOpt->videobitRate=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 13:
+			pOpt->degrees=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 14:
+			pOpt->seconds=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 15:
+			pOpt->profile=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 16:
+			pOpt->level=atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 17:
+			pOpt->audioFormat=(audio_encoder_gm)atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
+		case 18:
+			pOpt->videoFormat=(video_encoder_gm)atoi(argv[i]);
+			parseindex=0;
+			continue;
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 
-        pOpt->pFilename = argv[i];
+		pOpt->pFilename = argv[i];
 	}
-	
-	if (pOpt->pFilename == NULL) {
+
+	if (pOpt->pFilename == NULL)
+	{
 		ret = 1;
 	}
 
@@ -433,15 +459,21 @@ int main(int argc, char* argv[])
 #endif
 	ret = recorder_parse_options(argc,argv,&options);
 
-	if (ret<0){
+	if (ret<0)
+	{
 		return ret;
-	}else if (ret==1){
+	}
+	else if (ret==1)
+	{
 		recorder_usage();
 		return ret;
 	}
-	if (options.debugLevel){
+	if (options.debugLevel)
+	{
 		LogInit(fsl_osal_atoi(options.debugLevel), options.debugFile);
-	}else{
+	}
+	else
+	{
 		LogInit(-1, options.debugFile);
 	}
 
@@ -457,9 +489,11 @@ int main(int argc, char* argv[])
 
 	START_PLAYTIME_INFO_THREAD(thread, mRecorder);
 
-	while(bexit == OMX_FALSE) {
+	while(bexit == OMX_FALSE)
+	{
 		{
-			if (readinput){
+			if (readinput)
+			{
 				recorder_main_menu();
 				scanf("%s", rep);
 			}
@@ -470,10 +504,11 @@ int main(int argc, char* argv[])
 				STOP_SHOW_PLAYTIME_INFO;
 				mRecorder->stop(mRecorder);
 				mRecorder->close(mRecorder);
-				mRecorder->deleteIt(mRecorder);        
+				mRecorder->deleteIt(mRecorder);
 				goto exitMain;
 			}
-			if(rep[0] == 'r') {
+			if(rep[0] == 'r')
+			{
 				mRecorder->setOutputFile(mRecorder, options.pFilename);
 				int camera = 0;
 				mRecorder->setCamera(mRecorder, &camera, NULL);
@@ -508,14 +543,14 @@ int main(int argc, char* argv[])
 					mRecorder->setParamVideoEncoderProfile(mRecorder, options.profile);
 				if (options.level)
 					mRecorder->setParamVideoEncoderLevel(mRecorder, options.level);
-	
+
 				ret = mRecorder->prepare(mRecorder);
 				if (ret == OMX_FALSE)
 				{
 					printf("Recorder prepare %s failed.\n", pFilename);
 					mRecorder->stop(mRecorder);
 					mRecorder->close(mRecorder);
-					mRecorder->deleteIt(mRecorder);        
+					mRecorder->deleteIt(mRecorder);
 					goto exitMain;
 				}
 
@@ -524,17 +559,21 @@ int main(int argc, char* argv[])
 				START_SHOW_PLAYTIME_INFO;
 				printf("start recorde %s\n", pFilename);
 			}
-			else if(rep[0] == 'a') {
-				if(bPause != OMX_TRUE) {
+			else if(rep[0] == 'a')
+			{
+				if(bPause != OMX_TRUE)
+				{
 					mRecorder->pause(mRecorder);
 					bPause = OMX_TRUE;
 				}
-				else {
+				else
+				{
 					mRecorder->start(mRecorder);
 					bPause = OMX_FALSE;
 				}
 			}
-			else if(rep[0] == 's') {
+			else if(rep[0] == 's')
+			{
 				STOP_SHOW_PLAYTIME_INFO;
 				mRecorder->stop(mRecorder);
 				mRecorder->close(mRecorder);
@@ -544,13 +583,15 @@ int main(int argc, char* argv[])
 				STOP_SHOW_PLAYTIME_INFO;
 				mRecorder->stop(mRecorder);
 				mRecorder->close(mRecorder);
-				mRecorder->deleteIt(mRecorder);        
+				mRecorder->deleteIt(mRecorder);
 				bexit = OMX_TRUE;
 			}
-			else if(rep[0] == '*') {
+			else if(rep[0] == '*')
+			{
 				sleep(1);
 			}
-			else if(rep[0] == '#') {
+			else if(rep[0] == '#')
+			{
 				sleep(10);
 			}
 		}

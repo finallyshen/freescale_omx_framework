@@ -11,14 +11,14 @@
 
 Mp3Parser::Mp3Parser()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.parser.mp3.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"parser.mp3";
-    bInContext = OMX_FALSE;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.parser.mp3.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"parser.mp3";
+	bInContext = OMX_FALSE;
 	bNeedSendCodecConfig = OMX_FALSE;
 }
 
@@ -53,7 +53,7 @@ OMX_ERRORTYPE Mp3Parser::SetSource(OMX_PARAM_CONTENTURITYPE *Content, OMX_PARAM_
 	}
 	fsl_osal_strcpy((char *)pMediaName, (const char *)&(pContentURI->contentURI));
 	if(fsl_osal_strncmp((fsl_osal_char*)pMediaName, "http://", 7) == 0
-			|| fsl_osal_strncmp((fsl_osal_char*)pMediaName, "rtsp://", 7) == 0)
+	        || fsl_osal_strncmp((fsl_osal_char*)pMediaName, "rtsp://", 7) == 0)
 		isStreamingSource = OMX_TRUE;
 
 	bGetMetadata = OMX_TRUE;
@@ -66,11 +66,11 @@ OMX_ERRORTYPE Mp3Parser::UnloadParserMetadata()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    if (pMediaName)
-    {
-        FSL_FREE(pMediaName);
-        pMediaName = NULL;
-    }
+	if (pMediaName)
+	{
+		FSL_FREE(pMediaName);
+		pMediaName = NULL;
+	}
 
 	for (OMX_U32 i = 0; i < MAX_MATADATA_NUM; i ++)
 	{
@@ -101,34 +101,34 @@ OMX_ERRORTYPE Mp3Parser::GetMetadata(OMX_CONFIG_METADATAITEMTYPE *pMatadataItem)
 }
 
 /**< C style functions to expose entry point for the shared library */
-	extern "C" {
-		OMX_ERRORTYPE Mp3ParserInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        Mp3Parser *obj = NULL;
-        ComponentBase *base = NULL;
+extern "C" {
+	OMX_ERRORTYPE Mp3ParserInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		Mp3Parser *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(Mp3Parser, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(Mp3Parser, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 
 	OMX_ERRORTYPE ParserMetadata(OMX_PTR *handle, OMX_PARAM_CONTENTURITYPE *Content, OMX_PARAM_CONTENTPIPETYPE *Pipe)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        Mp3Parser *obj = NULL;
-        ComponentBase *base = NULL;
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		Mp3Parser *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(Mp3Parser, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(Mp3Parser, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
 		ret = obj->SetSource(Content, Pipe);
 		if(ret != OMX_ErrorNone)
@@ -145,8 +145,8 @@ OMX_ERRORTYPE Mp3Parser::GetMetadata(OMX_CONFIG_METADATAITEMTYPE *pMatadataItem)
 
 	OMX_ERRORTYPE UnloadParserMetadata(OMX_PTR handle)
 	{
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        Mp3Parser *obj = (Mp3Parser *)handle;
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		Mp3Parser *obj = (Mp3Parser *)handle;
 
 		obj->InstanceDeInit();
 		obj->UnloadParserMetadata();
@@ -157,19 +157,19 @@ OMX_ERRORTYPE Mp3Parser::GetMetadata(OMX_CONFIG_METADATAITEMTYPE *pMatadataItem)
 
 	OMX_U32 GetMetadataNum(OMX_PTR handle)
 	{
-        Mp3Parser *obj = (Mp3Parser *)handle;
+		Mp3Parser *obj = (Mp3Parser *)handle;
 		return obj->GetMetadataNum();
 	}
 
 	OMX_U32 GetMetadataSize(OMX_PTR handle, OMX_U32 index)
 	{
-        Mp3Parser *obj = (Mp3Parser *)handle;
+		Mp3Parser *obj = (Mp3Parser *)handle;
 		return obj->GetMetadataSize(index);
 	}
 
 	OMX_ERRORTYPE GetMetadata(OMX_PTR handle, OMX_CONFIG_METADATAITEMTYPE *pMatadataItem)
 	{
-        Mp3Parser *obj = (Mp3Parser *)handle;
+		Mp3Parser *obj = (Mp3Parser *)handle;
 		return obj->GetMetadata(pMatadataItem);
 	}
 }

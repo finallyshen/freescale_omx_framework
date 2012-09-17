@@ -14,20 +14,22 @@
 extern "C" {
 #endif /* __cplusplus */
 
-typedef enum {
-    OMX_VIDEO_RENDER_IPULIB,
-    OMX_VIDEO_RENDER_OVERLAY,
-    OMX_VIDEO_RENDER_SURFACE,
-    OMX_VIDEO_RENDER_V4L,
-    OMX_VIDEO_RENDER_FB,
-    OMX_VIDEO_RENDER_EGL,
-    OMX_VIDEO_RENDER_NUM,
-}OMX_VIDEO_RENDER_TYPE;
+	typedef enum {
+		OMX_VIDEO_RENDER_IPULIB,
+		OMX_VIDEO_RENDER_OVERLAY,
+		OMX_VIDEO_RENDER_SURFACE,
+		OMX_VIDEO_RENDER_V4L,
+		OMX_VIDEO_RENDER_FB,
+		OMX_VIDEO_RENDER_EGL,
+		OMX_VIDEO_RENDER_NUM,
+	}
+	OMX_VIDEO_RENDER_TYPE;
 
-typedef struct {
-    const OMX_VIDEO_RENDER_TYPE type;
-    const char* name;
-}VIDEO_RENDER_MAP_ENTRY;
+	typedef struct
+	{
+		const OMX_VIDEO_RENDER_TYPE type;
+		const char* name;
+	} VIDEO_RENDER_MAP_ENTRY;
 
 #ifdef __cplusplus
 }

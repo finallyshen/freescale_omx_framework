@@ -60,72 +60,77 @@
 #define LEVEL_ONE               1.0000000000000000
 
 /** Delta bit allocation strategy */
-typedef enum {
-    DBA_REUSE = 0,
-    DBA_NEW,
-    DBA_NONE,
-    DBA_RESERVED
+typedef enum
+{
+	DBA_REUSE = 0,
+	DBA_NEW,
+	DBA_NONE,
+	DBA_RESERVED
 } AC3DeltaStrategy;
 
 /** Channel mode (audio coding mode) */
-typedef enum {
-    AC3_CHMODE_DUALMONO = 0,
-    AC3_CHMODE_MONO,
-    AC3_CHMODE_STEREO,
-    AC3_CHMODE_3F,
-    AC3_CHMODE_2F1R,
-    AC3_CHMODE_3F1R,
-    AC3_CHMODE_2F2R,
-    AC3_CHMODE_3F2R
+typedef enum
+{
+	AC3_CHMODE_DUALMONO = 0,
+	AC3_CHMODE_MONO,
+	AC3_CHMODE_STEREO,
+	AC3_CHMODE_3F,
+	AC3_CHMODE_2F1R,
+	AC3_CHMODE_3F1R,
+	AC3_CHMODE_2F2R,
+	AC3_CHMODE_3F2R
 } AC3ChannelMode;
 
-typedef struct AC3BitAllocParameters {
-    int sr_code;
-    int sr_shift;
-    int slow_gain, slow_decay, fast_decay, db_per_bit, floor;
-    int cpl_fast_leak, cpl_slow_leak;
+typedef struct AC3BitAllocParameters
+{
+	int sr_code;
+	int sr_shift;
+	int slow_gain, slow_decay, fast_decay, db_per_bit, floor;
+	int cpl_fast_leak, cpl_slow_leak;
 } AC3BitAllocParameters;
 
 /**
  * @struct AC3HeaderInfo
  * Coded AC-3 header values up to the lfeon element, plus derived values.
  */
-typedef struct {
-    /** @defgroup coded Coded elements
-     * @{
-     */
-    uint16_t sync_word;
-    uint16_t crc1;
-    uint8_t sr_code;
-    uint8_t bitstream_id;
-    uint8_t bitstream_mode;
-    uint8_t channel_mode;
-    uint8_t lfe_on;
-    uint8_t frame_type;
-    int substreamid;                        ///< substream identification
-    int center_mix_level;                   ///< Center mix level index
-    int surround_mix_level;                 ///< Surround mix level index
-    uint16_t channel_map;
-    int num_blocks;                         ///< number of audio blocks
-    /** @} */
+typedef struct
+{
+	/** @defgroup coded Coded elements
+	 * @{
+	 */
+	uint16_t sync_word;
+	uint16_t crc1;
+	uint8_t sr_code;
+	uint8_t bitstream_id;
+	uint8_t bitstream_mode;
+	uint8_t channel_mode;
+	uint8_t lfe_on;
+	uint8_t frame_type;
+	int substreamid;                        ///< substream identification
+	int center_mix_level;                   ///< Center mix level index
+	int surround_mix_level;                 ///< Surround mix level index
+	uint16_t channel_map;
+	int num_blocks;                         ///< number of audio blocks
+	/** @} */
 
-    /** @defgroup derived Derived values
-     * @{
-     */
-    uint8_t sr_shift;
-    uint16_t sample_rate;
-    uint32_t bit_rate;
-    uint8_t channels;
-    uint16_t frame_size;
-    int64_t channel_layout;
-    /** @} */
+	/** @defgroup derived Derived values
+	 * @{
+	 */
+	uint8_t sr_shift;
+	uint16_t sample_rate;
+	uint32_t bit_rate;
+	uint8_t channels;
+	uint16_t frame_size;
+	int64_t channel_layout;
+	/** @} */
 } AC3HeaderInfo;
 
-typedef enum {
-    EAC3_FRAME_TYPE_INDEPENDENT = 0,
-    EAC3_FRAME_TYPE_DEPENDENT,
-    EAC3_FRAME_TYPE_AC3_CONVERT,
-    EAC3_FRAME_TYPE_RESERVED
+typedef enum
+{
+	EAC3_FRAME_TYPE_INDEPENDENT = 0,
+	EAC3_FRAME_TYPE_DEPENDENT,
+	EAC3_FRAME_TYPE_AC3_CONVERT,
+	EAC3_FRAME_TYPE_RESERVED
 } EAC3FrameType;
 
 void ff_ac3_common_init(void);

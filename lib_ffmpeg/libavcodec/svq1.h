@@ -42,9 +42,10 @@
 #define SVQ1_BLOCK_INTER_4V     2
 #define SVQ1_BLOCK_INTRA        3
 
-struct svq1_frame_size {
-    uint16_t width;
-    uint16_t height;
+struct svq1_frame_size
+{
+	uint16_t width;
+	uint16_t height;
 };
 
 uint16_t ff_svq1_packet_checksum (const uint8_t *data, const int length,

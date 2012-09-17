@@ -23,7 +23,7 @@ RegistryAnalyser::~RegistryAnalyser()
 }
 
 REG_ERRORTYPE RegistryAnalyser::Open(
-        fsl_osal_char *file_name) 
+    fsl_osal_char *file_name)
 {
 	efsl_osal_return_type_t ret;
 
@@ -43,7 +43,7 @@ REG_ERRORTYPE RegistryAnalyser::Open(
 	return REG_SUCCESS;
 }
 
-REG_ERRORTYPE RegistryAnalyser::Close() 
+REG_ERRORTYPE RegistryAnalyser::Close()
 {
 	if (pfile == NULL)
 	{
@@ -75,7 +75,7 @@ List<REG_ENTRY> *RegistryAnalyser::GetNextEntry()
 
 	/** Remove previous entry */
 	RemoveEntry();
-	
+
 	while (BufferDataLen - UseOffset > 0 || FileReadEnd == E_FSL_OSAL_FALSE)
 	{
 		if (BufferDataLen - UseOffset == 0)
@@ -94,7 +94,7 @@ List<REG_ENTRY> *RegistryAnalyser::GetNextEntry()
 
 			UseOffset = 0;
 		}
-		
+
 		symbol = readBuffer[UseOffset];
 		UseOffset ++;
 
@@ -112,9 +112,9 @@ List<REG_ENTRY> *RegistryAnalyser::GetNextEntry()
 				bSkip = E_FSL_OSAL_TRUE;
 			}
 			else if (symbol == '\t'
-					|| symbol == ' '
-					|| symbol == '\n'
-					|| symbol == '\r')
+			         || symbol == ' '
+			         || symbol == '\n'
+			         || symbol == '\r')
 			{
 			}
 			else if (symbol == '@')
@@ -153,7 +153,7 @@ List<REG_ENTRY> *RegistryAnalyser::GetNextEntry()
 	return &RegList;
 }
 
-REG_ERRORTYPE RegistryAnalyser::RemoveEntry() 
+REG_ERRORTYPE RegistryAnalyser::RemoveEntry()
 {
 	fsl_osal_u32 NodeCnt = RegList.GetNodeCnt();
 	fsl_osal_s32 i;

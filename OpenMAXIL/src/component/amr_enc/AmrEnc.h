@@ -20,29 +20,31 @@
 #include "AmrEncWrapper.h"
 
 /** AMR band mode */
-typedef enum AMRBANDMODETYPE {
+typedef enum AMRBANDMODETYPE
+{
 	AMRBandModeUnused = 0,
-	AMRBandModeNB,      
+	AMRBandModeNB,
 	AMRBandModeWB
 } AMRBANDMODETYPE;
 
-class AmrEnc : public AudioFilter {
-    public:
-        AmrEnc();
-    private:
-        OMX_ERRORTYPE InitComponent();
-        OMX_ERRORTYPE DeInitComponent();
-        OMX_ERRORTYPE AudioFilterInstanceInit();
-        OMX_ERRORTYPE AudioFilterCodecInit();
-        OMX_ERRORTYPE AudioFilterInstanceDeInit();
-        OMX_ERRORTYPE AudioFilterGetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
-        OMX_ERRORTYPE AudioFilterSetParameterPCM();
-        OMX_ERRORTYPE AudioFilterSetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
-		AUDIO_FILTERRETURNTYPE AudioFilterFrame();
-		OMX_ERRORTYPE AudioFilterReset();
-        OMX_AUDIO_PARAM_AMRTYPE AmrType;
-        AMRBANDMODETYPE AmrBandMode;
-        AmrEncWrapper *pEncWrapper;
+class AmrEnc : public AudioFilter
+{
+public:
+	AmrEnc();
+private:
+	OMX_ERRORTYPE InitComponent();
+	OMX_ERRORTYPE DeInitComponent();
+	OMX_ERRORTYPE AudioFilterInstanceInit();
+	OMX_ERRORTYPE AudioFilterCodecInit();
+	OMX_ERRORTYPE AudioFilterInstanceDeInit();
+	OMX_ERRORTYPE AudioFilterGetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
+	OMX_ERRORTYPE AudioFilterSetParameterPCM();
+	OMX_ERRORTYPE AudioFilterSetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
+	AUDIO_FILTERRETURNTYPE AudioFilterFrame();
+	OMX_ERRORTYPE AudioFilterReset();
+	OMX_AUDIO_PARAM_AMRTYPE AmrType;
+	AMRBANDMODETYPE AmrBandMode;
+	AmrEncWrapper *pEncWrapper;
 };
 
 #endif

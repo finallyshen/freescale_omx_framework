@@ -36,8 +36,8 @@
  */
 static av_cold void mdct_end(AC3MDCTContext *mdct)
 {
-    ff_mdct_end(&mdct->fft);
-    av_freep(&mdct->window);
+	ff_mdct_end(&mdct->fft);
+	av_freep(&mdct->window);
 }
 
 
@@ -48,23 +48,24 @@ static av_cold void mdct_end(AC3MDCTContext *mdct)
 static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
                              int nbits)
 {
-    float *window;
-    int i, n, n2;
+	float *window;
+	int i, n, n2;
 
-    n  = 1 << nbits;
-    n2 = n >> 1;
+	n  = 1 << nbits;
+	n2 = n >> 1;
 
-    window = av_malloc(n * sizeof(*window));
-    if (!window) {
-        av_log(avctx, AV_LOG_ERROR, "Cannot allocate memory.\n");
-        return AVERROR(ENOMEM);
-    }
-    ff_kbd_window_init(window, 5.0, n2);
-    for (i = 0; i < n2; i++)
-        window[n-1-i] = window[i];
-    mdct->window = window;
+	window = av_malloc(n * sizeof(*window));
+	if (!window)
+	{
+		av_log(avctx, AV_LOG_ERROR, "Cannot allocate memory.\n");
+		return AVERROR(ENOMEM);
+	}
+	ff_kbd_window_init(window, 5.0, n2);
+	for (i = 0; i < n2; i++)
+		window[n-1-i] = window[i];
+	mdct->window = window;
 
-    return ff_mdct_init(&mdct->fft, nbits, 0, -2.0 / n);
+	return ff_mdct_init(&mdct->fft, nbits, 0, -2.0 / n);
 }
 
 
@@ -74,7 +75,7 @@ static av_cold int mdct_init(AVCodecContext *avctx, AC3MDCTContext *mdct,
 static void apply_window(DSPContext *dsp, float *output, const float *input,
                          const float *window, unsigned int len)
 {
-    dsp->vector_fmul(output, input, window, len);
+	dsp->vector_fmul(output, input, window, len);
 }
 
 
@@ -83,8 +84,8 @@ static void apply_window(DSPContext *dsp, float *output, const float *input,
  */
 static int normalize_samples(AC3EncodeContext *s)
 {
-    /* Normalization is not needed for floating-point samples, so just return 0 */
-    return 0;
+	/* Normalization is not needed for floating-point samples, so just return 0 */
+	return 0;
 }
 
 
@@ -93,22 +94,26 @@ static int normalize_samples(AC3EncodeContext *s)
  */
 static void scale_coefficients(AC3EncodeContext *s)
 {
-    s->ac3dsp.float_to_fixed24(s->fixed_coef_buffer, s->mdct_coef_buffer,
-                               AC3_MAX_COEFS * AC3_MAX_BLOCKS * s->channels);
+	s->ac3dsp.float_to_fixed24(s->fixed_coef_buffer, s->mdct_coef_buffer,
+	                           AC3_MAX_COEFS * AC3_MAX_BLOCKS * s->channels);
 }
 
 
-AVCodec ff_ac3_encoder = {
-    "ac3",
-    AVMEDIA_TYPE_AUDIO,
-    CODEC_ID_AC3,
-    sizeof(AC3EncodeContext),
-    ac3_encode_init,
-    ac3_encode_frame,
-    ac3_encode_close,
-    NULL,
-    .sample_fmts = (const enum AVSampleFormat[]){AV_SAMPLE_FMT_FLT,AV_SAMPLE_FMT_NONE},
-    .long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
-    .priv_class = &ac3enc_class,
-    .channel_layouts = ac3_channel_layouts,
+AVCodec ff_ac3_encoder =
+{
+	"ac3",
+	AVMEDIA_TYPE_AUDIO,
+	CODEC_ID_AC3,
+	sizeof(AC3EncodeContext),
+	ac3_encode_init,
+	ac3_encode_frame,
+	ac3_encode_close,
+	NULL,
+	.sample_fmts = (const enum AVSampleFormat[])
+	{
+		AV_SAMPLE_FMT_FLT,AV_SAMPLE_FMT_NONE
+	},
+	.long_name = NULL_IF_CONFIG_SMALL("ATSC A/52A (AC-3)"),
+	.priv_class = &ac3enc_class,
+	.channel_layouts = ac3_channel_layouts,
 };

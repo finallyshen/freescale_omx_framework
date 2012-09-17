@@ -26,29 +26,32 @@
 typedef int DWTELEM;
 typedef short IDWTELEM;
 
-typedef struct {
-    IDWTELEM *b0;
-    IDWTELEM *b1;
-    IDWTELEM *b2;
-    IDWTELEM *b3;
-    int y;
+typedef struct
+{
+	IDWTELEM *b0;
+	IDWTELEM *b1;
+	IDWTELEM *b2;
+	IDWTELEM *b3;
+	int y;
 } DWTCompose;
 
 /** Used to minimize the amount of memory used in order to optimize cache performance. **/
-typedef struct slice_buffer_s {
-    IDWTELEM * * line; ///< For use by idwt and predict_slices.
-    IDWTELEM * * data_stack; ///< Used for internal purposes.
-    int data_stack_top;
-    int line_count;
-    int line_width;
-    int data_count;
-    IDWTELEM * base_buffer; ///< Buffer that this structure is caching.
+typedef struct slice_buffer_s
+{
+	IDWTELEM * * line; ///< For use by idwt and predict_slices.
+	IDWTELEM * * data_stack; ///< Used for internal purposes.
+	int data_stack_top;
+	int line_count;
+	int line_width;
+	int data_count;
+	IDWTELEM * base_buffer; ///< Buffer that this structure is caching.
 } slice_buffer;
 
-typedef struct DWTContext {
-    void (*vertical_compose97i)(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
-    void (*horizontal_compose97i)(IDWTELEM *b, int width);
-    void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
+typedef struct DWTContext
+{
+	void (*vertical_compose97i)(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
+	void (*horizontal_compose97i)(IDWTELEM *b, int width);
+	void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
 } DWTContext;
 
 #define MAX_DECOMPOSITIONS 8

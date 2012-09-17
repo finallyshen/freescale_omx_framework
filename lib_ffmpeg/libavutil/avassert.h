@@ -63,6 +63,6 @@
 #define av_assert2(cond) ((void)0)
 #endif
 
-#define assert 
+#define assert
 
 #endif

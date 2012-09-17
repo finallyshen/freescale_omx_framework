@@ -206,7 +206,7 @@ static void OPNAME ## rv30_tpel16_hhvv_lowpass(uint8_t *dst, uint8_t *src, int d
     OPNAME ## rv30_tpel8_hhvv_lowpass(dst+8, src+8, dstStride, srcStride);\
 }\
 \
-
+ 
 #define RV30_MC(OPNAME, SIZE) \
 static void OPNAME ## rv30_tpel ## SIZE ## _mc10_c(uint8_t *dst, uint8_t *src, int stride){\
     OPNAME ## rv30_tpel ## SIZE ## _h_lowpass(dst, src, stride, stride, 12, 6);\
@@ -240,7 +240,7 @@ static void OPNAME ## rv30_tpel ## SIZE ## _mc22_c(uint8_t *dst, uint8_t *src, i
     OPNAME ## rv30_tpel ## SIZE ## _hhvv_lowpass(dst, src, stride, stride);\
 }\
 \
-
+ 
 #define op_avg(a, b)  a = (((a)+cm[b]+1)>>1)
 #define op_put(a, b)  a = cm[b]
 
@@ -251,41 +251,42 @@ RV30_MC(put_, 16)
 RV30_MC(avg_, 8)
 RV30_MC(avg_, 16)
 
-av_cold void ff_rv30dsp_init(DSPContext* c, AVCodecContext *avctx) {
-    c->put_rv30_tpel_pixels_tab[0][ 0] = c->put_h264_qpel_pixels_tab[0][0];
-    c->put_rv30_tpel_pixels_tab[0][ 1] = put_rv30_tpel16_mc10_c;
-    c->put_rv30_tpel_pixels_tab[0][ 2] = put_rv30_tpel16_mc20_c;
-    c->put_rv30_tpel_pixels_tab[0][ 4] = put_rv30_tpel16_mc01_c;
-    c->put_rv30_tpel_pixels_tab[0][ 5] = put_rv30_tpel16_mc11_c;
-    c->put_rv30_tpel_pixels_tab[0][ 6] = put_rv30_tpel16_mc21_c;
-    c->put_rv30_tpel_pixels_tab[0][ 8] = put_rv30_tpel16_mc02_c;
-    c->put_rv30_tpel_pixels_tab[0][ 9] = put_rv30_tpel16_mc12_c;
-    c->put_rv30_tpel_pixels_tab[0][10] = put_rv30_tpel16_mc22_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 0] = c->avg_h264_qpel_pixels_tab[0][0];
-    c->avg_rv30_tpel_pixels_tab[0][ 1] = avg_rv30_tpel16_mc10_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 2] = avg_rv30_tpel16_mc20_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 4] = avg_rv30_tpel16_mc01_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 5] = avg_rv30_tpel16_mc11_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 6] = avg_rv30_tpel16_mc21_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 8] = avg_rv30_tpel16_mc02_c;
-    c->avg_rv30_tpel_pixels_tab[0][ 9] = avg_rv30_tpel16_mc12_c;
-    c->avg_rv30_tpel_pixels_tab[0][10] = avg_rv30_tpel16_mc22_c;
-    c->put_rv30_tpel_pixels_tab[1][ 0] = c->put_h264_qpel_pixels_tab[1][0];
-    c->put_rv30_tpel_pixels_tab[1][ 1] = put_rv30_tpel8_mc10_c;
-    c->put_rv30_tpel_pixels_tab[1][ 2] = put_rv30_tpel8_mc20_c;
-    c->put_rv30_tpel_pixels_tab[1][ 4] = put_rv30_tpel8_mc01_c;
-    c->put_rv30_tpel_pixels_tab[1][ 5] = put_rv30_tpel8_mc11_c;
-    c->put_rv30_tpel_pixels_tab[1][ 6] = put_rv30_tpel8_mc21_c;
-    c->put_rv30_tpel_pixels_tab[1][ 8] = put_rv30_tpel8_mc02_c;
-    c->put_rv30_tpel_pixels_tab[1][ 9] = put_rv30_tpel8_mc12_c;
-    c->put_rv30_tpel_pixels_tab[1][10] = put_rv30_tpel8_mc22_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 0] = c->avg_h264_qpel_pixels_tab[1][0];
-    c->avg_rv30_tpel_pixels_tab[1][ 1] = avg_rv30_tpel8_mc10_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 2] = avg_rv30_tpel8_mc20_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 4] = avg_rv30_tpel8_mc01_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 5] = avg_rv30_tpel8_mc11_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 6] = avg_rv30_tpel8_mc21_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 8] = avg_rv30_tpel8_mc02_c;
-    c->avg_rv30_tpel_pixels_tab[1][ 9] = avg_rv30_tpel8_mc12_c;
-    c->avg_rv30_tpel_pixels_tab[1][10] = avg_rv30_tpel8_mc22_c;
+av_cold void ff_rv30dsp_init(DSPContext* c, AVCodecContext *avctx)
+{
+	c->put_rv30_tpel_pixels_tab[0][ 0] = c->put_h264_qpel_pixels_tab[0][0];
+	c->put_rv30_tpel_pixels_tab[0][ 1] = put_rv30_tpel16_mc10_c;
+	c->put_rv30_tpel_pixels_tab[0][ 2] = put_rv30_tpel16_mc20_c;
+	c->put_rv30_tpel_pixels_tab[0][ 4] = put_rv30_tpel16_mc01_c;
+	c->put_rv30_tpel_pixels_tab[0][ 5] = put_rv30_tpel16_mc11_c;
+	c->put_rv30_tpel_pixels_tab[0][ 6] = put_rv30_tpel16_mc21_c;
+	c->put_rv30_tpel_pixels_tab[0][ 8] = put_rv30_tpel16_mc02_c;
+	c->put_rv30_tpel_pixels_tab[0][ 9] = put_rv30_tpel16_mc12_c;
+	c->put_rv30_tpel_pixels_tab[0][10] = put_rv30_tpel16_mc22_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 0] = c->avg_h264_qpel_pixels_tab[0][0];
+	c->avg_rv30_tpel_pixels_tab[0][ 1] = avg_rv30_tpel16_mc10_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 2] = avg_rv30_tpel16_mc20_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 4] = avg_rv30_tpel16_mc01_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 5] = avg_rv30_tpel16_mc11_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 6] = avg_rv30_tpel16_mc21_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 8] = avg_rv30_tpel16_mc02_c;
+	c->avg_rv30_tpel_pixels_tab[0][ 9] = avg_rv30_tpel16_mc12_c;
+	c->avg_rv30_tpel_pixels_tab[0][10] = avg_rv30_tpel16_mc22_c;
+	c->put_rv30_tpel_pixels_tab[1][ 0] = c->put_h264_qpel_pixels_tab[1][0];
+	c->put_rv30_tpel_pixels_tab[1][ 1] = put_rv30_tpel8_mc10_c;
+	c->put_rv30_tpel_pixels_tab[1][ 2] = put_rv30_tpel8_mc20_c;
+	c->put_rv30_tpel_pixels_tab[1][ 4] = put_rv30_tpel8_mc01_c;
+	c->put_rv30_tpel_pixels_tab[1][ 5] = put_rv30_tpel8_mc11_c;
+	c->put_rv30_tpel_pixels_tab[1][ 6] = put_rv30_tpel8_mc21_c;
+	c->put_rv30_tpel_pixels_tab[1][ 8] = put_rv30_tpel8_mc02_c;
+	c->put_rv30_tpel_pixels_tab[1][ 9] = put_rv30_tpel8_mc12_c;
+	c->put_rv30_tpel_pixels_tab[1][10] = put_rv30_tpel8_mc22_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 0] = c->avg_h264_qpel_pixels_tab[1][0];
+	c->avg_rv30_tpel_pixels_tab[1][ 1] = avg_rv30_tpel8_mc10_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 2] = avg_rv30_tpel8_mc20_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 4] = avg_rv30_tpel8_mc01_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 5] = avg_rv30_tpel8_mc11_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 6] = avg_rv30_tpel8_mc21_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 8] = avg_rv30_tpel8_mc02_c;
+	c->avg_rv30_tpel_pixels_tab[1][ 9] = avg_rv30_tpel8_mc12_c;
+	c->avg_rv30_tpel_pixels_tab[1][10] = avg_rv30_tpel8_mc22_c;
 }

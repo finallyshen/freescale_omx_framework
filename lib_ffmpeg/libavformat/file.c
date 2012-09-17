@@ -35,73 +35,80 @@
 
 static int file_read(URLContext *h, unsigned char *buf, int size)
 {
-    int fd = (intptr_t) h->priv_data;
-    return read(fd, buf, size);
+	int fd = (intptr_t) h->priv_data;
+	return read(fd, buf, size);
 }
 
 static int file_write(URLContext *h, const unsigned char *buf, int size)
 {
-    int fd = (intptr_t) h->priv_data;
-    return write(fd, buf, size);
+	int fd = (intptr_t) h->priv_data;
+	return write(fd, buf, size);
 }
 
 static int file_get_handle(URLContext *h)
 {
-    return (intptr_t) h->priv_data;
+	return (intptr_t) h->priv_data;
 }
 
 #if CONFIG_FILE_PROTOCOL
 
 static int file_open(URLContext *h, const char *filename, int flags)
 {
-    int access;
-    int fd;
+	int access;
+	int fd;
 
-    av_strstart(filename, "file:", &filename);
+	av_strstart(filename, "file:", &filename);
 
-    if (flags & AVIO_RDWR) {
-        access = O_CREAT | O_TRUNC | O_RDWR;
-    } else if (flags & AVIO_WRONLY) {
-        access = O_CREAT | O_TRUNC | O_WRONLY;
-    } else {
-        access = O_RDONLY;
-    }
+	if (flags & AVIO_RDWR)
+	{
+		access = O_CREAT | O_TRUNC | O_RDWR;
+	}
+	else if (flags & AVIO_WRONLY)
+	{
+		access = O_CREAT | O_TRUNC | O_WRONLY;
+	}
+	else
+	{
+		access = O_RDONLY;
+	}
 #ifdef O_BINARY
-    access |= O_BINARY;
+	access |= O_BINARY;
 #endif
-    fd = open(filename, access, 0666);
-    if (fd == -1)
-        return AVERROR(errno);
-    h->priv_data = (void *) (intptr_t) fd;
-    return 0;
+	fd = open(filename, access, 0666);
+	if (fd == -1)
+		return AVERROR(errno);
+	h->priv_data = (void *) (intptr_t) fd;
+	return 0;
 }
 
 /* XXX: use llseek */
 static int64_t file_seek(URLContext *h, int64_t pos, int whence)
 {
-    int fd = (intptr_t) h->priv_data;
-    if (whence == AVSEEK_SIZE) {
-        struct stat st;
-        int ret = fstat(fd, &st);
-        return ret < 0 ? AVERROR(errno) : st.st_size;
-    }
-    return lseek(fd, pos, whence);
+	int fd = (intptr_t) h->priv_data;
+	if (whence == AVSEEK_SIZE)
+	{
+		struct stat st;
+		int ret = fstat(fd, &st);
+		return ret < 0 ? AVERROR(errno) : st.st_size;
+	}
+	return lseek(fd, pos, whence);
 }
 
 static int file_close(URLContext *h)
 {
-    int fd = (intptr_t) h->priv_data;
-    return close(fd);
+	int fd = (intptr_t) h->priv_data;
+	return close(fd);
 }
 
-URLProtocol ff_file_protocol = {
-    "file",
-    file_open,
-    file_read,
-    file_write,
-    file_seek,
-    file_close,
-    .url_get_file_handle = file_get_handle,
+URLProtocol ff_file_protocol =
+{
+	"file",
+	file_open,
+	file_read,
+	file_write,
+	file_seek,
+	file_close,
+	.url_get_file_handle = file_get_handle,
 };
 
 #endif /* CONFIG_FILE_PROTOCOL */
@@ -110,32 +117,37 @@ URLProtocol ff_file_protocol = {
 
 static int pipe_open(URLContext *h, const char *filename, int flags)
 {
-    int fd;
-    char *final;
-    av_strstart(filename, "pipe:", &filename);
+	int fd;
+	char *final;
+	av_strstart(filename, "pipe:", &filename);
 
-    fd = strtol(filename, &final, 10);
-    if((filename == final) || *final ) {/* No digits found, or something like 10ab */
-        if (flags & AVIO_WRONLY) {
-            fd = 1;
-        } else {
-            fd = 0;
-        }
-    }
+	fd = strtol(filename, &final, 10);
+	if((filename == final) || *final )  /* No digits found, or something like 10ab */
+	{
+		if (flags & AVIO_WRONLY)
+		{
+			fd = 1;
+		}
+		else
+		{
+			fd = 0;
+		}
+	}
 #if HAVE_SETMODE
-    setmode(fd, O_BINARY);
+	setmode(fd, O_BINARY);
 #endif
-    h->priv_data = (void *) (intptr_t) fd;
-    h->is_streamed = 1;
-    return 0;
+	h->priv_data = (void *) (intptr_t) fd;
+	h->is_streamed = 1;
+	return 0;
 }
 
-URLProtocol ff_pipe_protocol = {
-    "pipe",
-    pipe_open,
-    file_read,
-    file_write,
-    .url_get_file_handle = file_get_handle,
+URLProtocol ff_pipe_protocol =
+{
+	"pipe",
+	pipe_open,
+	file_read,
+	file_write,
+	.url_get_file_handle = file_get_handle,
 };
 
 #endif /* CONFIG_PIPE_PROTOCOL */

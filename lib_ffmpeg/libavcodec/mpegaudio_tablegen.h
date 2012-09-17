@@ -40,29 +40,32 @@ static float expval_table_float[512][16];
 
 static void mpegaudio_tableinit(void)
 {
-    int i, value, exponent;
-    for (i = 1; i < TABLE_4_3_SIZE; i++) {
-        double value = i / 4;
-        double f, fm;
-        int e, m;
-        f  = value * cbrtf(value) * pow(2, (i & 3) * 0.25);
-        fm = frexp(f, &e);
-        m  = (uint32_t)(fm * (1LL << 31) + 0.5);
-        e += FRAC_BITS - 31 + 5 - 100;
+	int i, value, exponent;
+	for (i = 1; i < TABLE_4_3_SIZE; i++)
+	{
+		double value = i / 4;
+		double f, fm;
+		int e, m;
+		f  = value * cbrtf(value) * pow(2, (i & 3) * 0.25);
+		fm = frexp(f, &e);
+		m  = (uint32_t)(fm * (1LL << 31) + 0.5);
+		e += FRAC_BITS - 31 + 5 - 100;
 
-        /* normalized to FRAC_BITS */
-        table_4_3_value[i] =  m;
-        table_4_3_exp[i]   = -e;
-    }
-    for (exponent = 0; exponent < 512; exponent++) {
-        for (value = 0; value < 16; value++) {
-            double f = (double)value * cbrtf(value) * pow(2, (exponent - 400) * 0.25 + FRAC_BITS + 5);
-            expval_table[exponent][value] = llrint(f);
-            expval_table_float[exponent][value] = f;
-        }
-        exp_table[exponent] = expval_table[exponent][1];
-        exp_table_float[exponent] = expval_table_float[exponent][1];
-    }
+		/* normalized to FRAC_BITS */
+		table_4_3_value[i] =  m;
+		table_4_3_exp[i]   = -e;
+	}
+	for (exponent = 0; exponent < 512; exponent++)
+	{
+		for (value = 0; value < 16; value++)
+		{
+			double f = (double)value * cbrtf(value) * pow(2, (exponent - 400) * 0.25 + FRAC_BITS + 5);
+			expval_table[exponent][value] = llrint(f);
+			expval_table_float[exponent][value] = f;
+		}
+		exp_table[exponent] = expval_table[exponent][1];
+		exp_table_float[exponent] = expval_table_float[exponent][1];
+	}
 }
 #endif /* CONFIG_HARDCODED_TABLES */
 

@@ -17,7 +17,7 @@
 
 OMX_ERRORTYPE WbAmrEncWrapper::InstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 i;
 
 	pAmrEncConfig = (WBAMRE_Encoder_Config *)FSL_MALLOC(sizeof(WBAMRE_Encoder_Config));
@@ -68,69 +68,69 @@ OMX_ERRORTYPE WbAmrEncWrapper::CodecInit(OMX_AUDIO_PARAM_AMRTYPE *pAmrType)
 	pAmrEncConfig->wbappe_dtx_flag = 0;/* disable DTX mode here */
 	pAmrEncConfig->wbamre_output_size = (WBAMR_U16*)&nOutputSize;
 
-    switch(pAmrType->eAMRFrameFormat) 
+	switch(pAmrType->eAMRFrameFormat)
 	{
-		case OMX_AUDIO_AMRFrameFormatConformance:
-			pAmrEncConfig->wbamre_output_format = 1;
-			break;
-		case OMX_AUDIO_AMRFrameFormatFSF:
-			LOG_DEBUG("Amr format MMSIO.\n");
-			pAmrEncConfig->wbamre_output_format = 2;
-			break;
-		case OMX_AUDIO_AMRFrameFormatIF1:
-			pAmrEncConfig->wbamre_output_format = 4;
-			break;
-		case OMX_AUDIO_AMRFrameFormatIF2:
-			pAmrEncConfig->wbamre_output_format = 3;
-			break;
-		default:
-			return OMX_ErrorBadParameter;
+	case OMX_AUDIO_AMRFrameFormatConformance:
+		pAmrEncConfig->wbamre_output_format = 1;
+		break;
+	case OMX_AUDIO_AMRFrameFormatFSF:
+		LOG_DEBUG("Amr format MMSIO.\n");
+		pAmrEncConfig->wbamre_output_format = 2;
+		break;
+	case OMX_AUDIO_AMRFrameFormatIF1:
+		pAmrEncConfig->wbamre_output_format = 4;
+		break;
+	case OMX_AUDIO_AMRFrameFormatIF2:
+		pAmrEncConfig->wbamre_output_format = 3;
+		break;
+	default:
+		return OMX_ErrorBadParameter;
 	}
-	switch(pAmrType->eAMRBandMode) 
+	switch(pAmrType->eAMRBandMode)
 	{
-		case OMX_AUDIO_AMRBandModeUnused:
-			mode_in = WBAMR_MODE_23_85;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB0:
-			mode_in = WBAMR_MODE_6_60;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB1:
-			mode_in = WBAMR_MODE_8_85;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB2:
-			mode_in = WBAMR_MODE_12_65;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB3:
-			mode_in = WBAMR_MODE_14_25;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB4:
-			mode_in = WBAMR_MODE_15_85;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB5:
-			mode_in = WBAMR_MODE_18_25;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB6:
-			mode_in = WBAMR_MODE_19_85;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB7:
-			mode_in = WBAMR_MODE_23_05;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		case OMX_AUDIO_AMRBandModeWB8:
-			mode_in = WBAMR_MODE_23_85;
-			pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
-			break;
-		default:
-            return OMX_ErrorBadParameter;
-    }
+	case OMX_AUDIO_AMRBandModeUnused:
+		mode_in = WBAMR_MODE_23_85;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB0:
+		mode_in = WBAMR_MODE_6_60;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB1:
+		mode_in = WBAMR_MODE_8_85;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB2:
+		mode_in = WBAMR_MODE_12_65;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB3:
+		mode_in = WBAMR_MODE_14_25;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB4:
+		mode_in = WBAMR_MODE_15_85;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB5:
+		mode_in = WBAMR_MODE_18_25;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB6:
+		mode_in = WBAMR_MODE_19_85;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB7:
+		mode_in = WBAMR_MODE_23_05;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	case OMX_AUDIO_AMRBandModeWB8:
+		mode_in = WBAMR_MODE_23_85;
+		pAmrEncConfig->wbappe_mode = (WBAMR_S16 *)&mode_in;/* set encoding mode here */
+		break;
+	default:
+		return OMX_ErrorBadParameter;
+	}
 
 	WBAMRE_RET_TYPE AmrRet;
 	AmrRet = wbamre_encode_init(pAmrEncConfig);
@@ -140,12 +140,12 @@ OMX_ERRORTYPE WbAmrEncWrapper::CodecInit(OMX_AUDIO_PARAM_AMRTYPE *pAmrType)
 		return OMX_ErrorUndefined;
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE WbAmrEncWrapper::InstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 MemoryCnt = pAmrEncConfig->wbamre_mem_info.wbamre_num_reqs;
 	OMX_S32 i;
 
@@ -156,21 +156,21 @@ OMX_ERRORTYPE WbAmrEncWrapper::InstanceDeInit()
 
 	FSL_FREE(pAmrEncConfig);
 
-    return ret;
+	return ret;
 }
 
 OMX_U32 WbAmrEncWrapper::getInputBufferPushSize()
 {
-    return WB_INPUT_BUF_PUSH_SIZE;
+	return WB_INPUT_BUF_PUSH_SIZE;
 }
 
 OMX_ERRORTYPE WbAmrEncWrapper::encodeFrame(
-                    OMX_U8 *pOutBuffer, 
-                    OMX_U32 *pOutputDataSize,
-                    OMX_U8 *pInputBuffer, 
-                    OMX_U32 *pInputDataSize)
+    OMX_U8 *pOutBuffer,
+    OMX_U32 *pOutputDataSize,
+    OMX_U8 *pInputBuffer,
+    OMX_U32 *pInputDataSize)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	wbamre_encode_frame(pAmrEncConfig, (WBAMR_S16*)pInputBuffer, (WBAMR_S16*)pOutBuffer);
 
@@ -179,16 +179,16 @@ OMX_ERRORTYPE WbAmrEncWrapper::encodeFrame(
 	*pOutputDataSize = *(pAmrEncConfig->wbamre_output_size);
 	*pInputDataSize = (WBAMR_L_FRAME * sizeof(WBAMR_S16));
 
-    return ret;
+	return ret;
 
 }
 
 OMX_TICKS WbAmrEncWrapper::getTsPerFrame(OMX_U32 sampleRate)
 {
-    if(sampleRate > 0)
+	if(sampleRate > 0)
 		return WBAMR_L_FRAME *OMX_TICKS_PER_SECOND/sampleRate;
 	else
-        return 0;
+		return 0;
 
 }
 

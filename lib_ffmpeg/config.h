@@ -4,12 +4,12 @@
 #define FFMPEG_CONFIGURATION ""
 #define FFMPEG_LICENSE "LGPL version 2.1 or later"
 #define FFMPEG_DATADIR
-#define CC_TYPE 
-#define CC_VERSION 
-#define restrict 
+#define CC_TYPE
+#define CC_VERSION
+#define restrict
 #define EXTERN_PREFIX
-#define EXTERN_ASM 
-#define SLIBSUF 
+#define EXTERN_ASM
+#define SLIBSUF
 //#define av_always_inline
 #define ARCH_ALPHA 0
 #ifdef ARCH_ARM

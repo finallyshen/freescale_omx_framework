@@ -77,26 +77,28 @@ static int    TelemCnt;
 
 static void prof_report (void)
 {
-    int i;
-    double s = 0;
-    for (i=0;i<16;i++) {
-        double v;
-        if (TelemNames[i]) {
-            v = Telem[i]/TelemCnt;
-            av_log (NULL,AV_LOG_DEBUG,"%-20s: %12.4f\t%12.4f\n", TelemNames[i],v,v/64);
-            s = s + Telem[i];
-        }
-    }
-    av_log (NULL,AV_LOG_DEBUG,"%-20s: %12.4f\t%12.4f\n%20.4f\t%d\n",
-            "total",s/TelemCnt,s/TelemCnt/64,s,TelemCnt);
+	int i;
+	double s = 0;
+	for (i=0; i<16; i++)
+	{
+		double v;
+		if (TelemNames[i])
+		{
+			v = Telem[i]/TelemCnt;
+			av_log (NULL,AV_LOG_DEBUG,"%-20s: %12.4f\t%12.4f\n", TelemNames[i],v,v/64);
+			s = s + Telem[i];
+		}
+	}
+	av_log (NULL,AV_LOG_DEBUG,"%-20s: %12.4f\t%12.4f\n%20.4f\t%d\n",
+	        "total",s/TelemCnt,s/TelemCnt/64,s,TelemCnt);
 }
 
 static void bfprof (void)
 {
-    static int init;
-    if (!init) atexit (prof_report);
-    init=1;
-    TelemCnt++;
+	static int init;
+	if (!init) atexit (prof_report);
+	init=1;
+	TelemCnt++;
 }
 
 #else

@@ -24,39 +24,41 @@
 
 static av_cold int ass_decode_init(AVCodecContext *avctx)
 {
-    avctx->subtitle_header = av_malloc(avctx->extradata_size);
-    if (!avctx->extradata)
-        return AVERROR(ENOMEM);
-    memcpy(avctx->subtitle_header, avctx->extradata, avctx->extradata_size);
-    avctx->subtitle_header_size = avctx->extradata_size;
-    return 0;
+	avctx->subtitle_header = av_malloc(avctx->extradata_size);
+	if (!avctx->extradata)
+		return AVERROR(ENOMEM);
+	memcpy(avctx->subtitle_header, avctx->extradata, avctx->extradata_size);
+	avctx->subtitle_header_size = avctx->extradata_size;
+	return 0;
 }
 
 static int ass_decode_frame(AVCodecContext *avctx, void *data, int *got_sub_ptr,
                             AVPacket *avpkt)
 {
-    const char *ptr = avpkt->data;
-    int len, size = avpkt->size;
+	const char *ptr = avpkt->data;
+	int len, size = avpkt->size;
 
-    ff_ass_init(data);
+	ff_ass_init(data);
 
-    while (size > 0) {
-        len = ff_ass_add_rect(data, ptr, 0, 0/* FIXME: duration */, 1);
-        if (len < 0)
-            return len;
-        ptr  += len;
-        size -= len;
-    }
+	while (size > 0)
+	{
+		len = ff_ass_add_rect(data, ptr, 0, 0/* FIXME: duration */, 1);
+		if (len < 0)
+			return len;
+		ptr  += len;
+		size -= len;
+	}
 
-    *got_sub_ptr = avpkt->size > 0;
-    return avpkt->size;
+	*got_sub_ptr = avpkt->size > 0;
+	return avpkt->size;
 }
 
-AVCodec ff_ass_decoder = {
-    .name         = "ass",
-    .long_name    = NULL_IF_CONFIG_SMALL("Advanced SubStation Alpha subtitle"),
-    .type         = AVMEDIA_TYPE_SUBTITLE,
-    .id           = CODEC_ID_SSA,
-    .init         = ass_decode_init,
-    .decode       = ass_decode_frame,
+AVCodec ff_ass_decoder =
+{
+	.name         = "ass",
+	.long_name    = NULL_IF_CONFIG_SMALL("Advanced SubStation Alpha subtitle"),
+	.type         = AVMEDIA_TYPE_SUBTITLE,
+	.id           = CODEC_ID_SSA,
+	.init         = ass_decode_init,
+	.decode       = ass_decode_frame,
 };

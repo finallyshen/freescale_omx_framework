@@ -26,10 +26,11 @@
 
 #include <stdint.h>
 
-typedef struct AVFifoBuffer {
-    uint8_t *buffer;
-    uint8_t *rptr, *wptr, *end;
-    uint32_t rndx, wndx;
+typedef struct AVFifoBuffer
+{
+	uint8_t *buffer;
+	uint8_t *rptr, *wptr, *end;
+	uint32_t rndx, wndx;
 } AVFifoBuffer;
 
 /**
@@ -108,9 +109,9 @@ void av_fifo_drain(AVFifoBuffer *f, int size);
 
 static inline uint8_t av_fifo_peek(AVFifoBuffer *f, int offs)
 {
-    uint8_t *ptr = f->rptr + offs;
-    if (ptr >= f->end)
-        ptr -= f->end - f->buffer;
-    return *ptr;
+	uint8_t *ptr = f->rptr + offs;
+	if (ptr >= f->end)
+		ptr -= f->end - f->buffer;
+	return *ptr;
 }
 #endif /* AVUTIL_FIFO_H */

@@ -31,30 +31,30 @@
 #define av_bswap16 av_bswap16
 static av_always_inline av_const uint16_t av_bswap16(uint16_t x)
 {
-    __asm__("rorw $8, %0" : "+r"(x));
-    return x;
+	__asm__("rorw $8, %0" : "+r"(x));
+	return x;
 }
 
 #define av_bswap32 av_bswap32
 static av_always_inline av_const uint32_t av_bswap32(uint32_t x)
 {
 #if HAVE_BSWAP
-    __asm__("bswap   %0" : "+r" (x));
+	__asm__("bswap   %0" : "+r" (x));
 #else
-    __asm__("rorw    $8,  %w0 \n\t"
-            "rorl    $16, %0  \n\t"
-            "rorw    $8,  %w0"
-            : "+r"(x));
+	__asm__("rorw    $8,  %w0 \n\t"
+	        "rorl    $16, %0  \n\t"
+	        "rorw    $8,  %w0"
+	        : "+r"(x));
 #endif
-    return x;
+	return x;
 }
 
 #if ARCH_X86_64
 #define av_bswap64 av_bswap64
 static inline uint64_t av_const av_bswap64(uint64_t x)
 {
-    __asm__("bswap  %0": "=r" (x) : "0" (x));
-    return x;
+	__asm__("bswap  %0": "=r" (x) : "0" (x));
+	return x;
 }
 #endif
 

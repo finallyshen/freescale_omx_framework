@@ -25,27 +25,29 @@
 /**
  * fields extracted from the [Script Info] section
  */
-typedef struct {
-    char *script_type;    /**< SSA script format version (eg. v4.00) */
-    char *collisions;     /**< how subtitles are moved to prevent collisions */
-    int   play_res_x;     /**< video width that ASS coords are referring to */
-    int   play_res_y;     /**< video height that ASS coords are referring to */
-    float timer;          /**< time multiplier to apply to SSA clock (in %) */
+typedef struct
+{
+	char *script_type;    /**< SSA script format version (eg. v4.00) */
+	char *collisions;     /**< how subtitles are moved to prevent collisions */
+	int   play_res_x;     /**< video width that ASS coords are referring to */
+	int   play_res_y;     /**< video height that ASS coords are referring to */
+	float timer;          /**< time multiplier to apply to SSA clock (in %) */
 } ASSScriptInfo;
 
 /**
  * fields extracted from the [V4(+) Styles] section
  */
-typedef struct {
-    char *name;           /**< name of the tyle (case sensitive) */
-    char *font_name;      /**< font face (case sensitive) */
-    int   font_size;      /**< font height */
-    int   primary_color;  /**< color that a subtitle will normally appear in */
-    int   back_color;     /**< color of the subtitle outline or shadow */
-    int   bold;           /**< whether text is bold (1) or not (0) */
-    int   italic;         /**< whether text is italic (1) or not (0) */
-    int   underline;      /**< whether text is underlined (1) or not (0) */
-    int   alignment;      /**< position of the text (left, center, top...),
+typedef struct
+{
+	char *name;           /**< name of the tyle (case sensitive) */
+	char *font_name;      /**< font face (case sensitive) */
+	int   font_size;      /**< font height */
+	int   primary_color;  /**< color that a subtitle will normally appear in */
+	int   back_color;     /**< color of the subtitle outline or shadow */
+	int   bold;           /**< whether text is bold (1) or not (0) */
+	int   italic;         /**< whether text is italic (1) or not (0) */
+	int   underline;      /**< whether text is underlined (1) or not (0) */
+	int   alignment;      /**< position of the text (left, center, top...),
                                defined after the layout of the numpad
                                (1-3 sub, 4-6 mid, 7-9 top) */
 } ASSStyle;
@@ -53,12 +55,13 @@ typedef struct {
 /**
  * fields extracted from the [Events] section
  */
-typedef struct {
-    int   layer;    /**< higher numbered layers are drawn over lower numbered */
-    int   start;    /**< start time of the dialog in centiseconds */
-    int   end;      /**< end time of the dialog in centiseconds */
-    char *style;    /**< name of the ASSStyle to use with this dialog */
-    char *text;     /**< actual text which will be displayed as a subtitle,
+typedef struct
+{
+	int   layer;    /**< higher numbered layers are drawn over lower numbered */
+	int   start;    /**< start time of the dialog in centiseconds */
+	int   end;      /**< end time of the dialog in centiseconds */
+	char *style;    /**< name of the ASSStyle to use with this dialog */
+	char *text;     /**< actual text which will be displayed as a subtitle,
                          can include style override control codes (see
                          ff_ass_split_override_codes()) */
 } ASSDialog;
@@ -66,12 +69,13 @@ typedef struct {
 /**
  * structure containing the whole split ASS data
  */
-typedef struct {
-    ASSScriptInfo script_info;   /**< general information about the SSA script*/
-    ASSStyle     *styles;        /**< array of split out styles */
-    int           styles_count;  /**< number of ASSStyle in the styles array */
-    ASSDialog    *dialogs;       /**< array of split out dialogs */
-    int           dialogs_count; /**< number of ASSDialog in the dialogs array*/
+typedef struct
+{
+	ASSScriptInfo script_info;   /**< general information about the SSA script*/
+	ASSStyle     *styles;        /**< array of split out styles */
+	int           styles_count;  /**< number of ASSStyle in the styles array */
+	ASSDialog    *dialogs;       /**< array of split out dialogs */
+	int           dialogs_count; /**< number of ASSDialog in the dialogs array*/
 } ASS;
 
 /**
@@ -116,36 +120,37 @@ void ff_ass_split_free(ASSSplitContext *ctx);
  * Set of callback functions corresponding to each override codes that can
  * be encountered in a "Dialogue" Text field.
  */
-typedef struct {
-    /**
-     * @defgroup ass_styles    ASS styles
-     * @{
-     */
-    void (*text)(void *priv, const char *text, int len);
-    void (*new_line)(void *priv, int forced);
-    void (*style)(void *priv, char style, int close);
-    void (*color)(void *priv, unsigned int color, unsigned int color_id);
-    void (*alpha)(void *priv, int alpha, int alpha_id);
-    void (*font_name)(void *priv, const char *name);
-    void (*font_size)(void *priv, int size);
-    void (*alignment)(void *priv, int alignment);
-    void (*cancel_overrides)(void *priv, const char *style);
-    /**< @} */
+typedef struct
+{
+	/**
+	 * @defgroup ass_styles    ASS styles
+	 * @{
+	 */
+	void (*text)(void *priv, const char *text, int len);
+	void (*new_line)(void *priv, int forced);
+	void (*style)(void *priv, char style, int close);
+	void (*color)(void *priv, unsigned int color, unsigned int color_id);
+	void (*alpha)(void *priv, int alpha, int alpha_id);
+	void (*font_name)(void *priv, const char *name);
+	void (*font_size)(void *priv, int size);
+	void (*alignment)(void *priv, int alignment);
+	void (*cancel_overrides)(void *priv, const char *style);
+	/**< @} */
 
-    /**
-     * @defgroup ass_functions    ASS functions
-     * @{
-     */
-    void (*move)(void *priv, int x1, int y1, int x2, int y2, int t1, int t2);
-    void (*origin)(void *priv, int x, int y);
-    /**< @} */
+	/**
+	 * @defgroup ass_functions    ASS functions
+	 * @{
+	 */
+	void (*move)(void *priv, int x1, int y1, int x2, int y2, int t1, int t2);
+	void (*origin)(void *priv, int x, int y);
+	/**< @} */
 
-    /**
-     * @defgroup ass_end    end of Dialogue Event
-     * @{
-     */
-    void (*end)(void *priv);
-    /**< @} */
+	/**
+	 * @defgroup ass_end    end of Dialogue Event
+	 * @{
+	 */
+	void (*end)(void *priv);
+	/**< @} */
 } ASSCodesCallbacks;
 
 /**

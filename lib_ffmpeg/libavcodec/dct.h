@@ -26,14 +26,15 @@
 
 #include "rdft.h"
 
-struct DCTContext {
-    int nbits;
-    int inverse;
-    RDFTContext rdft;
-    const float *costab;
-    FFTSample *csc2;
-    void (*dct_calc)(struct DCTContext *s, FFTSample *data);
-    void (*dct32)(FFTSample *out, const FFTSample *in);
+struct DCTContext
+{
+	int nbits;
+	int inverse;
+	RDFTContext rdft;
+	const float *costab;
+	FFTSample *csc2;
+	void (*dct_calc)(struct DCTContext *s, FFTSample *data);
+	void (*dct32)(FFTSample *out, const FFTSample *in);
 };
 
 /**

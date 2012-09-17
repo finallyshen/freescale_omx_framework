@@ -18,7 +18,7 @@
 
 OMX_ERRORTYPE NbAmrEncWrapper::InstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 i;
 
 	pAmrEncConfig = (sAMREEncoderConfigType *)FSL_MALLOC(sizeof(sAMREEncoderConfigType));
@@ -85,96 +85,96 @@ OMX_ERRORTYPE NbAmrEncWrapper::InstanceInit()
 
 OMX_ERRORTYPE NbAmrEncWrapper::CodecInit(OMX_AUDIO_PARAM_AMRTYPE *pAmrType)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 i;
 
-    switch(pAmrType->eAMRFrameFormat) 
+	switch(pAmrType->eAMRFrameFormat)
 	{
-        case OMX_AUDIO_AMRFrameFormatConformance:
-			pAmrEncConfig->u8BitStreamFormat = NBAMR_ETSI;
-            break;
-        case OMX_AUDIO_AMRFrameFormatFSF:
-			LOG_DEBUG("Amr format MMSIO.\n");
-			pAmrEncConfig->u8BitStreamFormat = NBAMR_MMSIO;
-            break;
-        case OMX_AUDIO_AMRFrameFormatIF1:
-			pAmrEncConfig->u8BitStreamFormat = NBAMR_IF1IO;
-            break;
-        case OMX_AUDIO_AMRFrameFormatIF2:
-			pAmrEncConfig->u8BitStreamFormat = NBAMR_IF2IO;
-            break;
-        default:
-            return OMX_ErrorBadParameter;
-    }
+	case OMX_AUDIO_AMRFrameFormatConformance:
+		pAmrEncConfig->u8BitStreamFormat = NBAMR_ETSI;
+		break;
+	case OMX_AUDIO_AMRFrameFormatFSF:
+		LOG_DEBUG("Amr format MMSIO.\n");
+		pAmrEncConfig->u8BitStreamFormat = NBAMR_MMSIO;
+		break;
+	case OMX_AUDIO_AMRFrameFormatIF1:
+		pAmrEncConfig->u8BitStreamFormat = NBAMR_IF1IO;
+		break;
+	case OMX_AUDIO_AMRFrameFormatIF2:
+		pAmrEncConfig->u8BitStreamFormat = NBAMR_IF2IO;
+		break;
+	default:
+		return OMX_ErrorBadParameter;
+	}
 
-    switch(pAmrType->eAMRBandMode) 
+	switch(pAmrType->eAMRBandMode)
 	{
-		case OMX_AUDIO_AMRBandModeUnused:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR122");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB0:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR475");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB1:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR515");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB2:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR59");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB3:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR67");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB4:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR74");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB5:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR795");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB6:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR102");
-			}
-            break;
-		case OMX_AUDIO_AMRBandModeNB7:
-			for (i =0; i<ENCORD_FRAME; i++)
-			{
-				/* set user requested encoding mode */
-				pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR122");
-			}
-            break;
-        default:
-            return OMX_ErrorBadParameter;
-    }
+	case OMX_AUDIO_AMRBandModeUnused:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR122");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB0:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR475");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB1:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR515");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB2:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR59");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB3:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR67");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB4:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR74");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB5:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR795");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB6:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR102");
+		}
+		break;
+	case OMX_AUDIO_AMRBandModeNB7:
+		for (i =0; i<ENCORD_FRAME; i++)
+		{
+			/* set user requested encoding mode */
+			pAmrEncConfig->pps8APPEModeStr[i] = (NBAMR_S8*)("MR122");
+		}
+		break;
+	default:
+		return OMX_ErrorBadParameter;
+	}
 
 	eAMREReturnType AmrRet;
 	AmrRet = eAMREEncodeInit(pAmrEncConfig);
@@ -184,12 +184,12 @@ OMX_ERRORTYPE NbAmrEncWrapper::CodecInit(OMX_AUDIO_PARAM_AMRTYPE *pAmrType)
 		return OMX_ErrorUndefined;
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE NbAmrEncWrapper::InstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 MemoryCnt = pAmrEncConfig->sAMREMemInfo.s32AMRENumMemReqs;
 	OMX_S32 i;
 
@@ -208,28 +208,29 @@ OMX_ERRORTYPE NbAmrEncWrapper::InstanceDeInit()
 
 	FSL_FREE(pAmrEncConfig);
 
-    return ret;
+	return ret;
 }
 
 OMX_U32 NbAmrEncWrapper::getInputBufferPushSize()
 {
-    return NB_INPUT_BUF_PUSH_SIZE;
+	return NB_INPUT_BUF_PUSH_SIZE;
 }
 
 OMX_ERRORTYPE NbAmrEncWrapper::encodeFrame(
-                    OMX_U8 *pOutBuffer, 
-                    OMX_U32 *pOutputDataSize,
-                    OMX_U8 *pInputBuffer, 
-                    OMX_U32 *pInputDataSize)
+    OMX_U8 *pOutBuffer,
+    OMX_U32 *pOutputDataSize,
+    OMX_U8 *pInputBuffer,
+    OMX_U32 *pInputDataSize)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U8 *pSrc = pOutBuffer;
 	OMX_U8 *pDst = pOutBuffer;
 
 	eAMREEncodeFrame(pAmrEncConfig, (NBAMR_S16*)pInputBuffer, (NBAMR_S16*)pOutBuffer);
 
 	*pOutputDataSize = 0;
-	for (OMX_U32 i = 0; i < pAmrEncConfig->u8NumFrameToEncode; i ++) {
+	for (OMX_U32 i = 0; i < pAmrEncConfig->u8NumFrameToEncode; i ++)
+	{
 		pSrc = pOutBuffer + i*((NBAMR_MAX_PACKED_SIZE/2)+(NBAMR_MAX_PACKED_SIZE%2))*2;
 		OMX_U8 Header;
 		OMX_U8 u8Mode;
@@ -237,24 +238,25 @@ OMX_ERRORTYPE NbAmrEncWrapper::encodeFrame(
 		u8Mode = (NBAMR_U8) (0x0F & (Header >> 3));
 		LOG_DEBUG("u8Mode: %d\n", u8Mode);
 
-		for (OMX_U32 j = 0; j < pAmrEncConfig->pu32AMREPackedSize[i]; j ++) {
+		for (OMX_U32 j = 0; j < pAmrEncConfig->pu32AMREPackedSize[i]; j ++)
+		{
 			*pDst++ = *pSrc++;
 		}
 		LOG_LOG("Stream frame len: %d\n", pAmrEncConfig->pu32AMREPackedSize[i]);
 		*pOutputDataSize += pAmrEncConfig->pu32AMREPackedSize[i];
 	}
-    *pInputDataSize = (ENCORD_FRAME * L_FRAME) * sizeof (NBAMR_S16);
+	*pInputDataSize = (ENCORD_FRAME * L_FRAME) * sizeof (NBAMR_S16);
 
-    return ret;
+	return ret;
 
 }
 
 OMX_TICKS NbAmrEncWrapper::getTsPerFrame(OMX_U32 sampleRate)
 {
-    if(sampleRate > 0)
-        return (ENCORD_FRAME * L_FRAME) *OMX_TICKS_PER_SECOND/sampleRate;
-    else
-        return 0;
+	if(sampleRate > 0)
+		return (ENCORD_FRAME * L_FRAME) *OMX_TICKS_PER_SECOND/sampleRate;
+	else
+		return 0;
 }
 
 

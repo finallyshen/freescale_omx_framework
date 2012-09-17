@@ -15,9 +15,9 @@
  * @ingroup osal
  */
 
- #include <fsl_osal.h>
- #include <pthread.h>
- #include "Log.h"
+#include <fsl_osal.h>
+#include <pthread.h>
+#include "Log.h"
 
 /*! Allocates and Initilizes the mutual exclusion object.
  *
@@ -29,35 +29,35 @@
  */
 efsl_osal_return_type_t fsl_osal_mutex_init(fsl_osal_mutex *sync_obj, fsl_osal_mutex_type type)
 {
-     pthread_mutexattr_t attr;
-     
- 	*sync_obj = (pthread_mutex_t *)fsl_osal_malloc_new(sizeof(pthread_mutex_t));
- 	if(*sync_obj == NULL)
- 	{
- 		LOG_ERROR("\n malloc of mutex object failed.");
- 		return E_FSL_OSAL_UNAVAILABLE;
- 	}
-    
-    pthread_mutexattr_init(&attr);     
-    switch(type)
-    {
-        case fsl_osal_mutex_normal:
-            pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_NORMAL);
-            break;
-        case fsl_osal_mutex_recursive:
-            pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE_NP);
-            break;
-        case fsl_osal_mutex_errorcheck:
-            pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_ERRORCHECK_NP);
-            break;
-        default:
-            pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_NORMAL);
-            break;
-    }
-    
- 	pthread_mutex_init((pthread_mutex_t *)(*sync_obj), &attr);
+	pthread_mutexattr_t attr;
 
- 	return E_FSL_OSAL_SUCCESS;
+	*sync_obj = (pthread_mutex_t *)fsl_osal_malloc_new(sizeof(pthread_mutex_t));
+	if(*sync_obj == NULL)
+	{
+		LOG_ERROR("\n malloc of mutex object failed.");
+		return E_FSL_OSAL_UNAVAILABLE;
+	}
+
+	pthread_mutexattr_init(&attr);
+	switch(type)
+	{
+	case fsl_osal_mutex_normal:
+		pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_NORMAL);
+		break;
+	case fsl_osal_mutex_recursive:
+		pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE_NP);
+		break;
+	case fsl_osal_mutex_errorcheck:
+		pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_ERRORCHECK_NP);
+		break;
+	default:
+		pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_NORMAL);
+		break;
+	}
+
+	pthread_mutex_init((pthread_mutex_t *)(*sync_obj), &attr);
+
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! De-initializes and Releases the mutex object.
@@ -69,18 +69,18 @@ efsl_osal_return_type_t fsl_osal_mutex_init(fsl_osal_mutex *sync_obj, fsl_osal_m
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_mutex_destroy(fsl_osal_mutex sync_obj)
- {
+{
 
- 	if (pthread_mutex_destroy((pthread_mutex_t *)sync_obj) != 0)
- 	{
- 		LOG_ERROR("\n Error in destroying mutex.");
- 		return E_FSL_OSAL_INVALIDPARAM ;
- 	}
+	if (pthread_mutex_destroy((pthread_mutex_t *)sync_obj) != 0)
+	{
+		LOG_ERROR("\n Error in destroying mutex.");
+		return E_FSL_OSAL_INVALIDPARAM ;
+	}
 
- 	fsl_osal_dealloc(sync_obj);
+	fsl_osal_dealloc(sync_obj);
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Acquires the lock.
  *
@@ -91,15 +91,15 @@ efsl_osal_return_type_t fsl_osal_mutex_destroy(fsl_osal_mutex sync_obj)
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_mutex_lock(fsl_osal_mutex sync_obj)
- {
- 	if ( (pthread_mutex_lock((pthread_mutex_t *)sync_obj)) != 0)
- 	{
- 		LOG_ERROR("\n Error in locking the mutex");
- 		return E_FSL_OSAL_INVALIDPARAM ;
- 	}
+{
+	if ( (pthread_mutex_lock((pthread_mutex_t *)sync_obj)) != 0)
+	{
+		LOG_ERROR("\n Error in locking the mutex");
+		return E_FSL_OSAL_INVALIDPARAM ;
+	}
 
- 	return E_FSL_OSAL_SUCCESS;
- }
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Tries to acquire the lock. This is not a blocking call. E_FSL_OSAL_SUCCESS
  *	indicates that the lock is acquired.
@@ -113,14 +113,14 @@ efsl_osal_return_type_t fsl_osal_mutex_lock(fsl_osal_mutex sync_obj)
  *
  */
 efsl_osal_return_type_t fsl_osal_mutex_trylock(fsl_osal_mutex sync_obj)
- {
- 	if ( (pthread_mutex_trylock((pthread_mutex_t *)sync_obj)) != 0)
- 	{
- 		//LOG_ERROR("\n Error while trying to lock the mutex.");
- 		return E_FSL_OSAL_BUSY ;
- 	}
- 	return E_FSL_OSAL_SUCCESS;
- }
+{
+	if ( (pthread_mutex_trylock((pthread_mutex_t *)sync_obj)) != 0)
+	{
+		//LOG_ERROR("\n Error while trying to lock the mutex.");
+		return E_FSL_OSAL_BUSY ;
+	}
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! Releases the lock.
  *
@@ -134,11 +134,11 @@ efsl_osal_return_type_t fsl_osal_mutex_trylock(fsl_osal_mutex sync_obj)
  *		E_FSL_OSAL_INVALIDPARAM if paramter is invalid
  */
 efsl_osal_return_type_t fsl_osal_mutex_unlock(fsl_osal_mutex sync_obj)
- {
- 	if ( (pthread_mutex_unlock((pthread_mutex_t *)sync_obj)) != 0)
- 	{
- 		LOG_ERROR("\n Error while trying to unlock the mutex.");
- 		return E_FSL_OSAL_INVALIDPARAM ;
- 	}
- 	return E_FSL_OSAL_SUCCESS;
- }
+{
+	if ( (pthread_mutex_unlock((pthread_mutex_t *)sync_obj)) != 0)
+	{
+		LOG_ERROR("\n Error while trying to unlock the mutex.");
+		return E_FSL_OSAL_INVALIDPARAM ;
+	}
+	return E_FSL_OSAL_SUCCESS;
+}

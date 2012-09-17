@@ -24,14 +24,15 @@
 /**
  * all in native-endian format
  */
-enum AVSampleFormat {
-    AV_SAMPLE_FMT_NONE = -1,
-    AV_SAMPLE_FMT_U8,          ///< unsigned 8 bits
-    AV_SAMPLE_FMT_S16,         ///< signed 16 bits
-    AV_SAMPLE_FMT_S32,         ///< signed 32 bits
-    AV_SAMPLE_FMT_FLT,         ///< float
-    AV_SAMPLE_FMT_DBL,         ///< double
-    AV_SAMPLE_FMT_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
+enum AVSampleFormat
+{
+	AV_SAMPLE_FMT_NONE = -1,
+	AV_SAMPLE_FMT_U8,          ///< unsigned 8 bits
+	AV_SAMPLE_FMT_S16,         ///< signed 16 bits
+	AV_SAMPLE_FMT_S32,         ///< signed 32 bits
+	AV_SAMPLE_FMT_FLT,         ///< float
+	AV_SAMPLE_FMT_DBL,         ///< double
+	AV_SAMPLE_FMT_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
 };
 
 /**

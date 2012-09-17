@@ -31,9 +31,10 @@
 
 #define LINE_RATE 6000 /* characters per second */
 
-typedef struct {
-    int chars_per_frame;
-    uint64_t fsize;  /**< file size less metadata buffer */
+typedef struct
+{
+	int chars_per_frame;
+	uint64_t fsize;  /**< file size less metadata buffer */
 } TtyDemuxContext;
 
 /**
@@ -41,14 +42,14 @@ typedef struct {
  */
 static int efi_read(AVFormatContext *avctx, uint64_t start_pos)
 {
-    TtyDemuxContext *s = avctx->priv_data;
-    AVIOContext *pb = avctx->pb;
-    char buf[37];
-    int len;
+	TtyDemuxContext *s = avctx->priv_data;
+	AVIOContext *pb = avctx->pb;
+	char buf[37];
+	int len;
 
-    avio_seek(pb, start_pos, SEEK_SET);
-    if (avio_r8(pb) != 0x1A)
-        return -1;
+	avio_seek(pb, start_pos, SEEK_SET);
+	if (avio_r8(pb) != 0x1A)
+		return -1;
 
 #define GET_EFI_META(name,size) \
     len = avio_r8(pb); \
@@ -59,76 +60,82 @@ static int efi_read(AVFormatContext *avctx, uint64_t start_pos)
         av_metadata_set2(&avctx->metadata, name, buf, 0); \
     }
 
-    GET_EFI_META("filename", 12)
-    GET_EFI_META("title",    36)
+	GET_EFI_META("filename", 12)
+	GET_EFI_META("title",    36)
 
-    s->fsize = start_pos;
-    return 0;
+	s->fsize = start_pos;
+	return 0;
 }
 
 static int read_header(AVFormatContext *avctx,
                        AVFormatParameters *ap)
 {
-    TtyDemuxContext *s = avctx->priv_data;
-    AVStream *st = av_new_stream(avctx, 0);
-    if (!st)
-        return AVERROR(ENOMEM);
-    st->codec->codec_tag   = 0;
-    st->codec->codec_type  = AVMEDIA_TYPE_VIDEO;
-    st->codec->codec_id    = CODEC_ID_ANSI;
-    if (ap->width)  st->codec->width  = ap->width;
-    if (ap->height) st->codec->height = ap->height;
+	TtyDemuxContext *s = avctx->priv_data;
+	AVStream *st = av_new_stream(avctx, 0);
+	if (!st)
+		return AVERROR(ENOMEM);
+	st->codec->codec_tag   = 0;
+	st->codec->codec_type  = AVMEDIA_TYPE_VIDEO;
+	st->codec->codec_id    = CODEC_ID_ANSI;
+	if (ap->width)  st->codec->width  = ap->width;
+	if (ap->height) st->codec->height = ap->height;
 
-    if (!ap->time_base.num) {
-        av_set_pts_info(st, 60, 1, 25);
-    } else {
-        av_set_pts_info(st, 60, ap->time_base.num, ap->time_base.den);
-    }
+	if (!ap->time_base.num)
+	{
+		av_set_pts_info(st, 60, 1, 25);
+	}
+	else
+	{
+		av_set_pts_info(st, 60, ap->time_base.num, ap->time_base.den);
+	}
 
-    /* simulate tty display speed */
-    s->chars_per_frame = FFMAX(av_q2d(st->time_base) * (ap->sample_rate ? ap->sample_rate : LINE_RATE), 1);
+	/* simulate tty display speed */
+	s->chars_per_frame = FFMAX(av_q2d(st->time_base) * (ap->sample_rate ? ap->sample_rate : LINE_RATE), 1);
 
-    if (avctx->pb->seekable) {
-        s->fsize = avio_size(avctx->pb);
-        st->duration = (s->fsize + s->chars_per_frame - 1) / s->chars_per_frame;
+	if (avctx->pb->seekable)
+	{
+		s->fsize = avio_size(avctx->pb);
+		st->duration = (s->fsize + s->chars_per_frame - 1) / s->chars_per_frame;
 
-        if (ff_sauce_read(avctx, &s->fsize, 0, 0) < 0)
-            efi_read(avctx, s->fsize - 51);
+		if (ff_sauce_read(avctx, &s->fsize, 0, 0) < 0)
+			efi_read(avctx, s->fsize - 51);
 
-        avio_seek(avctx->pb, 0, SEEK_SET);
-    }
+		avio_seek(avctx->pb, 0, SEEK_SET);
+	}
 
-    return 0;
+	return 0;
 }
 
 static int read_packet(AVFormatContext *avctx, AVPacket *pkt)
 {
-    TtyDemuxContext *s = avctx->priv_data;
-    int n;
+	TtyDemuxContext *s = avctx->priv_data;
+	int n;
 
-    if (url_feof(avctx->pb))
-        return AVERROR_EOF;
+	if (url_feof(avctx->pb))
+		return AVERROR_EOF;
 
-    n = s->chars_per_frame;
-    if (s->fsize) {
-        // ignore metadata buffer
-        uint64_t p = avio_tell(avctx->pb);
-        if (p + s->chars_per_frame > s->fsize)
-            n = s->fsize - p;
-    }
+	n = s->chars_per_frame;
+	if (s->fsize)
+	{
+		// ignore metadata buffer
+		uint64_t p = avio_tell(avctx->pb);
+		if (p + s->chars_per_frame > s->fsize)
+			n = s->fsize - p;
+	}
 
-    pkt->size = av_get_packet(avctx->pb, pkt, n);
-    if (pkt->size <= 0)
-        return AVERROR(EIO);
-    pkt->flags |= AV_PKT_FLAG_KEY;
-    return 0;
+	pkt->size = av_get_packet(avctx->pb, pkt, n);
+	if (pkt->size <= 0)
+		return AVERROR(EIO);
+	pkt->flags |= AV_PKT_FLAG_KEY;
+	return 0;
 }
 
-AVInputFormat ff_tty_demuxer = {
-    .name           = "tty",
-    .long_name      = NULL_IF_CONFIG_SMALL("Tele-typewriter"),
-    .priv_data_size = sizeof(TtyDemuxContext),
-    .read_header    = read_header,
-    .read_packet    = read_packet,
-    .extensions     = "ans,art,asc,diz,ice,nfo,txt,vt",
+AVInputFormat ff_tty_demuxer =
+{
+	.name           = "tty",
+	.long_name      = NULL_IF_CONFIG_SMALL("Tele-typewriter"),
+	.priv_data_size = sizeof(TtyDemuxContext),
+	.read_header    = read_header,
+	.read_packet    = read_packet,
+	.extensions     = "ans,art,asc,diz,ice,nfo,txt,vt",
 };

@@ -30,12 +30,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-fsl_osal_void init_memmanager(fsl_osal_char *shortname);
-fsl_osal_void deinit_memmanager();
-fsl_osal_void clear_memmanager();
-fsl_osal_ptr dbg_malloc(fsl_osal_u32 size, fsl_osal_char * desc,fsl_osal_s32 line);
-fsl_osal_ptr dbg_realloc(fsl_osal_ptr ptr, fsl_osal_u32 size, fsl_osal_char * desc,fsl_osal_s32 line);
-fsl_osal_void dbg_free(fsl_osal_ptr mem);
+	fsl_osal_void init_memmanager(fsl_osal_char *shortname);
+	fsl_osal_void deinit_memmanager();
+	fsl_osal_void clear_memmanager();
+	fsl_osal_ptr dbg_malloc(fsl_osal_u32 size, fsl_osal_char * desc,fsl_osal_s32 line);
+	fsl_osal_ptr dbg_realloc(fsl_osal_ptr ptr, fsl_osal_u32 size, fsl_osal_char * desc,fsl_osal_s32 line);
+	fsl_osal_void dbg_free(fsl_osal_ptr mem);
 #ifdef __cplusplus
 }
 

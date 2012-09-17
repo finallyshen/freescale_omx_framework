@@ -19,14 +19,15 @@
 #include "AudioParserBase.h"
 #include "wav_parser/WavCoreParser.h"
 
-class WavParser : public AudioParserBase {
-    public:
-        WavParser();
-    private:
-		OMX_ERRORTYPE GetCoreParser();
-		OMX_AUDIO_CODINGTYPE GetAudioCodingType();
-		OMX_ERRORTYPE AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer);
-		OMX_U64 FrameBound(OMX_U64 nSkip);
+class WavParser : public AudioParserBase
+{
+public:
+	WavParser();
+private:
+	OMX_ERRORTYPE GetCoreParser();
+	OMX_AUDIO_CODINGTYPE GetAudioCodingType();
+	OMX_ERRORTYPE AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer);
+	OMX_U64 FrameBound(OMX_U64 nSkip);
 };
 
 #endif

@@ -29,47 +29,48 @@
  * arbitrary struct of which the first field is a pointer to an
  * AVClass struct (e.g. AVCodecContext, AVFormatContext etc.).
  */
-typedef struct {
-    /**
-     * The name of the class; usually it is the same name as the
-     * context structure type to which the AVClass is associated.
-     */
-    const char* class_name;
+typedef struct
+{
+	/**
+	 * The name of the class; usually it is the same name as the
+	 * context structure type to which the AVClass is associated.
+	 */
+	const char* class_name;
 
-    /**
-     * A pointer to a function which returns the name of a context
-     * instance ctx associated with the class.
-     */
-    const char* (*item_name)(void* ctx);
+	/**
+	 * A pointer to a function which returns the name of a context
+	 * instance ctx associated with the class.
+	 */
+	const char* (*item_name)(void* ctx);
 
-    /**
-     * a pointer to the first option specified in the class if any or NULL
-     *
-     * @see av_set_default_options()
-     */
-    const struct AVOption *option;
+	/**
+	 * a pointer to the first option specified in the class if any or NULL
+	 *
+	 * @see av_set_default_options()
+	 */
+	const struct AVOption *option;
 
-    /**
-     * LIBAVUTIL_VERSION with which this structure was created.
-     * This is used to allow fields to be added without requiring major
-     * version bumps everywhere.
-     */
+	/**
+	 * LIBAVUTIL_VERSION with which this structure was created.
+	 * This is used to allow fields to be added without requiring major
+	 * version bumps everywhere.
+	 */
 
-    int version;
+	int version;
 
-    /**
-     * Offset in the structure where log_level_offset is stored.
-     * 0 means there is no such variable
-     */
-    int log_level_offset_offset;
+	/**
+	 * Offset in the structure where log_level_offset is stored.
+	 * 0 means there is no such variable
+	 */
+	int log_level_offset_offset;
 
-    /**
-     * Offset in the structure where a pointer to the parent context for loging is stored.
-     * for example a decoder that uses eval.c could pass its AVCodecContext to eval as such
-     * parent context. And a av_log() implementation could then display the parent context
-     * can be NULL of course
-     */
-    int parent_log_context_offset;
+	/**
+	 * Offset in the structure where a pointer to the parent context for loging is stored.
+	 * for example a decoder that uses eval.c could pass its AVCodecContext to eval as such
+	 * parent context. And a av_log() implementation could then display the parent context
+	 * can be NULL of course
+	 */
+	int parent_log_context_offset;
 } AVClass;
 
 /* av_log API */

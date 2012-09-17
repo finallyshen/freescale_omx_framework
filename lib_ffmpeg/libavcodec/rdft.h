@@ -48,16 +48,17 @@ extern SINTABLE(16384);
 extern SINTABLE(32768);
 extern SINTABLE(65536);
 
-struct RDFTContext {
-    int nbits;
-    int inverse;
-    int sign_convention;
+struct RDFTContext
+{
+	int nbits;
+	int inverse;
+	int sign_convention;
 
-    /* pre/post rotation tables */
-    const FFTSample *tcos;
-    SINTABLE_CONST FFTSample *tsin;
-    FFTContext fft;
-    void (*rdft_calc)(struct RDFTContext *s, FFTSample *z);
+	/* pre/post rotation tables */
+	const FFTSample *tcos;
+	SINTABLE_CONST FFTSample *tsin;
+	FFTContext fft;
+	void (*rdft_calc)(struct RDFTContext *s, FFTSample *z);
 };
 
 /**

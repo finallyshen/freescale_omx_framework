@@ -33,41 +33,48 @@
  * finds the end of the current frame in the bitstream.
  * @return the position of the first byte of the next frame, or -1
  */
-static int find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size){
-    int vop_found, i;
-    uint16_t state;
+static int find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size)
+{
+	int vop_found, i;
+	uint16_t state;
 
-    vop_found= pc->frame_start_found;
-    state= pc->state;
+	vop_found= pc->frame_start_found;
+	state= pc->state;
 
-    i=0;
-    if(!vop_found){
-        for(i=0; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if(state == 0xFFD8){
-                i++;
-                vop_found=1;
-                break;
-            }
-        }
-    }
+	i=0;
+	if(!vop_found)
+	{
+		for(i=0; i<buf_size; i++)
+		{
+			state= (state<<8) | buf[i];
+			if(state == 0xFFD8)
+			{
+				i++;
+				vop_found=1;
+				break;
+			}
+		}
+	}
 
-    if(vop_found){
-        /* EOF considered as end of frame */
-        if (buf_size == 0)
-            return 0;
-        for(; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if(state == 0xFFD8){
-                pc->frame_start_found=0;
-                pc->state=0;
-                return i-1;
-            }
-        }
-    }
-    pc->frame_start_found= vop_found;
-    pc->state= state;
-    return END_NOT_FOUND;
+	if(vop_found)
+	{
+		/* EOF considered as end of frame */
+		if (buf_size == 0)
+			return 0;
+		for(; i<buf_size; i++)
+		{
+			state= (state<<8) | buf[i];
+			if(state == 0xFFD8)
+			{
+				pc->frame_start_found=0;
+				pc->state=0;
+				return i-1;
+			}
+		}
+	}
+	pc->frame_start_found= vop_found;
+	pc->state= state;
+	return END_NOT_FOUND;
 }
 
 static int jpeg_parse(AVCodecParserContext *s,
@@ -75,31 +82,36 @@ static int jpeg_parse(AVCodecParserContext *s,
                       const uint8_t **poutbuf, int *poutbuf_size,
                       const uint8_t *buf, int buf_size)
 {
-    ParseContext *pc = s->priv_data;
-    int next;
+	ParseContext *pc = s->priv_data;
+	int next;
 
-    if(s->flags & PARSER_FLAG_COMPLETE_FRAMES){
-        next= buf_size;
-    }else{
-        next= find_frame_end(pc, buf, buf_size);
+	if(s->flags & PARSER_FLAG_COMPLETE_FRAMES)
+	{
+		next= buf_size;
+	}
+	else
+	{
+		next= find_frame_end(pc, buf, buf_size);
 
-        if (ff_combine_frame(pc, next, &buf, &buf_size) < 0) {
-            *poutbuf = NULL;
-            *poutbuf_size = 0;
-            return buf_size;
-        }
-    }
+		if (ff_combine_frame(pc, next, &buf, &buf_size) < 0)
+		{
+			*poutbuf = NULL;
+			*poutbuf_size = 0;
+			return buf_size;
+		}
+	}
 
-    *poutbuf = buf;
-    *poutbuf_size = buf_size;
-    return next;
+	*poutbuf = buf;
+	*poutbuf_size = buf_size;
+	return next;
 }
 
 
-AVCodecParser ff_mjpeg_parser = {
-    { CODEC_ID_MJPEG },
-    sizeof(ParseContext),
-    NULL,
-    jpeg_parse,
-    ff_parse_close,
+AVCodecParser ff_mjpeg_parser =
+{
+	{ CODEC_ID_MJPEG },
+	sizeof(ParseContext),
+	NULL,
+	jpeg_parse,
+	ff_parse_close,
 };

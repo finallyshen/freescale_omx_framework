@@ -13,14 +13,14 @@
 
 FlacParser::FlacParser()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.parser.flac.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"parser.flac";
-    bInContext = OMX_FALSE;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.parser.flac.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"parser.flac";
+	bInContext = OMX_FALSE;
 	bNeedSendCodecConfig = OMX_TRUE;
 }
 
@@ -42,7 +42,7 @@ OMX_AUDIO_CODINGTYPE FlacParser::GetAudioCodingType()
 OMX_ERRORTYPE FlacParser::AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
-	OMX_AUDIO_PARAM_FLACTYPE FlacType; 
+	OMX_AUDIO_PARAM_FLACTYPE FlacType;
 
 	OMX_INIT_STRUCT(&FlacType, OMX_AUDIO_PARAM_FLACTYPE);
 
@@ -58,7 +58,7 @@ OMX_ERRORTYPE FlacParser::AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBu
 	fsl_osal_memcpy(pOutBuffer->pBuffer, &FlacType, sizeof(OMX_AUDIO_PARAM_FLACTYPE));
 	pOutBuffer->nFlags |= OMX_BUFFERFLAG_CODECCONFIG;
 
-    return ret;
+	return ret;
 }
 
 OMX_S64 FlacParser::nGetTimeStamp(OMX_S64 *pSeekPoint)
@@ -66,7 +66,7 @@ OMX_S64 FlacParser::nGetTimeStamp(OMX_S64 *pSeekPoint)
 	OMX_U32 nActuralRead;
 	OMX_U32 nReadLen = FLAC_TMP_BUFFER_SIZE;
 	FRAME_INFO FrameInfo;
-       fsl_osal_memset(&FrameInfo, 0, sizeof(FRAME_INFO));
+	fsl_osal_memset(&FrameInfo, 0, sizeof(FRAME_INFO));
 	OMX_U8 *pTmpBuffer = (OMX_U8 *)FSL_MALLOC(FLAC_TMP_BUFFER_SIZE);
 	if (pTmpBuffer == NULL)
 	{
@@ -105,24 +105,24 @@ OMX_S64 FlacParser::nGetTimeStamp(OMX_S64 *pSeekPoint)
 }
 
 /**< C style functions to expose entry point for the shared library */
-	extern "C" {
-		OMX_ERRORTYPE FlacParserInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        FlacParser *obj = NULL;
-        ComponentBase *base = NULL;
+extern "C" {
+	OMX_ERRORTYPE FlacParserInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		FlacParser *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(FlacParser, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(FlacParser, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

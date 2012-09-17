@@ -39,10 +39,10 @@
 static inline int is_dos_path(const char *path)
 {
 #if HAVE_DOS_PATHS
-    if (path[0] && path[1] == ':')
-        return 1;
+	if (path[0] && path[1] == ':')
+		return 1;
 #endif
-    return 0;
+	return 0;
 }
 
 #if CONFIG_NETWORK
@@ -58,10 +58,11 @@ typedef int socklen_t;
 #if !HAVE_POLL_H
 typedef unsigned long nfds_t;
 
-struct pollfd {
-    int fd;
-    short events;  /* events to look for */
-    short revents; /* events that occurred */
+struct pollfd
+{
+	int fd;
+	short events;  /* events to look for */
+	short revents; /* events that occurred */
 };
 
 /* events & revents */

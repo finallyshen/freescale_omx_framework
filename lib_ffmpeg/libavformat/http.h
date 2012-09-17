@@ -28,42 +28,42 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/**
- * Set custom HTTP headers.
- * A trailing CRLF ("\r\n") is required for custom headers.
- * Passing in an empty header string ("\0") will reset to defaults.
- *
- * The following headers can be overriden by custom values,
- * otherwise they will be set to their defaults.
- *  -User-Agent
- *  -Accept
- *  -Range
- *  -Host
- *  -Connection
- *
- * @param h URL context for this HTTP connection
- * @param headers the custom headers to set
- */
-void ff_http_set_headers(URLContext *h, const char *headers);
+	/**
+	 * Set custom HTTP headers.
+	 * A trailing CRLF ("\r\n") is required for custom headers.
+	 * Passing in an empty header string ("\0") will reset to defaults.
+	 *
+	 * The following headers can be overriden by custom values,
+	 * otherwise they will be set to their defaults.
+	 *  -User-Agent
+	 *  -Accept
+	 *  -Range
+	 *  -Host
+	 *  -Connection
+	 *
+	 * @param h URL context for this HTTP connection
+	 * @param headers the custom headers to set
+	 */
+	void ff_http_set_headers(URLContext *h, const char *headers);
 
-/**
- * Enable or disable chunked transfer encoding. (default is enabled)
- *
- * @param h URL context for this HTTP connection
- * @param is_chunked 0 to disable chunking, nonzero otherwise.
- */
-void ff_http_set_chunked_transfer_encoding(URLContext *h, int is_chunked);
+	/**
+	 * Enable or disable chunked transfer encoding. (default is enabled)
+	 *
+	 * @param h URL context for this HTTP connection
+	 * @param is_chunked 0 to disable chunking, nonzero otherwise.
+	 */
+	void ff_http_set_chunked_transfer_encoding(URLContext *h, int is_chunked);
 
-/**
- * Initialize the authentication state based on another HTTP URLContext.
- * This can be used to pre-initialize the authentication parameters if
- * they are known beforehand, to avoid having to do an initial failing
- * request just to get the parameters.
- *
- * @param dest URL context whose authentication state gets updated
- * @param src URL context whose authentication state gets copied
- */
-void ff_http_init_auth_state(URLContext *dest, const URLContext *src);
+	/**
+	 * Initialize the authentication state based on another HTTP URLContext.
+	 * This can be used to pre-initialize the authentication parameters if
+	 * they are known beforehand, to avoid having to do an initial failing
+	 * request just to get the parameters.
+	 *
+	 * @param dest URL context whose authentication state gets updated
+	 * @param src URL context whose authentication state gets copied
+	 */
+	void ff_http_init_auth_state(URLContext *dest, const URLContext *src);
 
 #ifdef __cplusplus
 }

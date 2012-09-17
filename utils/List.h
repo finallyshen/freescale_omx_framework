@@ -20,36 +20,38 @@
 #include "Log.h"
 #include "Mem.h"
 
-typedef enum LIST_RETURNTYPE {
+typedef enum LIST_RETURNTYPE
+{
 	LIST_SUCCESS = 0,
-    LIST_FAILURE
-} LSIT_RETURNTYPE; 
- 
+	LIST_FAILURE
+} LSIT_RETURNTYPE;
+
 template<class T> class List
 {
-	public:
-		List();
-		LSIT_RETURNTYPE Add(T *node, fsl_osal_u32 priority = 0); /**< Add node at the tail or based on priority*/
-		LSIT_RETURNTYPE Add(T *node, T *pUpNode); /**< Add node behind up node*/
-		LSIT_RETURNTYPE Remove(T *node); /**< Remove one node */
-		LSIT_RETURNTYPE Replace(T *node, T *nodeNew); /**< Replace one node with new node */
-		fsl_osal_u32 GetNodeCnt();
-		T *GetNode(fsl_osal_u32 index); /**< Get one node based on index, first index is 0 */
-		~List(); /**< Free all node */
-	private:
-		struct NODE{
-			NODE *pNext;
-			T *pT;
-			fsl_osal_u32 priority;
-		};
-		NODE *pFirst;
-		fsl_osal_u32 NodeCnt;
+public:
+	List();
+	LSIT_RETURNTYPE Add(T *node, fsl_osal_u32 priority = 0); /**< Add node at the tail or based on priority*/
+	LSIT_RETURNTYPE Add(T *node, T *pUpNode); /**< Add node behind up node*/
+	LSIT_RETURNTYPE Remove(T *node); /**< Remove one node */
+	LSIT_RETURNTYPE Replace(T *node, T *nodeNew); /**< Replace one node with new node */
+	fsl_osal_u32 GetNodeCnt();
+	T *GetNode(fsl_osal_u32 index); /**< Get one node based on index, first index is 0 */
+	~List(); /**< Free all node */
+private:
+	struct NODE
+	{
+		NODE *pNext;
+		T *pT;
+		fsl_osal_u32 priority;
+	};
+	NODE *pFirst;
+	fsl_osal_u32 NodeCnt;
 };
 
 template<class T> List<T>::List()
 {
 	pFirst = NULL;
-	NodeCnt = 0;	
+	NodeCnt = 0;
 }
 
 template<class T>
@@ -65,7 +67,7 @@ LSIT_RETURNTYPE List<T>::Add(T *node, fsl_osal_u32 priority)
 
 	while (*ppTmp != NULL)
 	{
-		if (priority > (*ppTmp)->priority) 
+		if (priority > (*ppTmp)->priority)
 		{
 			break;
 		}
@@ -123,7 +125,7 @@ LSIT_RETURNTYPE List<T>::Add(T *node, T *pUpNode)
 
 	while (*ppTmp != NULL)
 	{
-		if (pUpNode == (*ppTmp)->pT) 
+		if (pUpNode == (*ppTmp)->pT)
 		{
 			ppTmp2 = ppTmp;
 			break;

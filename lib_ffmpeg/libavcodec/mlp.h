@@ -71,22 +71,24 @@
 #define IIR 1
 
 /** filter data */
-typedef struct {
-    uint8_t     order; ///< number of taps in filter
-    uint8_t     shift; ///< Right shift to apply to output of filter.
+typedef struct
+{
+	uint8_t     order; ///< number of taps in filter
+	uint8_t     shift; ///< Right shift to apply to output of filter.
 
-    int32_t     state[MAX_FIR_ORDER];
+	int32_t     state[MAX_FIR_ORDER];
 } FilterParams;
 
 /** sample data coding information */
-typedef struct {
-    FilterParams filter_params[NUM_FILTERS];
-    int32_t     coeff[NUM_FILTERS][MAX_FIR_ORDER];
+typedef struct
+{
+	FilterParams filter_params[NUM_FILTERS];
+	int32_t     coeff[NUM_FILTERS][MAX_FIR_ORDER];
 
-    int16_t     huff_offset;      ///< Offset to apply to residual values.
-    int32_t     sign_huff_offset; ///< sign/rounding-corrected version of huff_offset
-    uint8_t     codebook;         ///< Which VLC codebook to use to read residuals.
-    uint8_t     huff_lsbs;        ///< Size of residual suffix not encoded using VLC.
+	int16_t     huff_offset;      ///< Offset to apply to residual values.
+	int32_t     sign_huff_offset; ///< sign/rounding-corrected version of huff_offset
+	uint8_t     codebook;         ///< Which VLC codebook to use to read residuals.
+	uint8_t     huff_lsbs;        ///< Size of residual suffix not encoded using VLC.
 } ChannelParams;
 
 /** Tables defining the Huffman codes.
@@ -119,9 +121,9 @@ void ff_mlp_init_crc(void);
 /** XOR four bytes into one. */
 static inline uint8_t xor_32_to_8(uint32_t value)
 {
-    value ^= value >> 16;
-    value ^= value >>  8;
-    return value;
+	value ^= value >> 16;
+	value ^= value >>  8;
+	return value;
 }
 
 #endif /* AVCODEC_MLP_H */

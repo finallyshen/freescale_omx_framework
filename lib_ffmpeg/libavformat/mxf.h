@@ -26,36 +26,39 @@
 
 typedef uint8_t UID[16];
 
-enum MXFMetadataSetType {
-    AnyType,
-    MaterialPackage,
-    SourcePackage,
-    SourceClip,
-    TimecodeComponent,
-    Sequence,
-    MultipleDescriptor,
-    Descriptor,
-    Track,
-    CryptoContext,
-    Preface,
-    Identification,
-    ContentStorage,
-    SubDescriptor,
-    IndexTableSegment,
-    EssenceContainerData,
-    TypeBottom,// add metadata type before this
+enum MXFMetadataSetType
+{
+	AnyType,
+	MaterialPackage,
+	SourcePackage,
+	SourceClip,
+	TimecodeComponent,
+	Sequence,
+	MultipleDescriptor,
+	Descriptor,
+	Track,
+	CryptoContext,
+	Preface,
+	Identification,
+	ContentStorage,
+	SubDescriptor,
+	IndexTableSegment,
+	EssenceContainerData,
+	TypeBottom,// add metadata type before this
 };
 
-typedef struct {
-    UID key;
-    int64_t offset;
-    uint64_t length;
+typedef struct
+{
+	UID key;
+	int64_t offset;
+	uint64_t length;
 } KLVPacket;
 
-typedef struct {
-    UID uid;
-    unsigned matching_len;
-    int id;
+typedef struct
+{
+	UID uid;
+	unsigned matching_len;
+	int id;
 } MXFCodecUL;
 
 extern const MXFCodecUL ff_mxf_data_definition_uls[];

@@ -34,9 +34,10 @@
 
 struct PutBitContext;
 
-enum FF_LZW_MODES{
-    FF_LZW_GIF,
-    FF_LZW_TIFF
+enum FF_LZW_MODES
+{
+	FF_LZW_GIF,
+	FF_LZW_TIFF
 };
 
 /* clients should not know what LZWState is */

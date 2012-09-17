@@ -20,11 +20,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
-OMX_ERRORTYPE CreatePlatformResMgr();
-OMX_ERRORTYPE DestroyPlatformResMgr();
-OMX_ERRORTYPE AddHwBuffer(OMX_PTR pPhyiscAddr, OMX_PTR pVirtualAddr);
-OMX_ERRORTYPE RemoveHwBuffer(OMX_PTR pVirtualAddr);
-OMX_ERRORTYPE GetHwBuffer(OMX_PTR pVirtualAddr, OMX_PTR *ppPhyiscAddr);
+	OMX_ERRORTYPE CreatePlatformResMgr();
+	OMX_ERRORTYPE DestroyPlatformResMgr();
+	OMX_ERRORTYPE AddHwBuffer(OMX_PTR pPhyiscAddr, OMX_PTR pVirtualAddr);
+	OMX_ERRORTYPE RemoveHwBuffer(OMX_PTR pVirtualAddr);
+	OMX_ERRORTYPE GetHwBuffer(OMX_PTR pVirtualAddr, OMX_PTR *ppPhyiscAddr);
 
 #ifdef __cplusplus
 }

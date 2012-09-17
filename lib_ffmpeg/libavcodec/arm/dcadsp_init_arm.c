@@ -27,6 +27,6 @@ void ff_dca_lfe_fir_neon(float *out, const float *in, const float *coefs,
 
 void av_cold ff_dcadsp_init_arm(DCADSPContext *s)
 {
-    if (HAVE_NEON)
-        s->lfe_fir = ff_dca_lfe_fir_neon;
+	if (HAVE_NEON)
+		s->lfe_fir = ff_dca_lfe_fir_neon;
 }

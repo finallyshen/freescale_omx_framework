@@ -24,38 +24,39 @@
 #include "avformat.h"
 #include "rtp.h"
 
-struct RTPMuxContext {
-    AVFormatContext *ic;
-    AVStream *st;
-    int payload_type;
-    uint32_t ssrc;
-    uint16_t seq;
-    uint32_t timestamp;
-    uint32_t base_timestamp;
-    uint32_t cur_timestamp;
-    int max_payload_size;
-    int num_frames;
+struct RTPMuxContext
+{
+	AVFormatContext *ic;
+	AVStream *st;
+	int payload_type;
+	uint32_t ssrc;
+	uint16_t seq;
+	uint32_t timestamp;
+	uint32_t base_timestamp;
+	uint32_t cur_timestamp;
+	int max_payload_size;
+	int num_frames;
 
-    /* rtcp sender statistics receive */
-    int64_t last_rtcp_ntp_time;    // TODO: move into statistics
-    int64_t first_rtcp_ntp_time;   // TODO: move into statistics
+	/* rtcp sender statistics receive */
+	int64_t last_rtcp_ntp_time;    // TODO: move into statistics
+	int64_t first_rtcp_ntp_time;   // TODO: move into statistics
 
-    /* rtcp sender statistics */
-    unsigned int packet_count;     // TODO: move into statistics (outgoing)
-    unsigned int octet_count;      // TODO: move into statistics (outgoing)
-    unsigned int last_octet_count; // TODO: move into statistics (outgoing)
-    int first_packet;
-    /* buffer for output */
-    uint8_t *buf;
-    uint8_t *buf_ptr;
+	/* rtcp sender statistics */
+	unsigned int packet_count;     // TODO: move into statistics (outgoing)
+	unsigned int octet_count;      // TODO: move into statistics (outgoing)
+	unsigned int last_octet_count; // TODO: move into statistics (outgoing)
+	int first_packet;
+	/* buffer for output */
+	uint8_t *buf;
+	uint8_t *buf_ptr;
 
-    int max_frames_per_packet;
+	int max_frames_per_packet;
 
-    /**
-     * Number of bytes used for H.264 NAL length, if the MP4 syntax is used
-     * (1, 2 or 4)
-     */
-    int nal_length_size;
+	/**
+	 * Number of bytes used for H.264 NAL length, if the MP4 syntax is used
+	 * (1, 2 or 4)
+	 */
+	int nal_length_size;
 };
 
 typedef struct RTPMuxContext RTPMuxContext;

@@ -49,51 +49,53 @@ VO_U32	cmnMemCheck (VO_S32 uID, VO_PTR pBuffer, VO_U32 uSize)
 
 AacEnc::AacEnc()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_encoder.aac.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_encoder.aac";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_encoder.aac.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_encoder.aac";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = AACE_INPUT_BUFFER_SIZE * 4;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE AacEnc::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = AACE_INPUT_BUFFER_SIZE * 4;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingAAC;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = AACE_INPUT_BUFFER_SIZE * 4;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -135,7 +137,7 @@ OMX_ERRORTYPE AacEnc::InitComponent()
 
 OMX_ERRORTYPE AacEnc::DeInitComponent()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 typedef int (VO_API * VOGETAUDIODECAPI) (VO_AUDIO_CODECAPI * pDecHandle);
@@ -146,177 +148,188 @@ OMX_ERRORTYPE AacEnc::AudioFilterInstanceInit()
 	OMX_PTR pfunc = NULL;
 	VOGETAUDIODECAPI voGetAACEncAPI;
 
-    libMgr = FSL_NEW(ShareLibarayMgr, ());
-    if (libMgr == NULL)
-        return OMX_ErrorInsufficientResources;
+	libMgr = FSL_NEW(ShareLibarayMgr, ());
+	if (libMgr == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    hLibStagefright = libMgr->load((OMX_STRING)STAGEFRIGHT_LIBRARY);
-    if (hLibStagefright == NULL) {
-        LOG_ERROR("Can't load library libstagefright.so");
-        return OMX_ErrorUndefined;
-    }
+	hLibStagefright = libMgr->load((OMX_STRING)STAGEFRIGHT_LIBRARY);
+	if (hLibStagefright == NULL)
+	{
+		LOG_ERROR("Can't load library libstagefright.so");
+		return OMX_ErrorUndefined;
+	}
 
-    pfunc = libMgr->getSymbol(hLibStagefright, (OMX_STRING)AAC_ENC_API);
-    if (pfunc == NULL) {
-        LOG_ERROR("Can't get sysble voGetAACEncAPI from libstagefright.so");
-        return OMX_ErrorUndefined;
-    }
+	pfunc = libMgr->getSymbol(hLibStagefright, (OMX_STRING)AAC_ENC_API);
+	if (pfunc == NULL)
+	{
+		LOG_ERROR("Can't get sysble voGetAACEncAPI from libstagefright.so");
+		return OMX_ErrorUndefined;
+	}
 
 	voGetAACEncAPI = (VOGETAUDIODECAPI)pfunc;
 
-    mApiHandle = FSL_NEW(VO_AUDIO_CODECAPI, ());
-    if (mApiHandle == NULL) {
-        return OMX_ErrorInsufficientResources;
+	mApiHandle = FSL_NEW(VO_AUDIO_CODECAPI, ());
+	if (mApiHandle == NULL)
+	{
+		return OMX_ErrorInsufficientResources;
 	}
 
-    if (VO_ERR_NONE != voGetAACEncAPI(mApiHandle)) {
-        LOG_ERROR("Failed to get api handle");
-        return OMX_ErrorUndefined;
-    }
-
-    mMemOperator = FSL_NEW(VO_MEM_OPERATOR, ());
-    if (mMemOperator == NULL) {
-        return OMX_ErrorInsufficientResources;
+	if (VO_ERR_NONE != voGetAACEncAPI(mApiHandle))
+	{
+		LOG_ERROR("Failed to get api handle");
+		return OMX_ErrorUndefined;
 	}
 
-    mMemOperator->Alloc = cmnMemAlloc;
-    mMemOperator->Copy = cmnMemCopy;
-    mMemOperator->Free = cmnMemFree;
-    mMemOperator->Set = cmnMemSet;
-    mMemOperator->Check = cmnMemCheck;
+	mMemOperator = FSL_NEW(VO_MEM_OPERATOR, ());
+	if (mMemOperator == NULL)
+	{
+		return OMX_ErrorInsufficientResources;
+	}
 
-    return ret;
+	mMemOperator->Alloc = cmnMemAlloc;
+	mMemOperator->Copy = cmnMemCopy;
+	mMemOperator->Free = cmnMemFree;
+	mMemOperator->Set = cmnMemSet;
+	mMemOperator->Check = cmnMemCheck;
+
+	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    if (mEncoderHandle) {
-        mApiHandle->Uninit(mEncoderHandle);
-        mEncoderHandle = NULL;
-    }
-    FSL_DELETE(mApiHandle);
+	if (mEncoderHandle)
+	{
+		mApiHandle->Uninit(mEncoderHandle);
+		mEncoderHandle = NULL;
+	}
+	FSL_DELETE(mApiHandle);
 	FSL_DELETE(mMemOperator);
 
-	if (libMgr) {
+	if (libMgr)
+	{
 		if (hLibStagefright)
 			libMgr->unload(hLibStagefright);
 		hLibStagefright = NULL;
-        FSL_DELETE(libMgr);
+		FSL_DELETE(libMgr);
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    VO_CODEC_INIT_USERDATA userData;
-    fsl_osal_memset(&userData, 0, sizeof(userData));
-    userData.memflag = VO_IMF_USERMEMOPERATOR;
-    userData.memData = (VO_PTR) mMemOperator;
-    if (VO_ERR_NONE != mApiHandle->Init(&mEncoderHandle, VO_AUDIO_CodingAAC, &userData)) {
-        LOG_ERROR("Failed to init AAC encoder");
-        return OMX_ErrorUndefined;
-    }
- 
-    // Configure AAC encoder$
-    AACENC_PARAM params;
-    fsl_osal_memset(&params, 0, sizeof(params));
-    params.sampleRate = AacType.nSampleRate;
-    params.bitRate = AacType.nBitRate;
-    params.nChannels = AacType.nChannels;
-    params.adtsUsed = 0;  // For MP4 file, don't use adts format$
+	VO_CODEC_INIT_USERDATA userData;
+	fsl_osal_memset(&userData, 0, sizeof(userData));
+	userData.memflag = VO_IMF_USERMEMOPERATOR;
+	userData.memData = (VO_PTR) mMemOperator;
+	if (VO_ERR_NONE != mApiHandle->Init(&mEncoderHandle, VO_AUDIO_CodingAAC, &userData))
+	{
+		LOG_ERROR("Failed to init AAC encoder");
+		return OMX_ErrorUndefined;
+	}
+
+	// Configure AAC encoder$
+	AACENC_PARAM params;
+	fsl_osal_memset(&params, 0, sizeof(params));
+	params.sampleRate = AacType.nSampleRate;
+	params.bitRate = AacType.nBitRate;
+	params.nChannels = AacType.nChannels;
+	params.adtsUsed = 0;  // For MP4 file, don't use adts format$
 	LOG_DEBUG("Encoder Sample Rate = %d\t channels: %d\t bitRate = %d\n", \
-			AacType.nSampleRate, AacType.nChannels, AacType.nBitRate);
+	          AacType.nSampleRate, AacType.nChannels, AacType.nBitRate);
 
-    if (VO_ERR_NONE != mApiHandle->SetParam(mEncoderHandle, VO_PID_AAC_ENCPARAM,  &params)) {
-        LOG_ERROR("Failed to set AAC encoder parameters");
-        return OMX_ErrorUndefined;
-    }
+	if (VO_ERR_NONE != mApiHandle->SetParam(mEncoderHandle, VO_PID_AAC_ENCPARAM,  &params))
+	{
+		LOG_ERROR("Failed to set AAC encoder parameters");
+		return OMX_ErrorUndefined;
+	}
 
 	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioAac:
-            {
-                OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
-                pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pAacType->nPortIndex != AUDIO_FILTER_OUTPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pAacType, &AacType,	sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
-            }
-			return ret;
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioAac:
+	{
+		OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
+		pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pAacType->nPortIndex != AUDIO_FILTER_OUTPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pAacType, &AacType,	sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterSetParameterPCM()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	if (AacType.nChannels != PcmMode.nChannels
-			|| AacType.nSampleRate != PcmMode.nSamplingRate)
+	        || AacType.nSampleRate != PcmMode.nSamplingRate)
 	{
 		AacType.nChannels = PcmMode.nChannels;
 		AacType.nSampleRate = PcmMode.nSamplingRate;
 		TS_PerFrame = AACE_INPUT_BUFFER_SIZE*OMX_TICKS_PER_SECOND/AacType.nSampleRate;
 		nPushModeInputLen = AACE_INPUT_BUFFER_SIZE * 2 * AacType.nChannels;
 		LOG_DEBUG("Encoder Sample Rate = %d\t channels: %d\t TS per Frame = %lld\n", \
-				AacType.nSampleRate, AacType.nChannels, TS_PerFrame);
+		          AacType.nSampleRate, AacType.nChannels, TS_PerFrame);
 		SendEvent(OMX_EventPortSettingsChanged, AUDIO_FILTER_OUTPUT_PORT, 0, NULL);
 	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioAac:
-            {
-                OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
-                pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pAacType->nPortIndex != AUDIO_FILTER_OUTPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(&AacType, pAacType, sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
-			}
-			return ret;
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioAac:
+	{
+		OMX_AUDIO_PARAM_AACPROFILETYPE *pAacType;
+		pAacType = (OMX_AUDIO_PARAM_AACPROFILETYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pAacType, OMX_AUDIO_PARAM_AACPROFILETYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pAacType->nPortIndex != AUDIO_FILTER_OUTPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(&AacType, pAacType, sizeof(OMX_AUDIO_PARAM_AACPROFILETYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 AUDIO_FILTERRETURNTYPE AacEnc::AudioFilterFrame()
@@ -325,25 +338,28 @@ AUDIO_FILTERRETURNTYPE AacEnc::AudioFilterFrame()
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
 
-	if (bFirstFrame == OMX_TRUE) {
-/*
-		put_bits(&pb, 5, 2); //object type - AAC-LC
-		put_bits(&pb, 4, s->samplerate_index); //sample rate index
-		put_bits(&pb, 4, avctx->channels);
-		//GASpecificConfig
-		put_bits(&pb, 1, 0); //frame length - 1024 samples
-		put_bits(&pb, 1, 0); //does not depend on core coder
-		put_bits(&pb, 1, 0); //is not extension
+	if (bFirstFrame == OMX_TRUE)
+	{
+		/*
+				put_bits(&pb, 5, 2); //object type - AAC-LC
+				put_bits(&pb, 4, s->samplerate_index); //sample rate index
+				put_bits(&pb, 4, avctx->channels);
+				//GASpecificConfig
+				put_bits(&pb, 1, 0); //frame length - 1024 samples
+				put_bits(&pb, 1, 0); //does not depend on core coder
+				put_bits(&pb, 1, 0); //is not extension
 
-		//Explicitly Mark SBR absent
-		put_bits(&pb, 11, 0x2b7); //sync extension
-		put_bits(&pb, 5,  5);
-		put_bits(&pb, 1,  0);
-*/
+				//Explicitly Mark SBR absent
+				put_bits(&pb, 11, 0x2b7); //sync extension
+				put_bits(&pb, 5,  5);
+				put_bits(&pb, 1,  0);
+		*/
 		OMX_U8 csd[5] = {0x10, 0x00, 0x56, 0xE5, 0x00};
 
-		for (OMX_U32 i = 0; i < 16; i ++) {
-			if (PcmMode.nSamplingRate == samplingFrequencyMap[i]) {
+		for (OMX_U32 i = 0; i < 16; i ++)
+		{
+			if (PcmMode.nSamplingRate == samplingFrequencyMap[i])
+			{
 				csd[0] |= 0x7 & (i>>1);
 				csd[1] |= (0x1 & i) << 7;
 				printf("csd[0]: 0x%x, csd[1]: 0x%x\n", csd[0], csd[1]);
@@ -368,9 +384,13 @@ AUDIO_FILTERRETURNTYPE AacEnc::AudioFilterFrame()
 	pOutBufferHdr->nOffset = 0;
 	pOutBufferHdr->nFilledLen = 0;
 
-	if (nActuralLen == 0) {
-	} else {
-		if (nActuralLen < nPushModeInputLen) {
+	if (nActuralLen == 0)
+	{
+	}
+	else
+	{
+		if (nActuralLen < nPushModeInputLen)
+		{
 			OMX_U32 nActuralLenZero;
 			AudioRingBuffer.BufferAddZeros(nPushModeInputLen - nActuralLen, &nActuralLenZero);
 			AudioRingBuffer.BufferGet(&pBuffer, nPushModeInputLen, &nActuralLen);
@@ -403,7 +423,7 @@ AUDIO_FILTERRETURNTYPE AacEnc::AudioFilterFrame()
 
 	LOG_LOG("TS per Frame = %lld\n", TS_PerFrame);
 
-	AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+	AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 
 	if (nActuralLen == 0)
 	{
@@ -412,34 +432,34 @@ AUDIO_FILTERRETURNTYPE AacEnc::AudioFilterFrame()
 
 	LOG_LOG("Encoder nTimeStamp = %lld\n", pOutBufferHdr->nTimeStamp);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE AacEnc::AudioFilterReset()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE AacEncInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        AacEnc *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE AacEncInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		AacEnc *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(AacEnc, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(AacEnc, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

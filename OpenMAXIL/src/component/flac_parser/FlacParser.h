@@ -19,14 +19,15 @@
 #include "AudioParserBase.h"
 #include "flac_parser/FlacCoreParser.h"
 
-class FlacParser : public AudioParserBase {
-    public:
-        FlacParser();
-    private:
-		OMX_ERRORTYPE GetCoreParser();
-		OMX_AUDIO_CODINGTYPE GetAudioCodingType();
-		OMX_ERRORTYPE AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer);
-		OMX_S64 nGetTimeStamp(OMX_S64 *pSeekPoint);
+class FlacParser : public AudioParserBase
+{
+public:
+	FlacParser();
+private:
+	OMX_ERRORTYPE GetCoreParser();
+	OMX_AUDIO_CODINGTYPE GetAudioCodingType();
+	OMX_ERRORTYPE AudioParserSetCodecConfig(OMX_BUFFERHEADERTYPE *pOutBuffer);
+	OMX_S64 nGetTimeStamp(OMX_S64 *pSeekPoint);
 };
 
 #endif

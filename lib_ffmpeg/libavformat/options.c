@@ -27,10 +27,10 @@
 
 static const char* format_to_name(void* ptr)
 {
-    AVFormatContext* fc = (AVFormatContext*) ptr;
-    if(fc->iformat) return fc->iformat->name;
-    else if(fc->oformat) return fc->oformat->name;
-    else return "NULL";
+	AVFormatContext* fc = (AVFormatContext*) ptr;
+	if(fc->iformat) return fc->iformat->name;
+	else if(fc->oformat) return fc->oformat->name;
+	else return "NULL";
 }
 
 #ifdef offsetof
@@ -43,29 +43,30 @@ static const char* format_to_name(void* ptr)
 #define E AV_OPT_FLAG_ENCODING_PARAM
 #define D AV_OPT_FLAG_DECODING_PARAM
 
-static const AVOption options[]={
-{"probesize", "set probing size", OFFSET(probesize), FF_OPT_TYPE_INT, 5000000, 32, INT_MAX, D, NULL},
-{"muxrate", "set mux rate", OFFSET(mux_rate), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
-{"packetsize", "set packet size", OFFSET(packet_size), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
-{"fflags", NULL, OFFSET(flags), FF_OPT_TYPE_FLAGS, DEFAULT, INT_MIN, INT_MAX, D|E, "fflags"},
-{"ignidx", "ignore index", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_IGNIDX, INT_MIN, INT_MAX, D, "fflags"},
-{"genpts", "generate pts", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_GENPTS, INT_MIN, INT_MAX, D, "fflags"},
-{"nofillin", "do not fill in missing values that can be exactly calculated", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_NOFILLIN, INT_MIN, INT_MAX, D, "fflags"},
-{"noparse", "disable AVParsers, this needs nofillin too", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_NOPARSE, INT_MIN, INT_MAX, D, "fflags"},
-{"igndts", "ignore dts", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_IGNDTS, INT_MIN, INT_MAX, D, "fflags"},
-{"rtphint", "add rtp hinting", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_RTP_HINT, INT_MIN, INT_MAX, E, "fflags"},
+static const AVOption options[]=
+{
+	{"probesize", "set probing size", OFFSET(probesize), FF_OPT_TYPE_INT, 5000000, 32, INT_MAX, D, NULL},
+	{"muxrate", "set mux rate", OFFSET(mux_rate), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
+	{"packetsize", "set packet size", OFFSET(packet_size), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
+	{"fflags", NULL, OFFSET(flags), FF_OPT_TYPE_FLAGS, DEFAULT, INT_MIN, INT_MAX, D|E, "fflags"},
+	{"ignidx", "ignore index", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_IGNIDX, INT_MIN, INT_MAX, D, "fflags"},
+	{"genpts", "generate pts", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_GENPTS, INT_MIN, INT_MAX, D, "fflags"},
+	{"nofillin", "do not fill in missing values that can be exactly calculated", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_NOFILLIN, INT_MIN, INT_MAX, D, "fflags"},
+	{"noparse", "disable AVParsers, this needs nofillin too", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_NOPARSE, INT_MIN, INT_MAX, D, "fflags"},
+	{"igndts", "ignore dts", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_IGNDTS, INT_MIN, INT_MAX, D, "fflags"},
+	{"rtphint", "add rtp hinting", 0, FF_OPT_TYPE_CONST, AVFMT_FLAG_RTP_HINT, INT_MIN, INT_MAX, E, "fflags"},
 #if FF_API_OLD_METADATA
-{"track", " set the track number", OFFSET(track), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
-{"year", "set the year", OFFSET(year), FF_OPT_TYPE_INT, DEFAULT, INT_MIN, INT_MAX, E, NULL},
+	{"track", " set the track number", OFFSET(track), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E, NULL},
+	{"year", "set the year", OFFSET(year), FF_OPT_TYPE_INT, DEFAULT, INT_MIN, INT_MAX, E, NULL},
 #endif
-{"analyzeduration", "how many microseconds are analyzed to estimate duration", OFFSET(max_analyze_duration), FF_OPT_TYPE_INT, 5*AV_TIME_BASE, 0, INT_MAX, D, NULL},
-{"cryptokey", "decryption key", OFFSET(key), FF_OPT_TYPE_BINARY, 0, 0, 0, D, NULL},
-{"indexmem", "max memory used for timestamp index (per stream)", OFFSET(max_index_size), FF_OPT_TYPE_INT, 1<<20, 0, INT_MAX, D, NULL},
-{"rtbufsize", "max memory used for buffering real-time frames", OFFSET(max_picture_buffer), FF_OPT_TYPE_INT, 3041280, 0, INT_MAX, D, NULL}, /* defaults to 1s of 15fps 352x288 YUYV422 video */
-{"fdebug", "print specific debug info", OFFSET(debug), FF_OPT_TYPE_FLAGS, DEFAULT, 0, INT_MAX, E|D, "fdebug"},
-{"ts", NULL, 0, FF_OPT_TYPE_CONST, FF_FDEBUG_TS, INT_MIN, INT_MAX, E|D, "fdebug"},
-{"max_delay", "maximum muxing or demuxing delay in microseconds", OFFSET(max_delay), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E|D, NULL},
-{NULL, NULL, 0, FF_OPT_TYPE_INT, 0, 0, 0, 0, NULL },
+	{"analyzeduration", "how many microseconds are analyzed to estimate duration", OFFSET(max_analyze_duration), FF_OPT_TYPE_INT, 5*AV_TIME_BASE, 0, INT_MAX, D, NULL},
+	{"cryptokey", "decryption key", OFFSET(key), FF_OPT_TYPE_BINARY, 0, 0, 0, D, NULL},
+	{"indexmem", "max memory used for timestamp index (per stream)", OFFSET(max_index_size), FF_OPT_TYPE_INT, 1<<20, 0, INT_MAX, D, NULL},
+	{"rtbufsize", "max memory used for buffering real-time frames", OFFSET(max_picture_buffer), FF_OPT_TYPE_INT, 3041280, 0, INT_MAX, D, NULL}, /* defaults to 1s of 15fps 352x288 YUYV422 video */
+	{"fdebug", "print specific debug info", OFFSET(debug), FF_OPT_TYPE_FLAGS, DEFAULT, 0, INT_MAX, E|D, "fdebug"},
+	{"ts", NULL, 0, FF_OPT_TYPE_CONST, FF_FDEBUG_TS, INT_MIN, INT_MAX, E|D, "fdebug"},
+	{"max_delay", "maximum muxing or demuxing delay in microseconds", OFFSET(max_delay), FF_OPT_TYPE_INT, DEFAULT, 0, INT_MAX, E|D, NULL},
+	{NULL, NULL, 0, FF_OPT_TYPE_INT, 0, 0, 0, 0, NULL },
 };
 
 #undef E
@@ -76,26 +77,26 @@ static const AVClass av_format_context_class = { "AVFormatContext", format_to_na
 
 static void avformat_get_context_defaults(AVFormatContext *s)
 {
-    memset(s, 0, sizeof(AVFormatContext));
+	memset(s, 0, sizeof(AVFormatContext));
 
-    s->av_class = &av_format_context_class;
+	s->av_class = &av_format_context_class;
 
-    av_opt_set_defaults(s);
+	av_opt_set_defaults(s);
 }
 
 AVFormatContext *avformat_alloc_context(void)
 {
-    AVFormatContext *ic;
-    ic = av_malloc(sizeof(AVFormatContext));
-    if (!ic) return ic;
-    avformat_get_context_defaults(ic);
-    ic->av_class = &av_format_context_class;
-    return ic;
+	AVFormatContext *ic;
+	ic = av_malloc(sizeof(AVFormatContext));
+	if (!ic) return ic;
+	avformat_get_context_defaults(ic);
+	ic->av_class = &av_format_context_class;
+	return ic;
 }
 
 #if FF_API_ALLOC_FORMAT_CONTEXT
 AVFormatContext *av_alloc_format_context(void)
 {
-    return avformat_alloc_context();
+	return avformat_alloc_context();
 }
 #endif

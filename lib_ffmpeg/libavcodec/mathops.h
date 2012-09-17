@@ -48,14 +48,16 @@
 //gcc 3.4 creates an incredibly bloated mess out of this
 //#    define MULH(a,b) (((int64_t)(a) * (int64_t)(b))>>32)
 
-static av_always_inline int MULH(int a, int b){
-    return ((int64_t)(a) * (int64_t)(b))>>32;
+static av_always_inline int MULH(int a, int b)
+{
+	return ((int64_t)(a) * (int64_t)(b))>>32;
 }
 #endif
 
 #ifndef UMULH
-static av_always_inline unsigned UMULH(unsigned a, unsigned b){
-    return ((uint64_t)(a) * (uint64_t)(b))>>32;
+static av_always_inline unsigned UMULH(unsigned a, unsigned b)
+{
+	return ((uint64_t)(a) * (uint64_t)(b))>>32;
 }
 #endif
 
@@ -91,26 +93,31 @@ static av_always_inline unsigned UMULH(unsigned a, unsigned b){
 static inline av_const int mid_pred(int a, int b, int c)
 {
 #if 0
-    int t= (a-b)&((a-b)>>31);
-    a-=t;
-    b+=t;
-    b-= (b-c)&((b-c)>>31);
-    b+= (a-b)&((a-b)>>31);
+	int t= (a-b)&((a-b)>>31);
+	a-=t;
+	b+=t;
+	b-= (b-c)&((b-c)>>31);
+	b+= (a-b)&((a-b)>>31);
 
-    return b;
+	return b;
 #else
-    if(a>b){
-        if(c>b){
-            if(c>a) b=a;
-            else    b=c;
-        }
-    }else{
-        if(b>c){
-            if(c>a) b=c;
-            else    b=a;
-        }
-    }
-    return b;
+	if(a>b)
+	{
+		if(c>b)
+		{
+			if(c>a) b=a;
+			else    b=c;
+		}
+	}
+	else
+	{
+		if(b>c)
+		{
+			if(c>a) b=c;
+			else    b=a;
+		}
+	}
+	return b;
 #endif
 }
 #endif
@@ -118,14 +125,14 @@ static inline av_const int mid_pred(int a, int b, int c)
 #ifndef sign_extend
 static inline av_const int sign_extend(int val, unsigned bits)
 {
-    return (val << ((8 * sizeof(int)) - bits)) >> ((8 * sizeof(int)) - bits);
+	return (val << ((8 * sizeof(int)) - bits)) >> ((8 * sizeof(int)) - bits);
 }
 #endif
 
 #ifndef zero_extend
 static inline av_const unsigned zero_extend(unsigned val, unsigned bits)
 {
-    return (val << ((8 * sizeof(int)) - bits)) >> ((8 * sizeof(int)) - bits);
+	return (val << ((8 * sizeof(int)) - bits)) >> ((8 * sizeof(int)) - bits);
 }
 #endif
 

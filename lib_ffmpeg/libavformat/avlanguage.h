@@ -24,10 +24,11 @@
 /**
  * Known language codespaces
  */
-enum AVLangCodespace {
-    AV_LANG_ISO639_2_BIBL, /** 3-char bibliographic language codes as per ISO-IEC 639-2 */
-    AV_LANG_ISO639_2_TERM, /** 3-char terminologic language codes as per ISO-IEC 639-2 */
-    AV_LANG_ISO639_1       /** 2-char code of language as per ISO/IEC 639-1 */
+enum AVLangCodespace
+{
+	AV_LANG_ISO639_2_BIBL, /** 3-char bibliographic language codes as per ISO-IEC 639-2 */
+	AV_LANG_ISO639_2_TERM, /** 3-char terminologic language codes as per ISO-IEC 639-2 */
+	AV_LANG_ISO639_1       /** 2-char code of language as per ISO/IEC 639-1 */
 };
 
 /**

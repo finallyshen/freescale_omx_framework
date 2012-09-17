@@ -66,30 +66,33 @@ extern const uint8_t av_reverse[256];
 
 static av_always_inline av_const int av_log2_c(unsigned int v)
 {
-    int n = 0;
-    if (v & 0xffff0000) {
-        v >>= 16;
-        n += 16;
-    }
-    if (v & 0xff00) {
-        v >>= 8;
-        n += 8;
-    }
-    n += ff_log2_tab[v];
+	int n = 0;
+	if (v & 0xffff0000)
+	{
+		v >>= 16;
+		n += 16;
+	}
+	if (v & 0xff00)
+	{
+		v >>= 8;
+		n += 8;
+	}
+	n += ff_log2_tab[v];
 
-    return n;
+	return n;
 }
 
 static av_always_inline av_const int av_log2_16bit_c(unsigned int v)
 {
-    int n = 0;
-    if (v & 0xff00) {
-        v >>= 8;
-        n += 8;
-    }
-    n += ff_log2_tab[v];
+	int n = 0;
+	if (v & 0xff00)
+	{
+		v >>= 8;
+		n += 8;
+	}
+	n += ff_log2_tab[v];
 
-    return n;
+	return n;
 }
 
 #ifdef HAVE_AV_CONFIG_H
@@ -109,9 +112,9 @@ static av_always_inline av_const int av_log2_16bit_c(unsigned int v)
  */
 static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
 {
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+	if      (a < amin) return amin;
+	else if (a > amax) return amax;
+	else               return a;
 }
 
 /**
@@ -121,8 +124,8 @@ static av_always_inline av_const int av_clip_c(int a, int amin, int amax)
  */
 static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
 {
-    if (a&(~0xFF)) return (-a)>>31;
-    else           return a;
+	if (a&(~0xFF)) return (-a)>>31;
+	else           return a;
 }
 
 /**
@@ -132,8 +135,8 @@ static av_always_inline av_const uint8_t av_clip_uint8_c(int a)
  */
 static av_always_inline av_const int8_t av_clip_int8_c(int a)
 {
-    if ((a+0x80) & ~0xFF) return (a>>31) ^ 0x7F;
-    else                  return a;
+	if ((a+0x80) & ~0xFF) return (a>>31) ^ 0x7F;
+	else                  return a;
 }
 
 /**
@@ -143,8 +146,8 @@ static av_always_inline av_const int8_t av_clip_int8_c(int a)
  */
 static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
 {
-    if (a&(~0xFFFF)) return (-a)>>31;
-    else             return a;
+	if (a&(~0xFFFF)) return (-a)>>31;
+	else             return a;
 }
 
 /**
@@ -154,8 +157,8 @@ static av_always_inline av_const uint16_t av_clip_uint16_c(int a)
  */
 static av_always_inline av_const int16_t av_clip_int16_c(int a)
 {
-    if ((a+0x8000) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
-    else                      return a;
+	if ((a+0x8000) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
+	else                      return a;
 }
 
 /**
@@ -165,8 +168,8 @@ static av_always_inline av_const int16_t av_clip_int16_c(int a)
  */
 static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
 {
-    if ((a+0x80000000u) & ~(0xFFFFFFFFUL)) return (a>>63) ^ 0x7FFFFFFF;
-    else                                         return a;
+	if ((a+0x80000000u) & ~(0xFFFFFFFFUL)) return (a>>63) ^ 0x7FFFFFFF;
+	else                                         return a;
 }
 
 /**
@@ -178,9 +181,9 @@ static av_always_inline av_const int32_t av_clipl_int32_c(int64_t a)
  */
 static av_always_inline av_const float av_clipf_c(float a, float amin, float amax)
 {
-    if      (a < amin) return amin;
-    else if (a > amax) return amax;
-    else               return a;
+	if      (a < amin) return amin;
+	else if (a > amax) return amax;
+	else               return a;
 }
 
 /** Compute ceil(log2(x)).
@@ -189,7 +192,7 @@ static av_always_inline av_const float av_clipf_c(float a, float amin, float ama
  */
 static av_always_inline av_const int av_ceil_log2_c(int x)
 {
-    return av_log2((x - 1) << 1);
+	return av_log2((x - 1) << 1);
 }
 
 /**
@@ -199,11 +202,11 @@ static av_always_inline av_const int av_ceil_log2_c(int x)
  */
 static av_always_inline av_const int av_popcount_c(uint32_t x)
 {
-    x -= (x >> 1) & 0x55555555;
-    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
-    x = (x + (x >> 4)) & 0x0F0F0F0F;
-    x += x >> 8;
-    return (x + (x >> 16)) & 0x3F;
+	x -= (x >> 1) & 0x55555555;
+	x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+	x = (x + (x >> 4)) & 0x0F0F0F0F;
+	x += x >> 8;
+	return (x + (x >> 16)) & 0x3F;
 }
 
 #define MKTAG(a,b,c,d) ((a) | ((b) << 8) | ((c) << 16) | ((d) << 24))
@@ -255,7 +258,7 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
             val += (hi<<10) + 0x10000;\
         }\
     }\
-
+ 
 /*!
  * \def PUT_UTF8(val, tmp, PUT_BYTE)
  * Convert a 32-bit Unicode character to its UTF-8 encoded form (up to 4 bytes long).
@@ -319,7 +322,7 @@ static av_always_inline av_const int av_popcount_c(uint32_t x)
             PUT_16BIT\
         }\
     }\
-
+ 
 
 
 #include "mem.h"

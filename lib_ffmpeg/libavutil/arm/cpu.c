@@ -21,5 +21,5 @@
 
 int ff_get_cpu_flags_arm(void)
 {
-    return HAVE_IWMMXT * AV_CPU_FLAG_IWMMXT;
+	return HAVE_IWMMXT * AV_CPU_FLAG_IWMMXT;
 }

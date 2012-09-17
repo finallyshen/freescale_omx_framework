@@ -25,25 +25,26 @@
 
 static int roq_write_header(struct AVFormatContext *s)
 {
-    static const uint8_t header[] = {
-        0x84, 0x10, 0xFF, 0xFF, 0xFF, 0xFF, 0x1E, 0x00
-    };
+	static const uint8_t header[] =
+	{
+		0x84, 0x10, 0xFF, 0xFF, 0xFF, 0xFF, 0x1E, 0x00
+	};
 
-    avio_write(s->pb, header, 8);
-    avio_flush(s->pb);
+	avio_write(s->pb, header, 8);
+	avio_flush(s->pb);
 
-    return 0;
+	return 0;
 }
 
 AVOutputFormat ff_roq_muxer =
 {
-    "RoQ",
-    NULL_IF_CONFIG_SMALL("raw id RoQ format"),
-    NULL,
-    "roq",
-    0,
-    CODEC_ID_ROQ_DPCM,
-    CODEC_ID_ROQ,
-    roq_write_header,
-    ff_raw_write_packet,
+	"RoQ",
+	NULL_IF_CONFIG_SMALL("raw id RoQ format"),
+	NULL,
+	"roq",
+	0,
+	CODEC_ID_ROQ_DPCM,
+	CODEC_ID_ROQ,
+	roq_write_header,
+	ff_raw_write_packet,
 };

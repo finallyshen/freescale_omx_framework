@@ -29,16 +29,17 @@
 #define GSM_MS_BLOCK_SIZE 65
 #define GSM_FRAME_SIZE   160
 
-typedef struct {
-    // Contains first 120 elements from the previous frame
-    // (used by long_term_synth according to the "lag"),
-    // then in the following 160 elements the current
-    // frame is constructed.
-    int16_t ref_buf[280];
-    int v[9];
-    int lar[2][8];
-    int lar_idx;
-    int msr;
+typedef struct
+{
+	// Contains first 120 elements from the previous frame
+	// (used by long_term_synth according to the "lag"),
+	// then in the following 160 elements the current
+	// frame is constructed.
+	int16_t ref_buf[280];
+	int v[9];
+	int lar[2][8];
+	int lar_idx;
+	int msr;
 } GSMContext;
 
 extern const uint16_t ff_gsm_long_term_gain_tab[4];

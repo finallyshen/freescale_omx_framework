@@ -7,23 +7,25 @@
  *
  */
 
-typedef enum {
-    FMT_NONE,
-    YUV420Planar,
-    YUV420PackedPlanar,
-    YUV420SemiPlanar,
-    YUV422Planar,
-    YUV422PackedPlanar,
-    YUV422SemiPlanar
+typedef enum
+{
+	FMT_NONE,
+	YUV420Planar,
+	YUV420PackedPlanar,
+	YUV420SemiPlanar,
+	YUV422Planar,
+	YUV422PackedPlanar,
+	YUV422SemiPlanar
 } VIDEO_FMT;
 
-typedef struct {
-    void * (*init)();
-    int (*deinit)(void *handle);
-    int (*report)(void *handle, int idx, int width, int height, VIDEO_FMT fmt, char *data);
+typedef struct
+{
+	void * (*init)();
+	int (*deinit)(void *handle);
+	int (*report)(void *handle, int idx, int width, int height, VIDEO_FMT fmt, char *data);
 } VFV_INTERFACE;
 
 extern "C" {
-int CreateVFVInterface(VFV_INTERFACE *interface);
+	int CreateVFVInterface(VFV_INTERFACE *interface);
 }
 

@@ -27,11 +27,11 @@ RingBuffer::RingBuffer()
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferCreate(fsl_osal_u32 nPushModeLen, fsl_osal_u32 nRingBufferScale)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 
 	nPushModeInputLen = nPushModeLen;
 	nRingBufferLen = nPushModeInputLen * nRingBufferScale;
- 
+
 	/** Create queue for TS. */
 	TS_Queue = FSL_NEW(Queue, ());
 	if (TS_Queue == NULL)
@@ -60,7 +60,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferCreate(fsl_osal_u32 nPushModeLen, fsl_osa
 
 	Reserved = (fsl_osal_u8 *)FSL_MALLOC(nPushModeInputLen);
 	if (Reserved == NULL)
-	{ 
+	{
 		FSL_DELETE(TS_Queue);
 		TS_Queue->Free();
 		FSL_FREE(RingBufferPtr);
@@ -72,13 +72,13 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferCreate(fsl_osal_u32 nPushModeLen, fsl_osa
 	bHaveTS = E_FSL_OSAL_FALSE;
 	TotalConsumeLen = 0;
 	RingBufferBeginPre = -1;
-	ReservedLen = nPushModeInputLen;   
+	ReservedLen = nPushModeInputLen;
 	Begin = RingBufferPtr;
 	End = RingBufferPtr;
 	Consumered = RingBufferPtr;
 	nPrevOffset = 0;
 
-    return ret;
+	return ret;
 }
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferReset()
@@ -148,7 +148,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::TS_Add(fsl_osal_s64 ts)
 	fsl_osal_s32 DataLen = AudioDataLen();
 	TS_Item.ts = ts;
 	/** Should add TS first after received buffer from input port */
-	TS_Item.RingBufferBegin = TotalConsumeLen + DataLen; 
+	TS_Item.RingBufferBegin = TotalConsumeLen + DataLen;
 	LOG_LOG("TS: %lld\t RingBufferBegin: %lld\n", TS_Item.ts, TS_Item.RingBufferBegin);
 
 	/* Update current time stamp at the first frame */
@@ -176,7 +176,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::TS_Get(fsl_osal_s64 *ts)
 
 RINGBUFFER_ERRORTYPE RingBuffer::TS_SetIncrease(fsl_osal_s64 ts)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 	if (bHaveTS == E_FSL_OSAL_FALSE)
 	{
 		CurrentTS += ts;
@@ -188,7 +188,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::TS_SetIncrease(fsl_osal_s64 ts)
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferAdd(fsl_osal_u8 *pBuffer, fsl_osal_u32 BufferLen, fsl_osal_u32 *pActualLen)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 
 	fsl_osal_s32 DataLen = AudioDataLen();
 	fsl_osal_s32 FreeBufferLen = nRingBufferLen - DataLen - 1;
@@ -216,12 +216,12 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferAdd(fsl_osal_u8 *pBuffer, fsl_osal_u32 Bu
 
 	LOG_LOG("nRingBufferLen = %d\t DataLen = %d\n", nRingBufferLen, DataLen);
 
-    return ret;
+	return ret;
 }
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferAddZeros(fsl_osal_u32 BufferLen, fsl_osal_u32 *pActualLen)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 
 	fsl_osal_u32 DataLen = AudioDataLen();
 	fsl_osal_u32 FreeBufferLen = nRingBufferLen - DataLen - 1;
@@ -249,7 +249,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferAddZeros(fsl_osal_u32 BufferLen, fsl_osal
 
 	LOG_LOG("nRingBufferLen = %d\t DataLen = %d\n", nRingBufferLen, DataLen);
 
-    return ret;
+	return ret;
 }
 
 
@@ -261,12 +261,12 @@ fsl_osal_u32 RingBuffer::AudioDataLen()
 		DataLen = nRingBufferLen - (End - Begin);
 	}
 
-    return (fsl_osal_u32)DataLen;
+	return (fsl_osal_u32)DataLen;
 }
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferGet(fsl_osal_u8 **ppBuffer, fsl_osal_u32 BufferLen, fsl_osal_u32 *pActualLen)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 	fsl_osal_s32 DataLen = AudioDataLen();
 	if (DataLen < (fsl_osal_s32)BufferLen)
 	{
@@ -295,7 +295,7 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferGet(fsl_osal_u8 **ppBuffer, fsl_osal_u32 
 	}
 
 	LOG_LOG("nRingBufferLen = %d\t DataLen = %d\n", nRingBufferLen, DataLen);
-    return ret;
+	return ret;
 }
 
 fsl_osal_u32 RingBuffer::GetFrameLen()
@@ -321,7 +321,7 @@ fsl_osal_u32 RingBuffer::GetFrameLen()
 
 RINGBUFFER_ERRORTYPE RingBuffer::BufferConsumered(fsl_osal_u32 ConsumeredLen)
 {
-    RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
+	RINGBUFFER_ERRORTYPE ret = RINGBUFFER_SUCCESS;
 	fsl_osal_s32 DataLen = AudioDataLen();
 	if (DataLen < (fsl_osal_s32)ConsumeredLen)
 	{
@@ -357,15 +357,15 @@ RINGBUFFER_ERRORTYPE RingBuffer::BufferConsumered(fsl_osal_u32 ConsumeredLen)
 
 		if (TotalConsumeLen >= TS_Item.RingBufferBegin)
 		{
-		    if(TS_Item.ts >= 0 && RingBufferBeginPre != TS_Item.RingBufferBegin) 
+			if(TS_Item.ts >= 0 && RingBufferBeginPre != TS_Item.RingBufferBegin)
 			{
 				RingBufferBeginPre = TS_Item.RingBufferBegin;
-        		CurrentTS = TS_Item.ts;
+				CurrentTS = TS_Item.ts;
 				bHaveTS = E_FSL_OSAL_TRUE;
 				LOG_DEBUG_INS("Reset CurrentTS = %lld\n", CurrentTS);
 			}
 			if (TS_Queue->Size() > 1)
-			{ 
+			{
 				if (TS_Queue->Get(&TS_Item) != QUEUE_SUCCESS)
 				{
 					LOG_ERROR("Can't get audio TS item.\n");

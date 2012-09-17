@@ -22,19 +22,20 @@
 #include "OMX_ContentPipe.h"
 #include "PlatformResourceMgrItf.h"
 
-OMX_ERRORTYPE OMXCore::OMX_Init() 
+OMX_ERRORTYPE OMXCore::OMX_Init()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	lock = NULL;
-	if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal)) {
+	if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal))
+	{
 		LOG_ERROR("Create mutex for camera device failed.\n");
 		return OMX_ErrorInsufficientResources;
 	}
 
 	LibMgr = FSL_NEW(ShareLibarayMgr, ());
-        if(LibMgr == NULL)
-            return OMX_ErrorInsufficientResources;
+	if(LibMgr == NULL)
+		return OMX_ErrorInsufficientResources;
 
 	/** Get component info of the core */
 	ret = ComponentRegister();
@@ -94,7 +95,7 @@ OMX_ERRORTYPE OMXCore::ComponentRegister()
 
 		fsl_osal_memset(pComponentInfo, 0, sizeof(COMPONENT_INFO));
 
-		for (EntryIndex=0; ;EntryIndex++)
+		for (EntryIndex=0; ; EntryIndex++)
 		{
 			REG_ENTRY *pRegEntryItem = RegEntry->GetNode(EntryIndex);
 			if (pRegEntryItem == NULL)
@@ -106,7 +107,7 @@ OMX_ERRORTYPE OMXCore::ComponentRegister()
 				if (!fsl_osal_strcmp(pRegEntryItem->name, "component_name"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pComponentInfo->ComponentName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "component_role"))
 				{
@@ -135,12 +136,12 @@ OMX_ERRORTYPE OMXCore::ComponentRegister()
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "library_path"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pComponentInfo->LibName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "component_entry_function"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pComponentInfo->EntryFunction, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else
 				{
@@ -151,7 +152,8 @@ OMX_ERRORTYPE OMXCore::ComponentRegister()
 
 		ComponentList.Add(pComponentInfo);
 
-	}while (1);
+	}
+	while (1);
 
 	ret_reg = RegistryAnalyser.Close();
 	if (ret_reg != REG_SUCCESS)
@@ -204,7 +206,7 @@ OMX_ERRORTYPE OMXCore::ContentPipeRegister()
 
 		fsl_osal_memset(pContentPipeInfo, 0, sizeof(CONTENTPIPE_INFO));
 
-		for (EntryIndex=0; ;EntryIndex++)
+		for (EntryIndex=0; ; EntryIndex++)
 		{
 			REG_ENTRY *pRegEntryItem = RegEntry->GetNode(EntryIndex);
 			if (pRegEntryItem == NULL)
@@ -216,17 +218,17 @@ OMX_ERRORTYPE OMXCore::ContentPipeRegister()
 				if (!fsl_osal_strcmp(pRegEntryItem->name, "content_pipe_name"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pContentPipeInfo->ContentPipeName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "content_pipe_library_path"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pContentPipeInfo->LibName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "content_pipe_entry_function"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pContentPipeInfo->EntryFunction, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else
 				{
@@ -237,7 +239,8 @@ OMX_ERRORTYPE OMXCore::ContentPipeRegister()
 
 		ContentPipeList.Add(pContentPipeInfo);
 
-	}while (1);
+	}
+	while (1);
 
 	ret_reg = RegistryAnalyser.Close();
 	if (ret_reg != REG_SUCCESS)
@@ -249,7 +252,7 @@ OMX_ERRORTYPE OMXCore::ContentPipeRegister()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCore::OMX_Deinit() 
+OMX_ERRORTYPE OMXCore::OMX_Deinit()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -283,14 +286,14 @@ OMX_ERRORTYPE OMXCore::OMX_Deinit()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCore::FreeAllComponent() 
+OMX_ERRORTYPE OMXCore::FreeAllComponent()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	HANDLE_INFO *HandleListPtr;
 	OMX_S32 RefCnt, i;
 	OMX_U32 ComponentCnt;
 
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	ComponentCnt = HandleList.GetNodeCnt();
 	if (ComponentCnt == 0)
 	{
@@ -317,12 +320,12 @@ OMX_ERRORTYPE OMXCore::FreeAllComponent()
 		}
 	}
 
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCore::FreeAllContentPipe() 
+OMX_ERRORTYPE OMXCore::FreeAllContentPipe()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	HANDLE_INFO *ContentPipeHandleListPtr;
@@ -366,7 +369,7 @@ OMX_ERRORTYPE OMXCore::FreeAllContentPipe()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCore::FreeCoreResource() 
+OMX_ERRORTYPE OMXCore::FreeCoreResource()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -426,9 +429,9 @@ OMX_ERRORTYPE OMXCore::FreeCoreResource()
 }
 
 OMX_ERRORTYPE OMXCore::OMX_ComponentNameEnum(
-        OMX_STRING cComponentName, 
-        OMX_U32 nNameLength, 
-        OMX_U32 nIndex) 
+    OMX_STRING cComponentName,
+    OMX_U32 nNameLength,
+    OMX_U32 nIndex)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 nComponentCnt;
@@ -456,17 +459,17 @@ OMX_ERRORTYPE OMXCore::OMX_ComponentNameEnum(
 }
 
 OMX_ERRORTYPE OMXCore::OMX_GetHandle(
-        OMX_HANDLETYPE *pHandle, 
-        OMX_STRING cComponentName,
-        OMX_PTR pAppData, 
-        OMX_CALLBACKTYPE *pCallBacks) 
+    OMX_HANDLETYPE *pHandle,
+    OMX_STRING cComponentName,
+    OMX_PTR pAppData,
+    OMX_CALLBACKTYPE *pCallBacks)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	COMPONENT_INFO *pComponentInfoPtr;
 	HANDLE_INFO *pHandleInfo = FSL_NEW(HANDLE_INFO, ());
 	OMX_COMPONENTTYPE *pComp = FSL_NEW(OMX_COMPONENTTYPE, ());
 	OMX_HANDLETYPE hHandle = (OMX_HANDLETYPE)pComp;
-	
+
 	fsl_osal_memset(pHandleInfo, 0, sizeof(HANDLE_INFO));
 	OMX_INIT_STRUCT(pComp, OMX_COMPONENTTYPE);
 
@@ -507,16 +510,16 @@ OMX_ERRORTYPE OMXCore::OMX_GetHandle(
 	}
 
 	/** Record handle info to handle list */
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	HandleList.Add(pHandleInfo);
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 	*pHandle = hHandle;
-	
+
 	return ret;
 }
 
 COMPONENT_INFO *OMXCore::SearchComponent(
-        OMX_STRING cComponentName) 
+    OMX_STRING cComponentName)
 {
 	OMX_U32 i;
 	COMPONENT_INFO *pComponentInfoPtr;
@@ -529,7 +532,7 @@ COMPONENT_INFO *OMXCore::SearchComponent(
 			break;
 		}
 		if (!fsl_osal_strcmp((fsl_osal_char *)cComponentName, (fsl_osal_char *) \
-					pComponentInfoPtr->ComponentName))
+		                     pComponentInfoPtr->ComponentName))
 		{
 			return pComponentInfoPtr;
 		}
@@ -539,16 +542,16 @@ COMPONENT_INFO *OMXCore::SearchComponent(
 }
 
 OMX_ERRORTYPE OMXCore::ConstructComponent(
-		HANDLE_INFO *pHandleInfo,
-		OMX_HANDLETYPE hHandle,
-		COMPONENT_INFO *pComponentInfoPtr)
+    HANDLE_INFO *pHandleInfo,
+    OMX_HANDLETYPE hHandle,
+    COMPONENT_INFO *pComponentInfoPtr)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_ERRORTYPE (*ComponentEntry)(OMX_HANDLETYPE);
 
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	pHandleInfo->hlib = LibMgr->load((fsl_osal_char *)pComponentInfoPtr->LibName);
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 	if (pHandleInfo->hlib == NULL)
 	{
 		LOG_ERROR("Load library fail. library name: %s\n", pComponentInfoPtr->LibName);
@@ -556,7 +559,7 @@ OMX_ERRORTYPE OMXCore::ConstructComponent(
 	}
 
 	ComponentEntry = (OMX_ERRORTYPE (*)(void*))LibMgr->getSymbol(pHandleInfo->hlib, \
-			(fsl_osal_char *)pComponentInfoPtr->EntryFunction);
+	                 (fsl_osal_char *)pComponentInfoPtr->EntryFunction);
 	if (ComponentEntry == NULL)
 	{
 		LOG_ERROR("Can't get component entry function.\n");
@@ -575,7 +578,7 @@ OMX_ERRORTYPE OMXCore::ConstructComponent(
 }
 
 OMX_ERRORTYPE OMXCore::OMX_FreeHandle(
-        OMX_HANDLETYPE hComponent) 
+    OMX_HANDLETYPE hComponent)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_COMPONENTTYPE *pComponent = NULL;
@@ -588,7 +591,7 @@ OMX_ERRORTYPE OMXCore::OMX_FreeHandle(
 		return OMX_ErrorBadParameter;
 	}
 
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	for (i = HandleList.GetNodeCnt() - 1; i >= 0; i --)
 	{
 		pHandleInfo = HandleList.GetNode(i);
@@ -626,14 +629,14 @@ OMX_ERRORTYPE OMXCore::OMX_FreeHandle(
 	}
 
 	LOG_ERROR("Can't find the component in component list.\n");
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 	return OMX_ErrorBadParameter;
 }
 
 OMX_ERRORTYPE OMXCore::OMX_GetComponentsOfRole(
-        OMX_STRING role, 
-        OMX_U32 *pNumComps, 
-        OMX_U8 **compNames) 
+    OMX_STRING role,
+    OMX_U32 *pNumComps,
+    OMX_U8 **compNames)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 i, j, k, nComponentCnt;
@@ -720,9 +723,9 @@ SEARCH_BREAK:
 }
 
 OMX_ERRORTYPE OMXCore::OMX_GetRolesOfComponent(
-        OMX_STRING compName, 
-        OMX_U32 *pNumRoles, 
-        OMX_U8 **roles) 
+    OMX_STRING compName,
+    OMX_U32 *pNumRoles,
+    OMX_U8 **roles)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 i, nRoleCnt;
@@ -785,10 +788,10 @@ OMX_ERRORTYPE OMXCore::OMX_GetRolesOfComponent(
 }
 
 OMX_ERRORTYPE OMXCore::OMX_SetupTunnel(
-        OMX_HANDLETYPE hOutput, 
-        OMX_U32 nPortOutput, 
-        OMX_HANDLETYPE hInput, 
-        OMX_U32 nPortInput) 
+    OMX_HANDLETYPE hOutput,
+    OMX_U32 nPortOutput,
+    OMX_HANDLETYPE hInput,
+    OMX_U32 nPortInput)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_TUNNELSETUPTYPE TunnelSetup;
@@ -812,8 +815,8 @@ OMX_ERRORTYPE OMXCore::OMX_SetupTunnel(
 		return ret;
 	}
 
-        if(hInput == NULL)
-            return ret;
+	if(hInput == NULL)
+		return ret;
 
 	ret = pInComp->ComponentTunnelRequest(hInput, nPortInput, hOutput, nPortOutput, &TunnelSetup);
 	if (ret != OMX_ErrorNone)
@@ -831,8 +834,8 @@ OMX_ERRORTYPE OMXCore::OMX_SetupTunnel(
 }
 
 OMX_ERRORTYPE OMXCore::OMX_GetContentPipe(
-        OMX_HANDLETYPE *hPipe, 
-        OMX_STRING szURI) 
+    OMX_HANDLETYPE *hPipe,
+    OMX_STRING szURI)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_S32 i;
@@ -902,18 +905,18 @@ OMX_ERRORTYPE OMXCore::OMX_GetContentPipe(
 	}
 
 	fsl_osal_strcpy((fsl_osal_char *)pContentPipeHandleInfo->ContentPipeName, (fsl_osal_char *)szURI);
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	ContentPipeHandleList.Add(pContentPipeHandleInfo);
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 	*hPipe = (OMX_HANDLETYPE)pPipe;
 
 	return ret;
 }
 
 OMX_ERRORTYPE OMXCore::ConstructContentPipe(
-		HANDLE_INFO *pHandleInfo,
-		OMX_HANDLETYPE hHandle,
-		CONTENTPIPE_INFO *pContentPipeInfoPtr)
+    HANDLE_INFO *pHandleInfo,
+    OMX_HANDLETYPE hHandle,
+    CONTENTPIPE_INFO *pContentPipeInfoPtr)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_ERRORTYPE (*ContentPipeEntry)(OMX_HANDLETYPE);
@@ -944,130 +947,133 @@ OMX_ERRORTYPE OMXCore::ConstructContentPipe(
 }
 
 /**< C style functions to expose entry point for the shared library */
-extern "C" 
+extern "C"
 {
-    /**< OMX core handle definition, global variable */
-    OMXCore *gCoreHandle = NULL;
-    static OMX_S32 refCnt = 0;
+	/**< OMX core handle definition, global variable */
+	OMXCore *gCoreHandle = NULL;
+	static OMX_S32 refCnt = 0;
 
-    OMX_ERRORTYPE OMX_Init() 
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE OMX_Init()
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-        if(NULL == gCoreHandle) {
-            gCoreHandle = FSL_NEW(OMXCore, ());
-            if(NULL == gCoreHandle)
-                return OMX_ErrorInsufficientResources;
-            ret = gCoreHandle->OMX_Init();
-            if(ret != OMX_ErrorNone) {
-                FSL_DELETE(gCoreHandle);
-                return ret;
-            }
+		if(NULL == gCoreHandle)
+		{
+			gCoreHandle = FSL_NEW(OMXCore, ());
+			if(NULL == gCoreHandle)
+				return OMX_ErrorInsufficientResources;
+			ret = gCoreHandle->OMX_Init();
+			if(ret != OMX_ErrorNone)
+			{
+				FSL_DELETE(gCoreHandle);
+				return ret;
+			}
 
-            CreatePlatformResMgr();
+			CreatePlatformResMgr();
 
-            LOG_DEBUG("OMXCore is Created.\n");
-        }
+			LOG_DEBUG("OMXCore is Created.\n");
+		}
 
-        refCnt ++;
+		refCnt ++;
 
-        return ret;
-    }
+		return ret;
+	}
 
-    OMX_ERRORTYPE OMX_Deinit() 
-    {
-        refCnt --;
-        if(refCnt > 0)
-            return OMX_ErrorNone;
+	OMX_ERRORTYPE OMX_Deinit()
+	{
+		refCnt --;
+		if(refCnt > 0)
+			return OMX_ErrorNone;
 
-        if(NULL != gCoreHandle) {
-            gCoreHandle->OMX_Deinit();
-            FSL_DELETE(gCoreHandle);
-            gCoreHandle = NULL;
-        }
+		if(NULL != gCoreHandle)
+		{
+			gCoreHandle->OMX_Deinit();
+			FSL_DELETE(gCoreHandle);
+			gCoreHandle = NULL;
+		}
 
-        DestroyPlatformResMgr();
+		DestroyPlatformResMgr();
 
-        LOG_DEBUG("OMXCore is Destroyed.\n");
+		LOG_DEBUG("OMXCore is Destroyed.\n");
 
-        return OMX_ErrorNone;
-    }
+		return OMX_ErrorNone;
+	}
 
-    OMX_ERRORTYPE OMX_ComponentNameEnum(
-            OMX_STRING cComponentName, 
-            OMX_U32 nNameLength, 
-            OMX_U32 nIndex) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_ComponentNameEnum(
+	    OMX_STRING cComponentName,
+	    OMX_U32 nNameLength,
+	    OMX_U32 nIndex)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_ComponentNameEnum(cComponentName, nNameLength, nIndex);
-    }
+		return gCoreHandle->OMX_ComponentNameEnum(cComponentName, nNameLength, nIndex);
+	}
 
-    OMX_ERRORTYPE OMX_GetHandle(
-            OMX_HANDLETYPE *pHandle, 
-            OMX_STRING cComponentName,
-            OMX_PTR pAppData, 
-            OMX_CALLBACKTYPE *pCallBacks) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_GetHandle(
+	    OMX_HANDLETYPE *pHandle,
+	    OMX_STRING cComponentName,
+	    OMX_PTR pAppData,
+	    OMX_CALLBACKTYPE *pCallBacks)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_GetHandle(pHandle, cComponentName, pAppData, pCallBacks);
-    }
+		return gCoreHandle->OMX_GetHandle(pHandle, cComponentName, pAppData, pCallBacks);
+	}
 
-    OMX_ERRORTYPE OMX_FreeHandle(
-            OMX_HANDLETYPE hComponent) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_FreeHandle(
+	    OMX_HANDLETYPE hComponent)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_FreeHandle(hComponent);
-    }
+		return gCoreHandle->OMX_FreeHandle(hComponent);
+	}
 
-    OMX_ERRORTYPE OMX_GetComponentsOfRole(
-            OMX_STRING role, 
-            OMX_U32 *pNumComps, 
-            OMX_U8 **compNames) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_GetComponentsOfRole(
+	    OMX_STRING role,
+	    OMX_U32 *pNumComps,
+	    OMX_U8 **compNames)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_GetComponentsOfRole(role, pNumComps, compNames);
-    }
+		return gCoreHandle->OMX_GetComponentsOfRole(role, pNumComps, compNames);
+	}
 
-    OMX_ERRORTYPE OMX_GetRolesOfComponent(
-            OMX_STRING compName, 
-            OMX_U32 *pNumRoles, 
-            OMX_U8 **roles) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_GetRolesOfComponent(
+	    OMX_STRING compName,
+	    OMX_U32 *pNumRoles,
+	    OMX_U8 **roles)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_GetRolesOfComponent(compName, pNumRoles, roles);
-    }
+		return gCoreHandle->OMX_GetRolesOfComponent(compName, pNumRoles, roles);
+	}
 
-    OMX_ERRORTYPE OMX_SetupTunnel(
-            OMX_HANDLETYPE hOutput, 
-            OMX_U32 nPortOutput, 
-            OMX_HANDLETYPE hInput, 
-            OMX_U32 nPortInput) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_SetupTunnel(
+	    OMX_HANDLETYPE hOutput,
+	    OMX_U32 nPortOutput,
+	    OMX_HANDLETYPE hInput,
+	    OMX_U32 nPortInput)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_SetupTunnel(hOutput, nPortOutput, hInput, nPortInput);
-    }
+		return gCoreHandle->OMX_SetupTunnel(hOutput, nPortOutput, hInput, nPortInput);
+	}
 
-    OMX_ERRORTYPE OMX_GetContentPipe(
-            OMX_HANDLETYPE *hPipe, 
-            OMX_STRING szURI) 
-    {
-        if(NULL == gCoreHandle)
-            return OMX_ErrorNotReady;
+	OMX_ERRORTYPE OMX_GetContentPipe(
+	    OMX_HANDLETYPE *hPipe,
+	    OMX_STRING szURI)
+	{
+		if(NULL == gCoreHandle)
+			return OMX_ErrorNotReady;
 
-        return gCoreHandle->OMX_GetContentPipe(hPipe, szURI);
-    }
+		return gCoreHandle->OMX_GetContentPipe(hPipe, szURI);
+	}
 }
 
 /* File EOF */

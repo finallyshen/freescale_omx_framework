@@ -25,42 +25,43 @@
 
 static int read_header(AVFormatContext *s, AVFormatParameters *ap)
 {
-    AVStream *vst;
-    int ret;
+	AVStream *vst;
+	int ret;
 
-    vst = av_new_stream(s, 0);
-    if (!vst)
-        return AVERROR(ENOMEM);
+	vst = av_new_stream(s, 0);
+	if (!vst)
+		return AVERROR(ENOMEM);
 
-    vst->codec->codec_type = AVMEDIA_TYPE_VIDEO;
-    vst->codec->codec_id   = CODEC_ID_CDGRAPHICS;
+	vst->codec->codec_type = AVMEDIA_TYPE_VIDEO;
+	vst->codec->codec_id   = CODEC_ID_CDGRAPHICS;
 
-    /// 75 sectors/sec * 4 packets/sector = 300 packets/sec
-    av_set_pts_info(vst, 32, 1, 300);
+	/// 75 sectors/sec * 4 packets/sector = 300 packets/sec
+	av_set_pts_info(vst, 32, 1, 300);
 
-    ret = avio_size(s->pb);
-    if (ret > 0)
-        vst->duration = (ret * vst->time_base.den) / (CDG_PACKET_SIZE * 300);
+	ret = avio_size(s->pb);
+	if (ret > 0)
+		vst->duration = (ret * vst->time_base.den) / (CDG_PACKET_SIZE * 300);
 
-    return 0;
+	return 0;
 }
 
 static int read_packet(AVFormatContext *s, AVPacket *pkt)
 {
-    int ret;
+	int ret;
 
-    ret = av_get_packet(s->pb, pkt, CDG_PACKET_SIZE);
+	ret = av_get_packet(s->pb, pkt, CDG_PACKET_SIZE);
 
-    pkt->stream_index = 0;
-    return ret;
+	pkt->stream_index = 0;
+	return ret;
 }
 
-AVInputFormat ff_cdg_demuxer = {
-    "cdg",
-    NULL_IF_CONFIG_SMALL("CD Graphics Format"),
-    0,
-    NULL,
-    read_header,
-    read_packet,
-    .extensions = "cdg"
+AVInputFormat ff_cdg_demuxer =
+{
+	"cdg",
+	NULL_IF_CONFIG_SMALL("CD Graphics Format"),
+	0,
+	NULL,
+	read_header,
+	read_packet,
+	.extensions = "cdg"
 };

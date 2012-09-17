@@ -18,39 +18,40 @@
 
 #include "fsl_osal.h"
 
-typedef enum {
-    QUEUE_SUCCESS,
-    QUEUE_FAILURE,
-    QUEUE_NOT_READY,
-    QUEUE_OVERFLOW,
-    QUEUE_INSUFFICIENT_RESOURCES
-}QUEUE_ERRORTYPE;
+typedef enum
+{
+	QUEUE_SUCCESS,
+	QUEUE_FAILURE,
+	QUEUE_NOT_READY,
+	QUEUE_OVERFLOW,
+	QUEUE_INSUFFICIENT_RESOURCES
+} QUEUE_ERRORTYPE;
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-    QUEUE_ERRORTYPE CreateQueue(
-            fsl_osal_ptr *pQHandle,
-            fsl_osal_u32 nMaxQueueSize,
-            efsl_osal_bool bBlockingQueue,
-            fsl_osal_u32 nMessageSize);
+	QUEUE_ERRORTYPE CreateQueue(
+	    fsl_osal_ptr *pQHandle,
+	    fsl_osal_u32 nMaxQueueSize,
+	    efsl_osal_bool bBlockingQueue,
+	    fsl_osal_u32 nMessageSize);
 
-    QUEUE_ERRORTYPE EnQueue(
-            fsl_osal_ptr hQHandle, 
-            fsl_osal_ptr pMessage, 
-            efsl_osal_bool bMaxPriority);
+	QUEUE_ERRORTYPE EnQueue(
+	    fsl_osal_ptr hQHandle,
+	    fsl_osal_ptr pMessage,
+	    efsl_osal_bool bMaxPriority);
 
-    fsl_osal_u32 GetQueueSize(
-            fsl_osal_ptr hQHandle);
+	fsl_osal_u32 GetQueueSize(
+	    fsl_osal_ptr hQHandle);
 
-    QUEUE_ERRORTYPE ReadQueue(
-            fsl_osal_ptr hQHandle, 
-            fsl_osal_ptr pMessage, 
-            efsl_osal_bool bDeQueue);
+	QUEUE_ERRORTYPE ReadQueue(
+	    fsl_osal_ptr hQHandle,
+	    fsl_osal_ptr pMessage,
+	    efsl_osal_bool bDeQueue);
 
-    QUEUE_ERRORTYPE DeleteQueue(
-            fsl_osal_ptr hQHandle);
+	QUEUE_ERRORTYPE DeleteQueue(
+	    fsl_osal_ptr hQHandle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

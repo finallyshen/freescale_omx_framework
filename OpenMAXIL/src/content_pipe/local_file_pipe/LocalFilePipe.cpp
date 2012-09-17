@@ -35,7 +35,7 @@ typedef struct _LOCAL_FILE_PIPE
 	CP_ACCESSTYPE eAccess;
 	CPbyte path_name[PATH_NAME_LENGTH];
 	CPresult (*ClientCallback)(CP_EVENTTYPE eEvent, CPuint iParam);
-}LOCAL_FILE_PIPE;
+} LOCAL_FILE_PIPE;
 
 
 
@@ -66,55 +66,55 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Open(CPhandle* hContent, CPstring szUR
 
 	switch(eAccess)
 	{
-		case CP_AccessRead:
-			fsl_osal_strcpy((OMX_STRING)mode, "rb");
-			break;
-		case CP_AccessWrite:
-			fsl_osal_strcpy((OMX_STRING)mode, "wb");
-			break;
-		case CP_AccessReadWrite:
-			fsl_osal_strcpy((OMX_STRING)mode, "rb+");
-			break;
-		default:
-			return KD_EINVAL;
+	case CP_AccessRead:
+		fsl_osal_strcpy((OMX_STRING)mode, "rb");
+		break;
+	case CP_AccessWrite:
+		fsl_osal_strcpy((OMX_STRING)mode, "wb");
+		break;
+	case CP_AccessReadWrite:
+		fsl_osal_strcpy((OMX_STRING)mode, "rb+");
+		break;
+	default:
+		return KD_EINVAL;
 	}
 
-    if (fsl_osal_fopen((OMX_STRING)szURI,
-    					(OMX_STRING)mode,
-    					&pFile) != E_FSL_OSAL_SUCCESS)
-    {
+	if (fsl_osal_fopen((OMX_STRING)szURI,
+	                   (OMX_STRING)mode,
+	                   &pFile) != E_FSL_OSAL_SUCCESS)
+	{
 		switch(errno)
 		{
-			case EACCES:
-				return KD_EACCES;
-			case EBADF:
-				return KD_EBADF;
-			case EHOSTUNREACH:
-				return KD_EHOSTUNREACH;
-			case EINVAL:
-				return KD_EINVAL;
-			case EIO:
-				return KD_EIO;
-			case EISDIR:
-				return KD_EISDIR;
-			case EMFILE:
-				return KD_EMFILE;
-			case ENOENT:
-				return KD_ENOENT;
-			default:
-				return KD_EIO;
+		case EACCES:
+			return KD_EACCES;
+		case EBADF:
+			return KD_EBADF;
+		case EHOSTUNREACH:
+			return KD_EHOSTUNREACH;
+		case EINVAL:
+			return KD_EINVAL;
+		case EIO:
+			return KD_EIO;
+		case EISDIR:
+			return KD_EISDIR;
+		case EMFILE:
+			return KD_EMFILE;
+		case ENOENT:
+			return KD_ENOENT;
+		default:
+			return KD_EIO;
 		}
 	}
 
-    /* allocate memory for component private structure */
-    hPipe = (LOCAL_FILE_PIPE *)FSL_MALLOC(sizeof(LOCAL_FILE_PIPE));
-    if(hPipe == NULL)
+	/* allocate memory for component private structure */
+	hPipe = (LOCAL_FILE_PIPE *)FSL_MALLOC(sizeof(LOCAL_FILE_PIPE));
+	if(hPipe == NULL)
 	{
 		fsl_osal_fclose(pFile);
 		return KD_EIO;
 	}
 
-    fsl_osal_memset((fsl_osal_ptr)hPipe , 0, sizeof(LOCAL_FILE_PIPE));
+	fsl_osal_memset((fsl_osal_ptr)hPipe , 0, sizeof(LOCAL_FILE_PIPE));
 
 	hPipe->eAccess = eAccess;
 	hPipe->pFile = pFile;
@@ -165,12 +165,12 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Close(CPhandle hContent)
 
 	if(hContent == NULL)
 		return KD_EINVAL;
-	
-    if(fsl_osal_fclose(hPipe->pFile) != E_FSL_OSAL_SUCCESS)
-        return KD_EIO;
+
+	if(fsl_osal_fclose(hPipe->pFile) != E_FSL_OSAL_SUCCESS)
+		return KD_EIO;
 
 	FSL_FREE(hPipe);
-	
+
 	return LOCAL_FILE_PIPE_SUCESS;
 }
 
@@ -202,42 +202,42 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Create(CPhandle *hContent, CPstring sz
 	if(exist == 1)
 		return KD_EEXIST;
 
-    if (fsl_osal_fopen((OMX_STRING)szURI,
-    					"wb",
-    					&pFile) != E_FSL_OSAL_SUCCESS)
-    {
+	if (fsl_osal_fopen((OMX_STRING)szURI,
+	                   "wb",
+	                   &pFile) != E_FSL_OSAL_SUCCESS)
+	{
 		switch(errno)
 		{
-			case EACCES:
-				return KD_EACCES;
-			case EBADF:
-				return KD_EBADF;
-			case EHOSTUNREACH:
-				return KD_EHOSTUNREACH;
-			case EINVAL:
-				return KD_EINVAL;
-			case EIO:
-				return KD_EIO;
-			case EISDIR:
-				return KD_EISDIR;
-			case EMFILE:
-				return KD_EMFILE;
-			case ENOENT:
-				return KD_ENOENT;
-			default:
-				return KD_EIO;
+		case EACCES:
+			return KD_EACCES;
+		case EBADF:
+			return KD_EBADF;
+		case EHOSTUNREACH:
+			return KD_EHOSTUNREACH;
+		case EINVAL:
+			return KD_EINVAL;
+		case EIO:
+			return KD_EIO;
+		case EISDIR:
+			return KD_EISDIR;
+		case EMFILE:
+			return KD_EMFILE;
+		case ENOENT:
+			return KD_ENOENT;
+		default:
+			return KD_EIO;
 		}
 	}
 
-    /* allocate memory for component private structure */
-    hPipe = (LOCAL_FILE_PIPE *)FSL_MALLOC(sizeof(LOCAL_FILE_PIPE));
-    if(hPipe == NULL)
+	/* allocate memory for component private structure */
+	hPipe = (LOCAL_FILE_PIPE *)FSL_MALLOC(sizeof(LOCAL_FILE_PIPE));
+	if(hPipe == NULL)
 	{
 		fsl_osal_fclose(pFile);
 		return KD_EIO;
 	}
 
-    fsl_osal_memset((OMX_PTR)hPipe , 0, sizeof(LOCAL_FILE_PIPE));
+	fsl_osal_memset((OMX_PTR)hPipe , 0, sizeof(LOCAL_FILE_PIPE));
 
 	hPipe->eAccess = CP_AccessWrite;
 	hPipe->pFile = pFile;
@@ -295,7 +295,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_CheckAvailableBytes(CPhandle hContent,
 		if( nBytesRequested < diff)
 			*eResult = CP_CheckBytesOk;
 		else if(nBytesRequested > diff)
-            *eResult = CP_CheckBytesInsufficientBytes;
+			*eResult = CP_CheckBytesInsufficientBytes;
 		else
 			*eResult = CP_CheckBytesAtEndOfStream;
 	}
@@ -311,7 +311,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_CheckAvailableBytes(CPhandle hContent,
 			*eResult =  CP_CheckBytesInsufficientBytes;
 	}
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -338,34 +338,34 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_SetPosition(CPhandle  hContent, CPint6
 
 	if(hContent == NULL)
 		return KD_EINVAL;
-	
+
 	switch(eOrigin)
 	{
-		case CP_OriginBegin:
-			whence = E_FSL_OSAL_SEEK_SET;
-			break;
-		case CP_OriginCur:
-			whence = E_FSL_OSAL_SEEK_CUR;
-			nPos += hPipe->nPos;
-			break;
-		case CP_OriginEnd:
-			whence = E_FSL_OSAL_SEEK_END;
-			nPos += hPipe->nLen;
-			break;
-		default:
-			return KD_EINVAL;
+	case CP_OriginBegin:
+		whence = E_FSL_OSAL_SEEK_SET;
+		break;
+	case CP_OriginCur:
+		whence = E_FSL_OSAL_SEEK_CUR;
+		nPos += hPipe->nPos;
+		break;
+	case CP_OriginEnd:
+		whence = E_FSL_OSAL_SEEK_END;
+		nPos += hPipe->nLen;
+		break;
+	default:
+		return KD_EINVAL;
 	}
 
 	if( nPos > hPipe->nLen || nPos < 0)
 		return KD_EINVAL;
 
 	fsl_osal_s64 nOffset64 = nOffset;
-    if (fsl_osal_fseek(hPipe->pFile, nOffset64, whence) != E_FSL_OSAL_SUCCESS)
-        return KD_EIO;     
+	if (fsl_osal_fseek(hPipe->pFile, nOffset64, whence) != E_FSL_OSAL_SUCCESS)
+		return KD_EIO;
 
 	hPipe->nPos = nPos;
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -389,13 +389,13 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_GetPosition(CPhandle hContent, CPint64
 
 	if(hContent == NULL || pPosition == NULL)
 		return KD_EINVAL;
-	
+
 	if(hPipe->nPos < 0 || hPipe->nPos > hPipe->nLen)
 		return KD_EIO;
 
 	*pPosition = hPipe->nPos;
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -425,16 +425,16 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Read(CPhandle hContent, CPbyte *pData,
 		return -KD_EINVAL;
 
 	status = fsl_osal_fread((OMX_PTR)pData,
-					nSize,
-					hPipe->pFile,
-					&nActualRead);
-	
+	                        nSize,
+	                        hPipe->pFile,
+	                        &nActualRead);
+
 	hPipe->nPos += nActualRead;
 
 	if(status != E_FSL_OSAL_SUCCESS && status != E_FSL_OSAL_EOF)
 		return -KD_EIO;
-	
-   	return LOCAL_FILE_PIPE_SUCESS;
+
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -465,25 +465,25 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_ReadBuffer(CPhandle hContent, CPbyte *
 		return KD_EINVAL;
 	if(*nSize == 0 || (hPipe->eAccess != CP_AccessRead && hPipe->eAccess != CP_AccessReadWrite))
 		return KD_EINVAL;
-		
-    /* allocate memory for component private structure */
-    *ppBuffer = (CPbyte *)FSL_MALLOC(*nSize);
-    if(*ppBuffer == NULL)
-        return KD_EIO;
 
-    fsl_osal_memset((OMX_PTR)*ppBuffer, 0, *nSize);
+	/* allocate memory for component private structure */
+	*ppBuffer = (CPbyte *)FSL_MALLOC(*nSize);
+	if(*ppBuffer == NULL)
+		return KD_EIO;
+
+	fsl_osal_memset((OMX_PTR)*ppBuffer, 0, *nSize);
 
 	status = fsl_osal_fread((OMX_PTR)*ppBuffer,
-					*nSize,
-					hPipe->pFile,
-					(fsl_osal_s32 *)nSize);
+	                        *nSize,
+	                        hPipe->pFile,
+	                        (fsl_osal_s32 *)nSize);
 
 	hPipe->nPos += *nSize;
 
 	if(status != E_FSL_OSAL_SUCCESS && status != E_FSL_OSAL_EOF)
 		return KD_EIO;
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -506,10 +506,10 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_ReleaseReadBuffer(CPhandle hContent, C
 		return KD_EINVAL;
 	if(hPipe->eAccess != CP_AccessRead && hPipe->eAccess != CP_AccessReadWrite)
 		return KD_EINVAL;
-	
+
 	FSL_FREE(pBuffer);
-	
-   	return LOCAL_FILE_PIPE_SUCESS;
+
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -536,25 +536,25 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Write(CPhandle hContent, CPbyte *data,
 		return -KD_EINVAL;
 	if(hPipe->eAccess != CP_AccessWrite && hPipe->eAccess != CP_AccessReadWrite)
 		return -KD_EINVAL;
-	
+
 	if(fsl_osal_fwrite((OMX_PTR)data,
-					nSize,
-					hPipe->pFile,
-					&nActualWritten) != E_FSL_OSAL_SUCCESS)
+	                   nSize,
+	                   hPipe->pFile,
+	                   &nActualWritten) != E_FSL_OSAL_SUCCESS)
 	{
 		hPipe->nPos += nActualWritten;
 		if(hPipe->nPos > hPipe->nLen)
 			hPipe->nLen = hPipe->nPos;
 		if(errno == EACCES)
-				return -KD_EACCES;
+			return -KD_EACCES;
 		else
-				return -KD_EIO;
+			return -KD_EIO;
 	}
 
 	hPipe->nPos += nActualWritten;
 	if(hPipe->nPos > hPipe->nLen)
 		hPipe->nLen = hPipe->nPos;
-	
+
 	return LOCAL_FILE_PIPE_SUCESS;
 }
 
@@ -583,13 +583,13 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_GetWriteBuffer(CPhandle hContent, CPby
 	if(hPipe->eAccess != CP_AccessWrite && hPipe->eAccess != CP_AccessReadWrite)
 		return KD_EINVAL;
 
-    /* allocate memory for component private structure */
-    *ppBuffer = (CPbyte *)FSL_MALLOC(nSize);
-    if(*ppBuffer == NULL)
-        return KD_EIO;
-    fsl_osal_memset((OMX_PTR)*ppBuffer , 0, nSize);
+	/* allocate memory for component private structure */
+	*ppBuffer = (CPbyte *)FSL_MALLOC(nSize);
+	if(*ppBuffer == NULL)
+		return KD_EIO;
+	fsl_osal_memset((OMX_PTR)*ppBuffer , 0, nSize);
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 
@@ -618,21 +618,21 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_WriteBuffer(CPhandle hContent, CPbyte 
 		return KD_EINVAL;
 
 	if(fsl_osal_fwrite((OMX_PTR)pBuffer,
-					nFilledSize,
-					hPipe->pFile,
-					(fsl_osal_s32 *)&nActualWritten) != E_FSL_OSAL_SUCCESS)
+	                   nFilledSize,
+	                   hPipe->pFile,
+	                   (fsl_osal_s32 *)&nActualWritten) != E_FSL_OSAL_SUCCESS)
 	{
 		hPipe->nPos += nActualWritten;
 		if(hPipe->nPos > hPipe->nLen)
 			hPipe->nLen = hPipe->nPos;
 		return KD_EIO;
 	}
-	
+
 	hPipe->nPos += nActualWritten;
 	if(hPipe->nPos > hPipe->nLen)
 		hPipe->nLen = hPipe->nPos;
 
-   	return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -648,7 +648,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_WriteBuffer(CPhandle hContent, CPbyte 
  				This will denote the success or failure of the  call.
  */
 OMX_LFILE_PIPE_API CPresult LocalFilePipe_RegisterCallback(CPhandle hContent,
-							CPresult (*ClientCallback)(CP_EVENTTYPE eEvent, CPuint iParam))
+        CPresult (*ClientCallback)(CP_EVENTTYPE eEvent, CPuint iParam))
 {
 	LOCAL_FILE_PIPE *hPipe = NULL;
 
@@ -658,7 +658,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_RegisterCallback(CPhandle hContent,
 
 	hPipe->ClientCallback = ClientCallback;
 
-   	return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 /*! This method is the entry point function to this content pipe implementation. This function
@@ -677,7 +677,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Init(CP_PIPETYPE *pipe)
 {
 	if(pipe == NULL)
 		return KD_EINVAL;
-	
+
 	pipe->Open 					= LocalFilePipe_Open;
 	pipe->Close 				= LocalFilePipe_Close;
 	pipe->Create 				= LocalFilePipe_Create;
@@ -692,7 +692,7 @@ OMX_LFILE_PIPE_API CPresult LocalFilePipe_Init(CP_PIPETYPE *pipe)
 	pipe->WriteBuffer 			= LocalFilePipe_WriteBuffer;
 	pipe->RegisterCallback		= LocalFilePipe_RegisterCallback;
 
-    return LOCAL_FILE_PIPE_SUCESS;
+	return LOCAL_FILE_PIPE_SUCESS;
 }
 
 /*EOF*/

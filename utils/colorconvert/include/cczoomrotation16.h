@@ -37,31 +37,31 @@
 
 class ColorConvert16: public ColorConvertBase
 {
-    public:
+public:
 
-        static ColorConvertBase* NewL(void);
-        virtual ~ColorConvert16();
-        int32 Init(int32 Src_width, int32 Src_height, int32 Src_pitch, RECTTYPE *Src_crop, OMX_COLOR_FORMATTYPE srcColorFormat, int32 Dst_width, int32 Dst_height, int32 Dst_pitch, int32 nRotation = 0);
-        int32 SetYuvFullRange(bool range);
-        int32 SetMode(int32 nMode); //nMode : 0 Off, 1 On
-        int32 Convert(uint8 *srcBuf, uint8 *destBuf);
-        int32 Convert(uint8 **srcBuf, uint8 *destBuf);
-        int32 GetOutputBufferSize(void);
-        ColorConvert16();
+	static ColorConvertBase* NewL(void);
+	virtual ~ColorConvert16();
+	int32 Init(int32 Src_width, int32 Src_height, int32 Src_pitch, RECTTYPE *Src_crop, OMX_COLOR_FORMATTYPE srcColorFormat, int32 Dst_width, int32 Dst_height, int32 Dst_pitch, int32 nRotation = 0);
+	int32 SetYuvFullRange(bool range);
+	int32 SetMode(int32 nMode); //nMode : 0 Off, 1 On
+	int32 Convert(uint8 *srcBuf, uint8 *destBuf);
+	int32 Convert(uint8 **srcBuf, uint8 *destBuf);
+	int32 GetOutputBufferSize(void);
+	ColorConvert16();
 
 
-    private:
+private:
 
-        uint32 mCoefTbl32[516];
-        uint8 *mCoefTbl;
-        int32 get_frame16(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
+	uint32 mCoefTbl32[516];
+	uint8 *mCoefTbl;
+	int32 get_frame16(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
 
-        int32 cc16Rotate(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
-        int32 cc16ZoomIn(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
-        int32 cc16ZoomRotate(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
+	int32 cc16Rotate(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
+	int32 cc16ZoomIn(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
+	int32 cc16ZoomRotate(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
 
-    private:
-        int32(ColorConvert16::*mPtrYUV2RGB)(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
+private:
+	int32(ColorConvert16::*mPtrYUV2RGB)(uint8 **src, uint8 *dst, DisplayProperties *disp, uint8 *COFF_TBL);
 };
 
 

@@ -45,12 +45,12 @@
 #define TIMER_MARK_REPORT(id)	timer_mark_report(id)
 #define TIMER_REPORT(id)			timer_report(id)
 #else
-#define TIMER_INIT				
-#define TIMER_MARK(id)			
-#define TIMER_START(id)			
-#define TIMER_STOP(id)			
-#define TIMER_MARK_REPORT(id)	
-#define TIMER_REPORT(id)			
+#define TIMER_INIT
+#define TIMER_MARK(id)
+#define TIMER_START(id)
+#define TIMER_STOP(id)
+#define TIMER_MARK_REPORT(id)
+#define TIMER_REPORT(id)
 #endif
 
 #define TIMER_MARK_GETOUTPUT_ID		(0)
@@ -65,32 +65,32 @@
 //#define VPU_DEBUG_BS
 //#define VPU_DEC_FILE_MODE				// default, using file mode for all codecs
 #define VPU_IFRAME_SEARCH				// for file mode, we need to enable iframesearch to clear buffer: to implement seek(flush) feature: (3) skipping decoding until key frame
-										//In fact, (2)=(1)+(3)
+//In fact, (2)=(1)+(3)
 #define VPU_FILEMODE_QUICK_EXIT		// for vc1 complexity, vpu_DecSetEscSeqInit() will cost some time, so we return error directly for file mode, but not check the loop count
-										//for example: wmv9_CP_240x180_26fps_263kbps_vc1.cmplx.wmv
+//for example: wmv9_CP_240x180_26fps_263kbps_vc1.cmplx.wmv
 #define VPU_AVOID_DEAD_LOOP			// avoid dead loop, cover: seqinit step; decode step
-										//for example: mp4v_mp3_mp3audio_4567_50_100_10_20.mp4
+//for example: mp4v_mp3_mp3audio_4567_50_100_10_20.mp4
 #define VPU_FILEMODE_WORKAROUND		//add some work around for file mode: H.264/H.263/Mpeg2/Mpeg4/DivX456/XVID
 #define VPU_SUPPORT_NO_ENOUGH_FRAME	//avoid hang when no enough frame buffer
 #define VPU_VC1_AP_SKIP_WORKAROUND	//work around for skip frame(VC1), vpu may output one frame which has not been released, now, we simply drop this frame; clip: Test_1440x576_WVC1_6Mbps.wmv
 #define VPU_INIT_FREE_SIZE_LIMITATION	//after the first init step, rd may exceed wr (can no occur at decode state), for example, WR+8, but RD+512, As result, free size is not enough when try the second init. But in fact, we can ignore the info
-										//for example: Divx5_640x480_23.976_1013_a_mp3_48_158_2_1st-key-frame-is-the-2nd-frame_11.Search-for-the-Full-Moon-02.avi
+//for example: Divx5_640x480_23.976_1013_a_mp3_48_158_2_1st-key-frame-is-the-2nd-frame_11.Search-for-the-Full-Moon-02.avi
 #define VPU_FILEMODE_INTERLACE_WORKAROUND		//for interlaced clips: If user feed two fields seperately, and vpu action is: return valid for the first field, and return invalid for the second field. So we need to drop the second field and notify user get one timestamp
 #define VPU_FILEMODE_CORRUPT_WORKAROUND	//for some corrupt clips(h264_P_B1.3_25.0fps_730k_320x240_aac_48KHz_128Kbps_c2_3min3s_Tomsk_iPod.mp4)
-											//vpu return dexindex=-2, dispindex=-3 even data length !=0
+//vpu return dexindex=-2, dispindex=-3 even data length !=0
 #define VPU_SUPPORT_NO_INBUF		//no enough input buffer: to avoid null run
 #define VPU_FAKE_FLUSH				//for debug flush mode
 #define VPU_FILEMODE_PBCHUNK_FLUSH_WORKAROUND	//if flush is called between PB chunk(need to feed to vpu twice), the pb state is not cleared by vpu.
-													//as result, the following key frame will be regarded as B frame and the output is wrong until next key frame.
-													//video may be freeze after seek when VPU_SUPPORT_UNCLOSED_GOP is enabled:Xvid_SP1_640x480_23.98_655_aaclc_44_2_test.mkv(the first interval of key frame is about 6s)
+//as result, the following key frame will be regarded as B frame and the output is wrong until next key frame.
+//video may be freeze after seek when VPU_SUPPORT_UNCLOSED_GOP is enabled:Xvid_SP1_640x480_23.98_655_aaclc_44_2_test.mkv(the first interval of key frame is about 6s)
 #define VPU_FLUSH_BEFORE_DEC_WORKAROUND		//for vpu, below case need to be avoided, eg. should not update 0 after register frame immediately
-													//register frame -> update 0 -> get EOS -> update non-0 -> always return EOS even data is valid
+//register frame -> update 0 -> get EOS -> update non-0 -> always return EOS even data is valid
 //#define VPU_SEEK_ANYPOINT_WORKAROUND	//unrecoverable mosaic may be introduced by random seek point(mainly for H.264??), so we need to call some related flush operation.
 //#define VPU_FILEMODE_SUPPORT_INTERLACED_SKIPMODE	//for interlaced clips: we should make sure the skipmode for two field are the same, to avoid mosaic and hangup issues
-											//it is mainly for skip B  strategy (performance issue): so we only consider skipframeMode
+//it is mainly for skip B  strategy (performance issue): so we only consider skipframeMode
 //#define VPU_FILEMODE_MERGE_INTERLACE_DEBUG		//in file mode, it is unstable that feeding two fields seperately. So we make some effort to merge two fields into one frame
 #define VPU_FILEMODE_INTERLACE_TIMESTAMP_ENHANCE	//for field decoding: move "pop of timestampe" from decode order to display order
-													//for some interlaced clips with deep dpb, original design may introduce much bigger timestamp(about 0.5 seconds): technicolor/332_dec.ts
+//for some interlaced clips with deep dpb, original design may introduce much bigger timestamp(about 0.5 seconds): technicolor/332_dec.ts
 #define VPU_NOT_RETURN_ALLBUF_AFTER_FLUSH	//we don't want to return all frame buffers after flush operation
 
 #define VPU_ENC_OUTFRAME_ALIGN	//vpu limitation: 4(or 8?) bytes alignment for output frame address
@@ -117,7 +117,7 @@
 #define VPU_LOG(...) //LOG_PRINTF
 //#define VPU_TRACE	LOG_PRINTF("%s: %d \r\n",__FUNCTION__,__LINE__)
 #define VPU_TRACE
-#define VPU_API  LOG_PRINTF 
+#define VPU_API  LOG_PRINTF
 #define VPU_ERROR LOG_PRINTF
 #define VPU_ENC_API	LOG_PRINTF
 #define VPU_ENC_LOG(...)// LOG_PRINTF
@@ -131,7 +131,7 @@ static int g_seek_dump=DUMP_ALL_DATA;	/*0: only dump data after seeking; otherwi
 #else
 #define VPU_LOG(...)
 #define VPU_TRACE
-#define VPU_API(...) 
+#define VPU_API(...)
 #define VPU_ERROR(...)
 #define VPU_ENC_API(...)
 #define VPU_ENC_LOG(...)
@@ -162,7 +162,7 @@ static int g_seek_dump=DUMP_ALL_DATA;	/*0: only dump data after seeking; otherwi
 //#define IMX6_MULTI_FORMATS_WORKAROUND	//need to reset to decoder different formats: such VC1 followed by Mpeg2
 //#define IMX6_SKIPMODE_WORKAROUND_FILL_DUMMY
 #define IMX6_RANGEMAP_WORKAROUND_IGNORE
-//#define IMX6_LD_BUG_WORKAROUND	 //1 for iMX6 compiler : ld (2.20.1-system.20100303) bug ??	
+//#define IMX6_LD_BUG_WORKAROUND	 //1 for iMX6 compiler : ld (2.20.1-system.20100303) bug ??
 //#define IMX6_PIC_ORDER_WORKAROUND	//fixed for 6_Gee_HD.avi
 //#define IMX6_BUFNOTENOUGH_WORKAROUND	//when buffer is not enough, vpu may return dispIndex=-1(EOS) directly, but not decIndex=-1
 //#define IMX6_INTER_DEBUG_RD_WR	//internal debug: rd wr register
@@ -180,7 +180,7 @@ static int g_seek_dump=DUMP_ALL_DATA;	/*0: only dump data after seeking; otherwi
 #define SEPARATOR " "
 #define BASELINE_SHORT_NAME "VPUWRAPPER_ARM"
 #define OS_NAME "_LINUX"
- 
+
 #define VPUWRAPPER_BINARY_VERSION_STR \
     (BASELINE_SHORT_NAME OS_NAME \
      SEPARATOR "Build on" \
@@ -290,16 +290,17 @@ Top		I	P	BI	B	SKIP	*	*	*
 7	*	*	*	*	*	*	*	*	*
 */
 
-static VpuPicType g_VC1APPicType[8][8]={
-{VPU_I_PIC,VPU_I_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_I_PIC,VPU_P_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_BI_PIC,VPU_B_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_B_PIC,VPU_BI_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+static VpuPicType g_VC1APPicType[8][8]=
+{
+	{VPU_I_PIC,VPU_I_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_I_PIC,VPU_P_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_BI_PIC,VPU_B_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_B_PIC,VPU_BI_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
 
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_SKIP_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
-{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC}
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_SKIP_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC},
+	{VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC,VPU_UNKNOWN_PIC}
 };
 
 typedef enum
@@ -312,7 +313,7 @@ typedef enum
 	VPU_DEC_STATE_OUTOK,
 	VPU_DEC_STATE_EOS,
 	VPU_DEC_STATE_CORRUPT,
-}VpuDecState;
+} VpuDecState;
 
 typedef struct
 {
@@ -328,7 +329,7 @@ typedef struct
 	int height;
 	VpuRect frameCrop;
 	unsigned int Q16ShiftWidthDivHeightRatio;
-}VpuFrameBufInfo;
+} VpuFrameBufInfo;
 
 typedef struct
 {
@@ -345,7 +346,7 @@ typedef struct
 
 	/* init info */
 	VpuDecInitInfo initInfo;
-	
+
 	/* out frame info */
 	VpuDecOutFrameInfo frameInfo;
 
@@ -408,7 +409,7 @@ typedef struct
 	int firstDataSize; /*data length for the first data*/
 #ifdef VPU_PROTECT_MULTI_INSTANCE
 	int filledEOS;	/* have vpu_DecUpdateBitstreamBuffer(handle,0) */
-#endif	
+#endif
 	int pbPacket;/*divx PB chunk*/
 	int pbClips;	/*for PB clips, skipmode will introduce problem*/
 
@@ -418,7 +419,7 @@ typedef struct
 
 #ifdef VPU_FILEMODE_SUPPORT_INTERLACED_SKIPMODE
 	int firstFrameMode;	/*record the skip frame mode for first field*/
-	int fieldCnt;			/*first field decoded: 1; second field decoded: 0;*/						
+	int fieldCnt;			/*first field decoded: 1; second field decoded: 0;*/
 #endif
 
 #ifdef VPU_FILEMODE_MERGE_INTERLACE_DEBUG
@@ -446,7 +447,7 @@ typedef struct
 	int nDecFrameRptEnabled;			/*1:support frame reported; 0: not support*/
 	int nAccumulatedConsumedStufferBytes;/*stuffer size between frames: if it <0, indicate that some frames are contained in config data*/
 	int nAccumulatedConsumedFrmBytes;	/*frame size: >=0*/
-	int nAccumulatedConsumedBytes;		/*it should match with the input data size == nAccumulatedConsumedStufferBytes+nAccumulatedConsumedFrmBytes*/	
+	int nAccumulatedConsumedBytes;		/*it should match with the input data size == nAccumulatedConsumedStufferBytes+nAccumulatedConsumedFrmBytes*/
 	VpuFrameBuffer* pLastDecodedFrm;	/*the nearest decoded frame*/
 	int nAdditionalSeqBytes;				/*seq header inserted by wrapper itself , or config data */
 	int nAdditionalFrmHeaderBytes; 		/*frame header inserted by wrapper itself */
@@ -455,13 +456,13 @@ typedef struct
 	/*profile/level info*/
 	int nProfile;
 	int nLevel;
-}VpuDecObj;
+} VpuDecObj;
 
-typedef struct 
+typedef struct
 {
 	DecHandle handle;
-	VpuDecObj obj;	
-}VpuDecHandleInternal;
+	VpuDecObj obj;
+} VpuDecHandleInternal;
 
 #ifdef VPU_BACKDOOR
 int VpuLogClearFlag(DecHandle nInHandle)
@@ -482,7 +483,7 @@ int VpuVerifyClearFlag(DecHandle nInHandle,VpuDecObj* pObj)
 	pCodecInst = nInHandle;
 	val=pCodecInst->ctxRegs[CTX_BIT_FRM_DIS_FLG];
 	VPU_LOG("vpu frame buffer clear flag: 0x%X \r\n",val);
-	for(i=0;i<pObj->frameNum;i++)
+	for(i=0; i<pObj->frameNum; i++)
 	{
 		/*
 		0: is cleared
@@ -500,7 +501,7 @@ int VpuVerifyClearFlag(DecHandle nInHandle,VpuDecObj* pObj)
 			//user hasn't clear it, but vpu has cleared it.
 			VPU_ERROR("the state for buffer %d is not correct!!!, shouldn't be cleared \r\n",i);
 		}
-	}	
+	}
 	return 1;
 }
 int VpuSetClearFlag(DecHandle nInHandle,VpuDecObj* pObj,int nIndex)
@@ -509,7 +510,7 @@ int VpuSetClearFlag(DecHandle nInHandle,VpuDecObj* pObj,int nIndex)
 	int val;
 	pCodecInst = nInHandle;
 	printf("reset flag: bufer index: %d \r\n",nIndex);
-	val=pCodecInst->ctxRegs[CTX_BIT_FRM_DIS_FLG];	
+	val=pCodecInst->ctxRegs[CTX_BIT_FRM_DIS_FLG];
 	pCodecInst->ctxRegs[CTX_BIT_FRM_DIS_FLG]=(1<<nIndex)|val;
 	return 1;
 }
@@ -523,16 +524,16 @@ void printf_memory(unsigned char* addr, int width, int height, int stride)
 
 	ptr=addr;
 	VPU_LOG("addr: 0x%X \r\n",(unsigned int)addr);
-	for(i=0;i<height;i++)
+	for(i=0; i<height; i++)
 	{
-		for(j=0;j<width;j++)
+		for(j=0; j<width; j++)
 		{
-			VPU_LOG("%2X ",ptr[j]);         
+			VPU_LOG("%2X ",ptr[j]);
 		}
 		VPU_LOG("\r\n");
 		ptr+=stride;
 	}
-	VPU_LOG("\r\n");	
+	VPU_LOG("\r\n");
 	return;
 }
 
@@ -544,7 +545,7 @@ void WrapperFileDumpBitstrem(FILE** ppFp, unsigned char* pBits, unsigned int nSi
 	}
 
 	if (0==g_seek_dump) return;
-	
+
 	if(*ppFp==NULL)
 	{
 		*ppFp=fopen("temp_wrapper.bit","wb");
@@ -565,28 +566,28 @@ void WrapperFileDumpYUV(FILE** ppFp, unsigned char*  pY,unsigned char*  pU,unsig
 {
 	static int cnt=0;
 	int nCScale=1;
-	
+
 	switch(nColorfmt)
 	{
-		case 0:	//4:2:0
-			nCScale=1;
-			break;
-		case 1:	//4:2:2 hor
-		case 2:	//4:2:2 ver
-			nCScale=2;
-			break;
-		case 3:	//4:4:4
-			nCScale=4;
-			break;
-		case 4:	//4:0:0
-			nCScale=0;
-			break;
-		default:	//4:2:0
-			break;			
-	}	
+	case 0:	//4:2:0
+		nCScale=1;
+		break;
+	case 1:	//4:2:2 hor
+	case 2:	//4:2:2 ver
+		nCScale=2;
+		break;
+	case 3:	//4:4:4
+		nCScale=4;
+		break;
+	case 4:	//4:0:0
+		nCScale=0;
+		break;
+	default:	//4:2:0
+		break;
+	}
 
 	if (0==g_seek_dump) return;
-	
+
 	if(*ppFp==NULL)
 	{
 		*ppFp=fopen("temp_wrapper.yuv","wb");
@@ -606,13 +607,13 @@ void WrapperFileDumpYUV(FILE** ppFp, unsigned char*  pY,unsigned char*  pU,unsig
 		fflush(*ppFp);
 		cnt++;
 	}
-	
+
 	return;
 }
 #endif
 
 int VpuTiledAddressMapping(int nInMapType,unsigned int nInYTop,unsigned int nInYBot,unsigned int nInCbTop,unsigned int nInCbBot,
-			unsigned int* pOutY, unsigned int* pOutCb,unsigned int* pOutCr)
+                           unsigned int* pOutY, unsigned int* pOutCb,unsigned int* pOutCr)
 {
 	unsigned int lum_top_20bits,chr_top_20bits;
 	unsigned int lum_bot_20bits,chr_bot_20bits;
@@ -648,11 +649,11 @@ int VpuTiledAddressMapping(int nInMapType,unsigned int nInYTop,unsigned int nInY
 }
 
 
-int VC1CreateNALSeqHeader(unsigned char* pHeader, int* pHeaderLen, 
-	unsigned char* pCodecPri,int nCodecSize, unsigned int* pData, int nMaxHeader)
+int VC1CreateNALSeqHeader(unsigned char* pHeader, int* pHeaderLen,
+                          unsigned char* pCodecPri,int nCodecSize, unsigned int* pData, int nMaxHeader)
 {
 	int nHeaderLen;
-	unsigned char temp[4]={0x00,0x00,0x01,0x0D};
+	unsigned char temp[4]= {0x00,0x00,0x01,0x0D};
 	nHeaderLen =nCodecSize -1;
 	if((4+nHeaderLen)>nMaxHeader)
 	{
@@ -664,7 +665,7 @@ int VC1CreateNALSeqHeader(unsigned char* pHeader, int* pHeaderLen,
 
 	if(VC1_IS_NOT_NAL(pData[0]))
 	{
-		//insert 0x0000010D at the end of header 
+		//insert 0x0000010D at the end of header
 		vpu_memcpy(pHeader+nHeaderLen, temp, 4);
 		nHeaderLen += 4;
 	}
@@ -674,8 +675,8 @@ int VC1CreateNALSeqHeader(unsigned char* pHeader, int* pHeaderLen,
 	return 1;
 }
 
-int VC1CreateRCVSeqHeader(unsigned char* pHeader, int* pHeaderLen, 
-	unsigned char* pCodecPri,unsigned int nFrameSize,int nWidth,int nHeight)
+int VC1CreateRCVSeqHeader(unsigned char* pHeader, int* pHeaderLen,
+                          unsigned char* pCodecPri,unsigned int nFrameSize,int nWidth,int nHeight)
 {
 	int nHeaderLen;
 
@@ -721,13 +722,13 @@ int VC1CreateRCVSeqHeader(unsigned char* pHeader, int* pHeaderLen,
 	//Width
 	pHeader[i++] = (unsigned char)nWidth;
 	pHeader[i++] = (unsigned char)(((nWidth >> 8) & 0xff));
-	pHeader[i++] = (unsigned char)(((nWidth >> 16) & 0xff)); 
+	pHeader[i++] = (unsigned char)(((nWidth >> 16) & 0xff));
 	pHeader[i++] = (unsigned char)(((nWidth >> 24) & 0xff));
 
 	//RCV2 ???
 	//nHeaderLen+=16;
 	//...
-	
+
 	//Frame Size
 	pHeader[i++] = (unsigned char)nFrameSize;
 	pHeader[i++] = (unsigned char)(nFrameSize >> 8);
@@ -748,14 +749,14 @@ int VC1CreateNalFrameHeader(unsigned char* pHeader, int* pHeaderLen,unsigned int
 {
 	unsigned int VC1Id;
 	VC1Id=*pInData;
-	if(VC1_IS_NOT_NAL(VC1Id))	
+	if(VC1_IS_NOT_NAL(VC1Id))
 	{
 		//need insert header : special ID
 		pHeader[0]=0x0;
 		pHeader[1]=0x0;
 		pHeader[2]=0x01;
 		pHeader[3]=0x0D;
-		*pHeaderLen=4;	
+		*pHeaderLen=4;
 	}
 	else
 	{
@@ -779,8 +780,8 @@ int VC1CreateRCVFrameHeader(unsigned char* pHeader, int* pHeaderLen,unsigned int
 	return 1;
 }
 
-int VP8CreateSeqHeader(unsigned char* pHeader, int* pHeaderLen, 
-	unsigned int nTimeBaseDen,unsigned int nTimeBaseNum,unsigned int nFrameCnt,int nWidth,int nHeight)
+int VP8CreateSeqHeader(unsigned char* pHeader, int* pHeaderLen,
+                       unsigned int nTimeBaseDen,unsigned int nTimeBaseNum,unsigned int nFrameCnt,int nWidth,int nHeight)
 {
 	int i=0;
 
@@ -857,8 +858,8 @@ int VP8CreateFrameHeader(unsigned char* pHeader, int* pHeaderLen,unsigned int nI
 	return 1;
 }
 
-int DIV3CreateSeqHeader(unsigned char* pHeader, int* pHeaderLen, 
-	unsigned int nTimeBaseDen,unsigned int nTimeBaseNum,unsigned int nFrameCnt,int nWidth,int nHeight)
+int DIV3CreateSeqHeader(unsigned char* pHeader, int* pHeaderLen,
+                        unsigned int nTimeBaseDen,unsigned int nTimeBaseNum,unsigned int nFrameCnt,int nWidth,int nHeight)
 {
 	int i=0;
 
@@ -940,316 +941,316 @@ unsigned int VpuConvertAspectRatio(VpuCodStd eInFormat,unsigned int InRatio,int 
 #define FIXED_POINTED_1	(0x10000)	//(Q16_SHIFT)
 	unsigned int tmp;
 	//set default value: no scale
-	unsigned int OutWidth=FIXED_POINTED_1;	
+	unsigned int OutWidth=FIXED_POINTED_1;
 	unsigned int OutHeight=FIXED_POINTED_1;
 	unsigned int Q16Ratio=FIXED_POINTED_1;
 	VPU_LOG("aspect ratio: format: %d, ratio: 0x%X, InWidth: %d, InHeight: %d \r\n",eInFormat,InRatio,InWidth,InHeight);
 	switch(eInFormat)
 	{
-		case VPU_V_MPEG2:
-			//FIXME: we have no other better info to identify mpeg1 or mpeg2 except profile/level
-			if((profile==0)&&(level==0))
+	case VPU_V_MPEG2:
+		//FIXME: we have no other better info to identify mpeg1 or mpeg2 except profile/level
+		if((profile==0)&&(level==0))
+		{
+			//Mpeg1
+			/*
+			CODE	HEIGHT/WIDTH	COMMENT
+			0000	undefined		Forbidden
+			0001	1.0				square pels
+			0010	0.6735
+			0011	0.7031			16:9 625-line
+			0100	0.7615
+			0101	0.8055
+			0110	0.8437			16:9 525-line
+			0111	0.8935
+			1000	0.9157			702x575 at 4:3 = 0.9157
+			1001	0.9815
+			1010	1.0255
+			1011	1.0695
+			1100	1.0950			711x487 at 4:3 = 1.0950
+			1101	1.1575
+			1110	1.2015
+			1111	undefined		reserved
+			*/				switch(InRatio)
 			{
-				//Mpeg1
-/*
-CODE	HEIGHT/WIDTH	COMMENT
-0000	undefined		Forbidden
-0001	1.0				square pels
-0010	0.6735	
-0011	0.7031			16:9 625-line
-0100	0.7615	
-0101	0.8055	
-0110	0.8437			16:9 525-line
-0111	0.8935	
-1000	0.9157			702x575 at 4:3 = 0.9157
-1001	0.9815	
-1010	1.0255	
-1011	1.0695	
-1100	1.0950			711x487 at 4:3 = 1.0950
-1101	1.1575	
-1110	1.2015	
-1111	undefined		reserved
-*/				switch(InRatio)
-				{
-					case 0x1:	// 1.0 (SAR)
-						//no scale(use default value)
-						break;
-					case 0x2:	// 1:0.6735 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*6735;
-						break;						
-					case 0x3:	// 1:0.7031 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*7031;
-						break;	
-					case 0x4:	// 1:0.7615 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*7615;
-						break;	
-					case 0x5:	// 1:0.8055 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*8055;
-						break;	
-					case 0x6:	// 1:0.8437 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*8437;
-						break;	
-					case 0x7:	// 1:0.8935 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*8935;
-						break;	
-					case 0x8:	// 1:0.9157 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*9157;
-						break;	
-					case 0x9:	// 1:0.9815 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*9815;
-						break;	
-					case 0xA:	// 1:1.0255 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*10255;
-						break;	
-					case 0xB:	// 1:1.0695 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*10695;
-						break;	
-					case 0xC:	// 1:1.0950 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*10950;
-						break;		
-					case 0xD:	// 1:1.1575 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*11575;
-						break;	
-					case 0xE:	// 1:1.2015 (SAR)
-						OutWidth=(double)FIXED_POINTED_1*10000;
-						OutHeight=FIXED_POINTED_1*12015;
-						break;				
-					default:
-						VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
-						break;
-				}
+			case 0x1:	// 1.0 (SAR)
+				//no scale(use default value)
+				break;
+			case 0x2:	// 1:0.6735 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*6735;
+				break;
+			case 0x3:	// 1:0.7031 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*7031;
+				break;
+			case 0x4:	// 1:0.7615 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*7615;
+				break;
+			case 0x5:	// 1:0.8055 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*8055;
+				break;
+			case 0x6:	// 1:0.8437 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*8437;
+				break;
+			case 0x7:	// 1:0.8935 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*8935;
+				break;
+			case 0x8:	// 1:0.9157 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*9157;
+				break;
+			case 0x9:	// 1:0.9815 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*9815;
+				break;
+			case 0xA:	// 1:1.0255 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*10255;
+				break;
+			case 0xB:	// 1:1.0695 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*10695;
+				break;
+			case 0xC:	// 1:1.0950 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*10950;
+				break;
+			case 0xD:	// 1:1.1575 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*11575;
+				break;
+			case 0xE:	// 1:1.2015 (SAR)
+				OutWidth=(double)FIXED_POINTED_1*10000;
+				OutHeight=FIXED_POINTED_1*12015;
+				break;
+			default:
+				VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+				break;
 			}
-			else
-			{
-				//Mpeg2
-/*	
-		aspect_ratio_information 	Sample Aspect Ratio 		DAR
-		0000 					Forbidden 				Forbidden			
-		0001					1.0 (Square Sample) 		每
-		0010 					每 						3 ¯ 4
-		0011 					每 						9 ¯ 16
-		0100 					每 						1 ¯ 2.21		
-		0101 					每 						Reserved
-		＃ 												＃
-		1111 					每 						Reserved		
-*/
-				switch(InRatio)
-				{
-					case 0x1:	// 1.0 (SAR)
-						//no scale(use default value)
-						break;
-					case 0x2:	// 4:3 (DAR)
-						OutWidth=(double)FIXED_POINTED_1*InHeight*4/(3*InWidth);
-						OutHeight=FIXED_POINTED_1;
-						break;
-					case 0x3:	// 16:9 (DAR)
-						OutWidth=(double)FIXED_POINTED_1*InHeight*16/(9*InWidth);
-						OutHeight=FIXED_POINTED_1;
-						break;
-					case 0x4:	// 2.21 : 1 (DAR)
-						OutWidth=(double)FIXED_POINTED_1*InHeight*221/(100*InWidth);
-						OutHeight=FIXED_POINTED_1;
-						break;
-					default:
-						VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
-						break;
-				}	
-			}
-			break;
-		case VPU_V_AVC:
-/*
-	if aspectRateInfo [31:16] is 0, aspectRateInfo [7:0] means
-	aspect_ratio_idc. Otherwise, AspectRatio means Extended_SAR.
-	sar_width = aspectRateInfo [31:16],
-	sar_height = aspectRateInfo [15:0]
-		aspect_ratio_idc 	Sample aspect ratio 		(informative)Examples of use
-		0 				Unspecified
-		1 				1:1(※square§)		1280x720 16:9 frame without overscan
-												1920x1080 16:9 frame without overscan (cropped from 1920x1088)
-												640x480 4:3 frame without overscan
-		2 				12:11 					720x576 4:3 frame with horizontal overscan
-												352x288 4:3 frame without overscan
-		3 				10:11 					720x480 4:3 frame with horizontal overscan
-												352x240 4:3 frame without overscan
-		4 				16:11 					720x576 16:9 frame with horizontal overscan
-												540x576 4:3 frame with horizontal overscan
-		5 				40:33 					720x480 16:9 frame with horizontal overscan
-												540x480 4:3 frame with horizontal overscan
-		6 				24:11 					352x576 4:3 frame without overscan
-												480x576 16:9 frame with horizontal overscan
-		7 				20:11 					352x480 4:3 frame without overscan
-												480x480 16:9 frame with horizontal overscan
-		8 				32:11 					352x576 16:9 frame without overscan
-		9 				80:33 					352x480 	16:9 frame without overscan
-		10 				18:11 					480x576 4:3 frame with horizontal overscan
-		11 				15:11 					480x480 4:3 frame with horizontal overscan
-		12 				64:33 					540x576 16:9 frame with horizontal overscan
-		13 				160:99 					540x480 16:9 frame with horizontal overscan
-		14..254 			Reserved
-		255 				Extended_SAR	
-*/			
-			tmp=(InRatio>>16)&0xFFFF;	//[31:16]
-			if(tmp==0)
-			{
-				tmp=InRatio&0xFF;		//[7:0]
-				switch(tmp)
-				{
-					case 0x1:	// 1:1
-						//no scale(use default value)
-						break;
-					case 0x2:	// 12:11
-						OutWidth=FIXED_POINTED_1*12;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x3:	// 10:11
-						OutWidth=FIXED_POINTED_1*10;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x4:	// 16:11
-						OutWidth=FIXED_POINTED_1*16;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x5:	// 40:33
-						OutWidth=FIXED_POINTED_1*40;
-						OutHeight=FIXED_POINTED_1*33;	
-						break;
-					case 0x6:	// 24:11
-						OutWidth=FIXED_POINTED_1*24;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x7:	// 20:11
-						OutWidth=FIXED_POINTED_1*20;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x8:	// 32:11
-						OutWidth=FIXED_POINTED_1*32;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0x9:	// 80:33
-						OutWidth=FIXED_POINTED_1*80;
-						OutHeight=FIXED_POINTED_1*33;	
-						break;
-
-					case 0xA:	// 18:11
-						OutWidth=FIXED_POINTED_1*18;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0xB:	// 15:11
-						OutWidth=FIXED_POINTED_1*15;
-						OutHeight=FIXED_POINTED_1*11;	
-						break;
-					case 0xC:	// 64:33
-						OutWidth=FIXED_POINTED_1*64;
-						OutHeight=FIXED_POINTED_1*33;	
-						break;
-					case 0xD:	// 160:99
-						OutWidth=FIXED_POINTED_1*160;
-						OutHeight=FIXED_POINTED_1*99;	
-						break;
-					default:
-						VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
-						break;
-				}
-			}
-			else
-			{
-				//extended SAR: => sar_width: sar_height ??
-				//sar_width = aspectRateInfo [31:16],
-				//sar_height = aspectRateInfo [15:0]	
-				tmp=(InRatio>>16)&0xFFFF;	//width=[31:16]
-				//OutWidth=FIXED_POINTED_1*tmp/InWidth;
-				OutWidth=FIXED_POINTED_1*tmp;
-				tmp=InRatio&0xFFFF;			//height=[15:0]
-				//OutHeight=FIXED_POINTED_1*tmp/InHeight;
-				OutHeight=FIXED_POINTED_1*tmp;
-			}
-			break;
-		case VPU_V_DIVX3:	//??
-		case VPU_V_DIVX4:
-		case VPU_V_DIVX56:
-		case VPU_V_XVID:
-		case VPU_V_MPEG4:
-/*
-		aspect_ratio_info 	pixel aspect ratios
-		0000 									Forbidden
-		0001 									1:1 (Square)
-		0010 									12:11 (625-type for 4:3 picture)
-		0011 									10:11 (525-type for 4:3 picture)
-		0100 									16:11 (625-type stretched for 16:9 picture)
-		0101 									40:33 (525-type stretched for 16:9 picture)
-		0110-1110 								Reserved
-		1111 									extended PAR
-*/			
+		}
+		else
+		{
+			//Mpeg2
+			/*
+					aspect_ratio_information 	Sample Aspect Ratio 		DAR
+					0000 					Forbidden 				Forbidden
+					0001					1.0 (Square Sample) 		每
+					0010 					每 						3 ¯ 4
+					0011 					每 						9 ¯ 16
+					0100 					每 						1 ¯ 2.21
+					0101 					每 						Reserved
+					＃ 												＃
+					1111 					每 						Reserved
+			*/
 			switch(InRatio)
 			{
-				case 0x1:	// 1:1 (SAR)
-					OutWidth=FIXED_POINTED_1;
-					OutHeight=FIXED_POINTED_1;
-					break;
-				case 0x2:	// 12:11 (SAR)
-					OutWidth=FIXED_POINTED_1*12;
-					OutHeight=FIXED_POINTED_1*11;
-					break;
-				case 0x3:	// 10:11 (SAR)
-					OutWidth=FIXED_POINTED_1*10;
-					OutHeight=FIXED_POINTED_1*11;				
-					break;
-				case 0x4:	// 16:11 (SAR)
-					OutWidth=FIXED_POINTED_1*16;
-					OutHeight=FIXED_POINTED_1*11;
-					break;
-				case 0x5:	// 40:33 (SAR)
-					OutWidth=FIXED_POINTED_1*40;
-					OutHeight=FIXED_POINTED_1*33;
-					break;
-				default:
-					if((InRatio&0xF)==0xF)		// [3:0]: '1111' : extended_PAR
-					{
-						tmp=(InRatio>>4)&0xFF;	//width=[11:4]
-						OutWidth=FIXED_POINTED_1*tmp;
-						tmp=(InRatio>>12)&0xFF;	//height=[19:12]
-						OutHeight=FIXED_POINTED_1*tmp;
-					}
-					else
-					{
-						VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
-					}
-					break;
+			case 0x1:	// 1.0 (SAR)
+				//no scale(use default value)
+				break;
+			case 0x2:	// 4:3 (DAR)
+				OutWidth=(double)FIXED_POINTED_1*InHeight*4/(3*InWidth);
+				OutHeight=FIXED_POINTED_1;
+				break;
+			case 0x3:	// 16:9 (DAR)
+				OutWidth=(double)FIXED_POINTED_1*InHeight*16/(9*InWidth);
+				OutHeight=FIXED_POINTED_1;
+				break;
+			case 0x4:	// 2.21 : 1 (DAR)
+				OutWidth=(double)FIXED_POINTED_1*InHeight*221/(100*InWidth);
+				OutHeight=FIXED_POINTED_1;
+				break;
+			default:
+				VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+				break;
 			}
-			break;
-		case VPU_V_VC1:
-		case VPU_V_VC1_AP:	
-			//Aspect Width = aspectRateInfo [31:16],
-			//Aspect Height = aspectRateInfo [15:0]
+		}
+		break;
+	case VPU_V_AVC:
+		/*
+			if aspectRateInfo [31:16] is 0, aspectRateInfo [7:0] means
+			aspect_ratio_idc. Otherwise, AspectRatio means Extended_SAR.
+			sar_width = aspectRateInfo [31:16],
+			sar_height = aspectRateInfo [15:0]
+				aspect_ratio_idc 	Sample aspect ratio 		(informative)Examples of use
+				0 				Unspecified
+				1 				1:1(※square§)		1280x720 16:9 frame without overscan
+														1920x1080 16:9 frame without overscan (cropped from 1920x1088)
+														640x480 4:3 frame without overscan
+				2 				12:11 					720x576 4:3 frame with horizontal overscan
+														352x288 4:3 frame without overscan
+				3 				10:11 					720x480 4:3 frame with horizontal overscan
+														352x240 4:3 frame without overscan
+				4 				16:11 					720x576 16:9 frame with horizontal overscan
+														540x576 4:3 frame with horizontal overscan
+				5 				40:33 					720x480 16:9 frame with horizontal overscan
+														540x480 4:3 frame with horizontal overscan
+				6 				24:11 					352x576 4:3 frame without overscan
+														480x576 16:9 frame with horizontal overscan
+				7 				20:11 					352x480 4:3 frame without overscan
+														480x480 16:9 frame with horizontal overscan
+				8 				32:11 					352x576 16:9 frame without overscan
+				9 				80:33 					352x480 	16:9 frame without overscan
+				10 				18:11 					480x576 4:3 frame with horizontal overscan
+				11 				15:11 					480x480 4:3 frame with horizontal overscan
+				12 				64:33 					540x576 16:9 frame with horizontal overscan
+				13 				160:99 					540x480 16:9 frame with horizontal overscan
+				14..254 			Reserved
+				255 				Extended_SAR
+		*/
+		tmp=(InRatio>>16)&0xFFFF;	//[31:16]
+		if(tmp==0)
+		{
+			tmp=InRatio&0xFF;		//[7:0]
+			switch(tmp)
+			{
+			case 0x1:	// 1:1
+				//no scale(use default value)
+				break;
+			case 0x2:	// 12:11
+				OutWidth=FIXED_POINTED_1*12;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x3:	// 10:11
+				OutWidth=FIXED_POINTED_1*10;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x4:	// 16:11
+				OutWidth=FIXED_POINTED_1*16;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x5:	// 40:33
+				OutWidth=FIXED_POINTED_1*40;
+				OutHeight=FIXED_POINTED_1*33;
+				break;
+			case 0x6:	// 24:11
+				OutWidth=FIXED_POINTED_1*24;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x7:	// 20:11
+				OutWidth=FIXED_POINTED_1*20;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x8:	// 32:11
+				OutWidth=FIXED_POINTED_1*32;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0x9:	// 80:33
+				OutWidth=FIXED_POINTED_1*80;
+				OutHeight=FIXED_POINTED_1*33;
+				break;
+
+			case 0xA:	// 18:11
+				OutWidth=FIXED_POINTED_1*18;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0xB:	// 15:11
+				OutWidth=FIXED_POINTED_1*15;
+				OutHeight=FIXED_POINTED_1*11;
+				break;
+			case 0xC:	// 64:33
+				OutWidth=FIXED_POINTED_1*64;
+				OutHeight=FIXED_POINTED_1*33;
+				break;
+			case 0xD:	// 160:99
+				OutWidth=FIXED_POINTED_1*160;
+				OutHeight=FIXED_POINTED_1*99;
+				break;
+			default:
+				VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+				break;
+			}
+		}
+		else
+		{
+			//extended SAR: => sar_width: sar_height ??
+			//sar_width = aspectRateInfo [31:16],
+			//sar_height = aspectRateInfo [15:0]
 			tmp=(InRatio>>16)&0xFFFF;	//width=[31:16]
 			//OutWidth=FIXED_POINTED_1*tmp/InWidth;
 			OutWidth=FIXED_POINTED_1*tmp;
 			tmp=InRatio&0xFFFF;			//height=[15:0]
 			//OutHeight=FIXED_POINTED_1*tmp/InHeight;
 			OutHeight=FIXED_POINTED_1*tmp;
+		}
+		break;
+	case VPU_V_DIVX3:	//??
+	case VPU_V_DIVX4:
+	case VPU_V_DIVX56:
+	case VPU_V_XVID:
+	case VPU_V_MPEG4:
+		/*
+				aspect_ratio_info 	pixel aspect ratios
+				0000 									Forbidden
+				0001 									1:1 (Square)
+				0010 									12:11 (625-type for 4:3 picture)
+				0011 									10:11 (525-type for 4:3 picture)
+				0100 									16:11 (625-type stretched for 16:9 picture)
+				0101 									40:33 (525-type stretched for 16:9 picture)
+				0110-1110 								Reserved
+				1111 									extended PAR
+		*/
+		switch(InRatio)
+		{
+		case 0x1:	// 1:1 (SAR)
+			OutWidth=FIXED_POINTED_1;
+			OutHeight=FIXED_POINTED_1;
 			break;
-		case VPU_V_MJPG:
-		case VPU_V_AVC_MVC:
-		case VPU_V_AVS:
-		case VPU_V_VP8:
-			//ignore ratio
+		case 0x2:	// 12:11 (SAR)
+			OutWidth=FIXED_POINTED_1*12;
+			OutHeight=FIXED_POINTED_1*11;
+			break;
+		case 0x3:	// 10:11 (SAR)
+			OutWidth=FIXED_POINTED_1*10;
+			OutHeight=FIXED_POINTED_1*11;
+			break;
+		case 0x4:	// 16:11 (SAR)
+			OutWidth=FIXED_POINTED_1*16;
+			OutHeight=FIXED_POINTED_1*11;
+			break;
+		case 0x5:	// 40:33 (SAR)
+			OutWidth=FIXED_POINTED_1*40;
+			OutHeight=FIXED_POINTED_1*33;
 			break;
 		default:
-			//ignore ratio
-			VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+			if((InRatio&0xF)==0xF)		// [3:0]: '1111' : extended_PAR
+			{
+				tmp=(InRatio>>4)&0xFF;	//width=[11:4]
+				OutWidth=FIXED_POINTED_1*tmp;
+				tmp=(InRatio>>12)&0xFF;	//height=[19:12]
+				OutHeight=FIXED_POINTED_1*tmp;
+			}
+			else
+			{
+				VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+			}
 			break;
+		}
+		break;
+	case VPU_V_VC1:
+	case VPU_V_VC1_AP:
+		//Aspect Width = aspectRateInfo [31:16],
+		//Aspect Height = aspectRateInfo [15:0]
+		tmp=(InRatio>>16)&0xFFFF;	//width=[31:16]
+		//OutWidth=FIXED_POINTED_1*tmp/InWidth;
+		OutWidth=FIXED_POINTED_1*tmp;
+		tmp=InRatio&0xFFFF;			//height=[15:0]
+		//OutHeight=FIXED_POINTED_1*tmp/InHeight;
+		OutHeight=FIXED_POINTED_1*tmp;
+		break;
+	case VPU_V_MJPG:
+	case VPU_V_AVC_MVC:
+	case VPU_V_AVS:
+	case VPU_V_VP8:
+		//ignore ratio
+		break;
+	default:
+		//ignore ratio
+		VPU_ERROR("unsupported ration: 0x%X \r\n",InRatio);
+		break;
 	}
 
 	if((OutWidth==0)||(OutHeight==0))
@@ -1276,119 +1277,24 @@ VpuPicType VpuConvertPicType(VpuCodStd InCodec,int InPicType,int InIdrFlag)
 	*/
 	switch (InCodec)
 	{
-		case VPU_V_AVC:
-			if(CPU_IS_MX6X())
+	case VPU_V_AVC:
+		if(CPU_IS_MX6X())
+		{
+			/*
+			InIdrFlag:
+			[0]: second field or frame
+			[1]: first field
+			now, we only check the second field bit [0]
+			*/
+			if((InIdrFlag)&0x1)
 			{
-				/*
-				InIdrFlag:
-				[0]: second field or frame
-				[1]: first field
-				now, we only check the second field bit [0]
-				*/
-				if((InIdrFlag)&0x1)
-				{
-					eOutPicType=VPU_IDR_PIC;
-					VPU_LOG("frame : (IDR) \r\n");
-				}
-				else
-				{
-					switch(InPicType)
-					{
-						case 0:
-							eOutPicType=VPU_I_PIC;
-							VPU_LOG("frame : (I) \r\n");
-							break;
-						case 1:
-							eOutPicType=VPU_P_PIC;
-							VPU_LOG("frame : (P) \r\n");
-							break;
-						case 2:
-							eOutPicType=VPU_B_PIC;
-							VPU_LOG("frame : (B) \r\n");
-							break;			
-						default:
-							VPU_LOG("frame : (*) \r\n");
-							break;
-					}
-				}
+				eOutPicType=VPU_IDR_PIC;
+				VPU_LOG("frame : (IDR) \r\n");
 			}
 			else
 			{
-				if(AVC_IS_IDR(InPicType))
+				switch(InPicType)
 				{
-					eOutPicType=VPU_IDR_PIC;
-					VPU_LOG("frame : (I) \r\n");
-				}
-				else if(AVC_IS_ISLICE(InPicType))
-				{
-					eOutPicType=VPU_I_PIC;
-					VPU_LOG("frame : (IS) \r\n");
-				}
-				else if(AVC_IS_PSLICE(InPicType))
-				{
-					eOutPicType=VPU_P_PIC;		
-					VPU_LOG("frame : (PS) \r\n");
-				}
-				else if(AVC_IS_BSLICE(InPicType))
-				{
-					eOutPicType=VPU_B_PIC;		
-					VPU_LOG("frame : (BS) \r\n");
-				}
-				else
-				{
-					VPU_LOG("frame :  (*) \r\n");
-				}					
-			}
-			break;			
-		case VPU_V_VC1:
-			/*
-			0 - I picture
-			1 - P picture
-			2 - BI picture
-			3 - B picture
-			4 - P_SKIP picture
-			*/
-			switch(InPicType&0x7)
-			{
-				case 0:
-					eOutPicType=VPU_I_PIC;
-					VPU_LOG("frame : (I) \r\n");
-					break;
-				case 1:
-					eOutPicType=VPU_P_PIC;
-					VPU_LOG("frame : (P) \r\n");
-					break;
-				case 2:	
-					eOutPicType=VPU_BI_PIC;
-					VPU_LOG("frame : (BI) \r\n");
-					break;
-				case 3:	
-					eOutPicType=VPU_B_PIC;
-					VPU_LOG("frame : (B) \r\n");
-					break;
-				case 4:	
-					eOutPicType=VPU_SKIP_PIC;
-					VPU_LOG("frame : (SKIP) \r\n");
-					break;
-				default:
-					VPU_LOG("frame : (*) \r\n");
-					break;
-			}
-			break;
-		case VPU_V_VC1_AP:
-			//need to check [2:0](second field) and [5:3](first field)
-			eOutPicType=g_VC1APPicType[(InPicType>>3)&0x7][InPicType&0x7];
-			VPU_LOG("VC1-AP: pictype: %d \r\n",eOutPicType);
-			break;
-		default:	
-			/*
-			0 - I picture
-			1 - P picture
-			2 - B picture
-			3 - D picture in MPEG2, S picture in MPEG4		
-			*/
-			switch(InPicType)
-			{
 				case 0:
 					eOutPicType=VPU_I_PIC;
 					VPU_LOG("frame : (I) \r\n");
@@ -1400,13 +1306,108 @@ VpuPicType VpuConvertPicType(VpuCodStd InCodec,int InPicType,int InIdrFlag)
 				case 2:
 					eOutPicType=VPU_B_PIC;
 					VPU_LOG("frame : (B) \r\n");
-					break;			
+					break;
 				default:
 					VPU_LOG("frame : (*) \r\n");
 					break;
+				}
 			}
-			break;			
-	}	
+		}
+		else
+		{
+			if(AVC_IS_IDR(InPicType))
+			{
+				eOutPicType=VPU_IDR_PIC;
+				VPU_LOG("frame : (I) \r\n");
+			}
+			else if(AVC_IS_ISLICE(InPicType))
+			{
+				eOutPicType=VPU_I_PIC;
+				VPU_LOG("frame : (IS) \r\n");
+			}
+			else if(AVC_IS_PSLICE(InPicType))
+			{
+				eOutPicType=VPU_P_PIC;
+				VPU_LOG("frame : (PS) \r\n");
+			}
+			else if(AVC_IS_BSLICE(InPicType))
+			{
+				eOutPicType=VPU_B_PIC;
+				VPU_LOG("frame : (BS) \r\n");
+			}
+			else
+			{
+				VPU_LOG("frame :  (*) \r\n");
+			}
+		}
+		break;
+	case VPU_V_VC1:
+		/*
+		0 - I picture
+		1 - P picture
+		2 - BI picture
+		3 - B picture
+		4 - P_SKIP picture
+		*/
+		switch(InPicType&0x7)
+		{
+		case 0:
+			eOutPicType=VPU_I_PIC;
+			VPU_LOG("frame : (I) \r\n");
+			break;
+		case 1:
+			eOutPicType=VPU_P_PIC;
+			VPU_LOG("frame : (P) \r\n");
+			break;
+		case 2:
+			eOutPicType=VPU_BI_PIC;
+			VPU_LOG("frame : (BI) \r\n");
+			break;
+		case 3:
+			eOutPicType=VPU_B_PIC;
+			VPU_LOG("frame : (B) \r\n");
+			break;
+		case 4:
+			eOutPicType=VPU_SKIP_PIC;
+			VPU_LOG("frame : (SKIP) \r\n");
+			break;
+		default:
+			VPU_LOG("frame : (*) \r\n");
+			break;
+		}
+		break;
+	case VPU_V_VC1_AP:
+		//need to check [2:0](second field) and [5:3](first field)
+		eOutPicType=g_VC1APPicType[(InPicType>>3)&0x7][InPicType&0x7];
+		VPU_LOG("VC1-AP: pictype: %d \r\n",eOutPicType);
+		break;
+	default:
+		/*
+		0 - I picture
+		1 - P picture
+		2 - B picture
+		3 - D picture in MPEG2, S picture in MPEG4
+		*/
+		switch(InPicType)
+		{
+		case 0:
+			eOutPicType=VPU_I_PIC;
+			VPU_LOG("frame : (I) \r\n");
+			break;
+		case 1:
+			eOutPicType=VPU_P_PIC;
+			VPU_LOG("frame : (P) \r\n");
+			break;
+		case 2:
+			eOutPicType=VPU_B_PIC;
+			VPU_LOG("frame : (B) \r\n");
+			break;
+		default:
+			VPU_LOG("frame : (*) \r\n");
+			break;
+		}
+		break;
+	}
 	return eOutPicType;
 }
 
@@ -1416,59 +1417,59 @@ VpuFieldType VpuConvertFieldType(VpuCodStd InCodec,DecOutputInfo * pCurDecFrameI
 
 	switch (InCodec)
 	{
-		case VPU_V_AVC:
-			if(pCurDecFrameInfo->interlacedFrame)
+	case VPU_V_AVC:
+		if(pCurDecFrameInfo->interlacedFrame)
+		{
+			if (pCurDecFrameInfo->topFieldFirst) eField = VPU_FIELD_TB;
+			else eField = VPU_FIELD_BT;
+		}
+		break;
+	case VPU_V_VC1:
+	case VPU_V_VC1_AP:
+		if (pCurDecFrameInfo->pictureStructure==2)
+		{
+			VPU_LOG("frame interlaced \r\n");
+		}
+		else if (pCurDecFrameInfo->pictureStructure==3)
+		{
+			if (pCurDecFrameInfo->topFieldFirst) eField = VPU_FIELD_TB;
+			else 	eField= VPU_FIELD_BT;
+		}
+		break;
+	case VPU_V_MPEG2:
+	case VPU_V_H263:
+	case VPU_V_DIVX3:
+		if (pCurDecFrameInfo->interlacedFrame
+		        || !pCurDecFrameInfo->progressiveFrame)
+		{
+			if (pCurDecFrameInfo->pictureStructure == 1) eField= VPU_FIELD_TOP;
+			else if (pCurDecFrameInfo->pictureStructure == 2) eField= VPU_FIELD_BOTTOM;
+			else if (pCurDecFrameInfo->pictureStructure == 3)
 			{
 				if (pCurDecFrameInfo->topFieldFirst) eField = VPU_FIELD_TB;
 				else eField = VPU_FIELD_BT;
 			}
-			break;
-		case VPU_V_VC1:
-		case VPU_V_VC1_AP:
-			if (pCurDecFrameInfo->pictureStructure==2)
-			{
-				VPU_LOG("frame interlaced \r\n");
-			}
-			else if (pCurDecFrameInfo->pictureStructure==3)
-			{
-				if (pCurDecFrameInfo->topFieldFirst) eField = VPU_FIELD_TB;
-				else 	eField= VPU_FIELD_BT;
-			}			
-			break;
-		case VPU_V_MPEG2:
-		case VPU_V_H263:
-		case VPU_V_DIVX3:
-			if (pCurDecFrameInfo->interlacedFrame
-				|| !pCurDecFrameInfo->progressiveFrame)
-			{
-				if (pCurDecFrameInfo->pictureStructure == 1) eField= VPU_FIELD_TOP;
-				else if (pCurDecFrameInfo->pictureStructure == 2) eField= VPU_FIELD_BOTTOM;
-				else if (pCurDecFrameInfo->pictureStructure == 3)
-				{
-					if (pCurDecFrameInfo->topFieldFirst) eField = VPU_FIELD_TB;
-					else eField = VPU_FIELD_BT;
-				}
-			}
-			break;
-		case VPU_V_MPEG4:
-		case VPU_V_DIVX4:
-		case VPU_V_DIVX56:
-		case VPU_V_XVID:
-		case VPU_V_RV:
-		case VPU_V_MJPG:
-			//none ??
-			break;
-		default:	
-			break;			
+		}
+		break;
+	case VPU_V_MPEG4:
+	case VPU_V_DIVX4:
+	case VPU_V_DIVX56:
+	case VPU_V_XVID:
+	case VPU_V_RV:
+	case VPU_V_MJPG:
+		//none ??
+		break;
+	default:
+		break;
 	}
-	
+
 	return eField;
 }
 
 unsigned int VpuComputeValidSizeInRingBuf(unsigned int nStart,unsigned int nEnd,unsigned int nBufStart,unsigned int nBufEnd)
 {
 	if((nStart<nBufStart)||((nStart-FRAME_END_OFFSET)>=nBufEnd)||
-		(nEnd<nBufStart)||(nEnd>=nBufEnd))
+	        (nEnd<nBufStart)||(nEnd>=nBufEnd))
 	{
 		VPU_ERROR("%s: address: [0x%X, 0x%X] out of range [0x%X, 0x%X] \r\n",__FUNCTION__,nStart,nEnd,nBufStart,nBufEnd);
 		//return 0;  //vpu register BIT_BYTE_POS_FRAME_START/BIT_BYTE_POS_FRAME_END may point to far away from correct buffer range
@@ -1486,7 +1487,7 @@ unsigned int VpuComputeValidSizeInRingBuf(unsigned int nStart,unsigned int nEnd,
 int VpuAccumulateConsumedBytes(VpuDecObj* pObj, int nInSize, int type, unsigned int nFrmStartPhy, unsigned int nFrmEndPhy)
 {
 #define MAX_CONSUMED_BYTES	1000000000
-	/* 	type: 
+	/* 	type:
 			0: sequence header inserted by vpu wrapper(VC1/VP8/DivX3), may include the first frame header
 			0: config data set by user
 			1: additional frame header inserted by vpu wrapper(VC1/VP8/DivX3)
@@ -1505,74 +1506,74 @@ int VpuAccumulateConsumedBytes(VpuDecObj* pObj, int nInSize, int type, unsigned 
 
 	switch(type)
 	{
-		case 0:	//It should be called only once !!!
-			if(0==pObj->nAdditionalSeqBytes)
+	case 0:	//It should be called only once !!!
+		if(0==pObj->nAdditionalSeqBytes)
+		{
+			pObj->nAdditionalSeqBytes=nInSize;
+		}
+		//We suppose, the size is constant !!!
+		ASSERT(pObj->nAdditionalSeqBytes==nInSize);
+		VPU_LOG("additional sequence size: %d \r\n", nInSize);
+		break;
+	case 1:
+		if(0==pObj->nAdditionalFrmHeaderBytes)
+		{
+			pObj->nAdditionalFrmHeaderBytes=nInSize;
+		}
+		//We suppose, the size is constant !!!(for DivX3/VP8/VC1RCV, the header size is fixed; but for VC1NAL, is it fixed ??)
+		ASSERT(pObj->nAdditionalFrmHeaderBytes==nInSize);
+		VPU_LOG("additional frame header size: %d \r\n", nInSize);
+		break;
+	case 2:
+		/*accumulate stuffer data size between two frames*/
+		if(1)//if(nFrmStartPhy!=(pObj->nLastFrameEndPosPhy+1))
+		{
+			//two frames are not continuous, stuffer data is exist
+			//ASSERT(nFrmStartPhy!=pObj->nLastFrameEndPosPhy);	// empty or full ??
+			nStuffSize=VpuComputeValidSizeInRingBuf(pObj->nLastFrameEndPosPhy, nFrmStartPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd);
+			nStuffSize-=2;	//reduce start and end themselves
+			nStuffSize+=FRAME_END_OFFSET+FRAME_START_OFFSET;
+			VPU_LOG("last end: 0x%X, start: 0x%X, buf start: 0x%X, buf end: 0x%X, stuff size: %d \r\n",pObj->nLastFrameEndPosPhy, nFrmStartPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd,nStuffSize);
+			pObj->nAccumulatedConsumedStufferBytes+=nStuffSize;
+		}
+		/*adjust stuffer size: reduce the sequence/config size inserted by vpu wrapper itself */
+		if(pObj->nAdditionalSeqBytes)
+		{
+			pObj->nAccumulatedConsumedStufferBytes-=pObj->nAdditionalSeqBytes;
+			pObj->nAdditionalSeqBytes=0; //clear 0 !!!
+			if(pObj->nAccumulatedConsumedStufferBytes<0)
 			{
-				pObj->nAdditionalSeqBytes=nInSize;
+				VPU_LOG("warning: some frames are packaged in the config data.\r\n");
 			}
-			//We suppose, the size is constant !!!
-			ASSERT(pObj->nAdditionalSeqBytes==nInSize);
-			VPU_LOG("additional sequence size: %d \r\n", nInSize);
-			break;
-		case 1:
-			if(0==pObj->nAdditionalFrmHeaderBytes)
-			{
-				pObj->nAdditionalFrmHeaderBytes=nInSize;
-			}
-			//We suppose, the size is constant !!!(for DivX3/VP8/VC1RCV, the header size is fixed; but for VC1NAL, is it fixed ??)
-			ASSERT(pObj->nAdditionalFrmHeaderBytes==nInSize);			
-			VPU_LOG("additional frame header size: %d \r\n", nInSize);
-			break;
-		case 2:
-			/*accumulate stuffer data size between two frames*/
-			if(1)//if(nFrmStartPhy!=(pObj->nLastFrameEndPosPhy+1))
-			{
-				//two frames are not continuous, stuffer data is exist	
-				//ASSERT(nFrmStartPhy!=pObj->nLastFrameEndPosPhy);	// empty or full ??
-				nStuffSize=VpuComputeValidSizeInRingBuf(pObj->nLastFrameEndPosPhy, nFrmStartPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd);
-				nStuffSize-=2;	//reduce start and end themselves
-				nStuffSize+=FRAME_END_OFFSET+FRAME_START_OFFSET;
-				VPU_LOG("last end: 0x%X, start: 0x%X, buf start: 0x%X, buf end: 0x%X, stuff size: %d \r\n",pObj->nLastFrameEndPosPhy, nFrmStartPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd,nStuffSize);
-				pObj->nAccumulatedConsumedStufferBytes+=nStuffSize;
-			}
-			/*adjust stuffer size: reduce the sequence/config size inserted by vpu wrapper itself */
-			if(pObj->nAdditionalSeqBytes)
-			{
-				pObj->nAccumulatedConsumedStufferBytes-=pObj->nAdditionalSeqBytes;
-				pObj->nAdditionalSeqBytes=0; //clear 0 !!!
-				if(pObj->nAccumulatedConsumedStufferBytes<0)
-				{
-					VPU_LOG("warning: some frames are packaged in the config data.\r\n");
-				}
-			}
+		}
 
 #if 0	//debug code
+		{
+			unsigned int nFrmSize;
+			nFrmSize=VpuComputeValidSizeInRingBuf(nFrmStartPhy,nFrmEndPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd);
+			ASSERT(nInSize==nFrmSize);
+			if(nInSize!=nFrmSize)
 			{
-				unsigned int nFrmSize;
-				nFrmSize=VpuComputeValidSizeInRingBuf(nFrmStartPhy,nFrmEndPhy,(unsigned int)pObj->pBsBufPhyStart,(unsigned int)pObj->pBsBufPhyEnd);
-				ASSERT(nInSize==nFrmSize);
-				if(nInSize!=nFrmSize)
-				{
-					VPU_LOG("error: size not matched!!!!:  frame size: %d, vpu reported frame size: %d \r\n",nFrmSize,nInSize);
-					nInSize=nFrmSize;
-				}
+				VPU_LOG("error: size not matched!!!!:  frame size: %d, vpu reported frame size: %d \r\n",nFrmSize,nInSize);
+				nInSize=nFrmSize;
 			}
+		}
 #endif
 
-			/*accumulate the frame size*/
-			pObj->nAccumulatedConsumedFrmBytes+=nInSize;
-			/*adjust frame size: reduce the frame header inserted by vpu wrapper itself*/
-			pObj->nAccumulatedConsumedFrmBytes-=pObj->nAdditionalFrmHeaderBytes;
-			ASSERT(nInSize>pObj->nAdditionalFrmHeaderBytes);
+		/*accumulate the frame size*/
+		pObj->nAccumulatedConsumedFrmBytes+=nInSize;
+		/*adjust frame size: reduce the frame header inserted by vpu wrapper itself*/
+		pObj->nAccumulatedConsumedFrmBytes-=pObj->nAdditionalFrmHeaderBytes;
+		ASSERT(nInSize>pObj->nAdditionalFrmHeaderBytes);
 
-			/*total consumed bytes= stuffer size + frame size*/
-			pObj->nAccumulatedConsumedBytes=pObj->nAccumulatedConsumedStufferBytes+pObj->nAccumulatedConsumedFrmBytes;
+		/*total consumed bytes= stuffer size + frame size*/
+		pObj->nAccumulatedConsumedBytes=pObj->nAccumulatedConsumedStufferBytes+pObj->nAccumulatedConsumedFrmBytes;
 
-			/*update last frame end location*/
-			pObj->nLastFrameEndPosPhy=nFrmEndPhy;
-			break;
-		default:
-			break;
+		/*update last frame end location*/
+		pObj->nLastFrameEndPosPhy=nFrmEndPhy;
+		break;
+	default:
+		break;
 	}
 
 	/*If user don't get the info, we need to clear it to avoid overflow */
@@ -1589,12 +1590,12 @@ int VpuAccumulateConsumedBytes(VpuDecObj* pObj, int nInSize, int type, unsigned 
 int VpuSaveDecodedFrameInfo(VpuDecObj* pObj, int index,DecOutputInfo * pCurDecFrameInfo,VpuFrameBuffer* pInFrameDecode)
 {
 	VpuFrameBufInfo * pDstInfo;
-	
+
 	if(index>=pObj->frameNum)
 	{
-		//overflow !!!		
+		//overflow !!!
 		return 0;
-	}	
+	}
 
 	if(index>=0)	//valid decoded frame
 	{
@@ -1614,8 +1615,8 @@ int VpuSaveDecodedFrameInfo(VpuDecObj* pObj, int index,DecOutputInfo * pCurDecFr
 		pDstInfo->width=pCurDecFrameInfo->decPicWidth;
 		pDstInfo->height=pCurDecFrameInfo->decPicHeight;
 		if(((0==pCurDecFrameInfo->decPicCrop.bottom)&&(0==pCurDecFrameInfo->decPicCrop.right))
-			||(pCurDecFrameInfo->decPicCrop.right<=pCurDecFrameInfo->decPicCrop.left)
-			||(pCurDecFrameInfo->decPicCrop.bottom<=pCurDecFrameInfo->decPicCrop.top))
+		        ||(pCurDecFrameInfo->decPicCrop.right<=pCurDecFrameInfo->decPicCrop.left)
+		        ||(pCurDecFrameInfo->decPicCrop.bottom<=pCurDecFrameInfo->decPicCrop.top))
 		{
 			//crop info is invalid
 			pDstInfo->frameCrop.nLeft= 0;
@@ -1624,14 +1625,14 @@ int VpuSaveDecodedFrameInfo(VpuDecObj* pObj, int index,DecOutputInfo * pCurDecFr
 			pDstInfo->frameCrop.nBottom=pCurDecFrameInfo->decPicHeight;
 		}
 		else
-		{	
+		{
 			pDstInfo->frameCrop.nLeft=pCurDecFrameInfo->decPicCrop.left;
 			pDstInfo->frameCrop.nTop=pCurDecFrameInfo->decPicCrop.top;
 			pDstInfo->frameCrop.nRight=pCurDecFrameInfo->decPicCrop.right;
 			pDstInfo->frameCrop.nBottom=pCurDecFrameInfo->decPicCrop.bottom;
 		}
 		cropWidth=pDstInfo->frameCrop.nRight-pDstInfo->frameCrop.nLeft;
-		cropHeight=pDstInfo->frameCrop.nBottom-pDstInfo->frameCrop.nTop;		
+		cropHeight=pDstInfo->frameCrop.nBottom-pDstInfo->frameCrop.nTop;
 		pDstInfo->Q16ShiftWidthDivHeightRatio=VpuConvertAspectRatio(pObj->CodecFormat,(unsigned int)pCurDecFrameInfo->aspectRateInfo,cropWidth,cropHeight, pObj->nProfile,pObj->nLevel);
 	}
 
@@ -1639,19 +1640,19 @@ int VpuSaveDecodedFrameInfo(VpuDecObj* pObj, int index,DecOutputInfo * pCurDecFr
 	pObj->pLastDecodedFrm=pInFrameDecode;
 	VPU_LOG("one decoded frame: start: 0x%X, end: 0x%X \r\n",pCurDecFrameInfo->frameStartPos,pCurDecFrameInfo->frameEndPos);
 	VpuAccumulateConsumedBytes(pObj,pCurDecFrameInfo->consumedByte,2,pCurDecFrameInfo->frameStartPos,pCurDecFrameInfo->frameEndPos);
-	
+
 	return 1;
 }
 
 int VpuLoadDispFrameInfo(VpuDecObj* pObj, int index,VpuDecOutFrameInfo* pDispFrameInfo)
 {
 	VpuFrameBufInfo * pSrcInfo;
-	
+
 	if(index>=pObj->frameNum)
 	{
-		//overflow !!!		
+		//overflow !!!
 		return 0;
-	}		
+	}
 
 	pSrcInfo=&pObj->frameBufInfo[index];
 	//pDispFrameInfo->ePicType=pSrcInfo->picType;
@@ -1660,7 +1661,7 @@ int VpuLoadDispFrameInfo(VpuDecObj* pObj, int index,VpuDecOutFrameInfo* pDispFra
 	//pDispFrameInfo->nRepeatFirstField=pSrcInfo->repeatFirstField;
 	//pDispFrameInfo->nConsumedByte=pSrcInfo->consumedBytes;
 	pDispFrameInfo->eFieldType=pSrcInfo->eFieldType;
-	pDispFrameInfo->nMVCViewID=pSrcInfo->viewID;	
+	pDispFrameInfo->nMVCViewID=pSrcInfo->viewID;
 
 	/*dynamic resolution and ratio*/
 	pDispFrameInfo->pExtInfo=&pObj->frmExtInfo;
@@ -1668,8 +1669,8 @@ int VpuLoadDispFrameInfo(VpuDecObj* pObj, int index,VpuDecOutFrameInfo* pDispFra
 	pDispFrameInfo->pExtInfo->nFrmHeight=pSrcInfo->height;
 	pDispFrameInfo->pExtInfo->FrmCropRect=pSrcInfo->frameCrop;
 	pDispFrameInfo->pExtInfo->nQ16ShiftWidthDivHeightRatio=pSrcInfo->Q16ShiftWidthDivHeightRatio;
-	
-	//VPU_LOG("load index %d: pictype = %d \r\n",index,pSrcInfo->picType);	
+
+	//VPU_LOG("load index %d: pictype = %d \r\n",index,pSrcInfo->picType);
 	return 1;
 }
 
@@ -1678,7 +1679,7 @@ int VpuSearchFrameIndex(VpuDecObj* pObj,VpuFrameBuffer * pInFrameBuf)
 	int index;
 	int i;
 
-	for(i=0;i<pObj->frameNum;i++)
+	for(i=0; i<pObj->frameNum; i++)
 	{
 		if((&pObj->frameBuf[i]) == pInFrameBuf)
 		{
@@ -1686,7 +1687,7 @@ int VpuSearchFrameIndex(VpuDecObj* pObj,VpuFrameBuffer * pInFrameBuf)
 			break;
 		}
 	}
-	
+
 	if (i>=pObj->frameNum)
 	{
 		//not find !!
@@ -1715,14 +1716,14 @@ int  VpuSearchFreeFrameBuf(VpuDecObj* pObj,int* pIndex)
 {
 	int i;
 
-	for(i=0;i<pObj->frameNum;i++)
+	for(i=0; i<pObj->frameNum; i++)
 	{
 		if(pObj->frameBufState[i] == VPU_FRAME_STATE_FREE)
-		{			
+		{
 			break;
 		}
 	}
-	
+
 	if (i>=pObj->frameNum)
 	{
 		//not find !!
@@ -1769,7 +1770,7 @@ int VpuFreeAllDispFrame(DecHandle InVpuHandle,int Num,int* pFrameState)
 	//TODO: it is already useless !!!
 	int i;
 	RetCode ret=RETCODE_SUCCESS;
-	for(i=0;i<Num;i++)
+	for(i=0; i<Num; i++)
 	{
 		if (VpuDispFrameIsNotCleared(i, pFrameState))
 		{
@@ -1788,7 +1789,7 @@ int VpuFreeAllDispFrame(DecHandle InVpuHandle,int Num,int* pFrameState)
 int VpuClearAllDispFrame(int Num,int* pFrameState)
 {
 	int i;
-	for(i=0;i<Num;i++)
+	for(i=0; i<Num; i++)
 	{
 		VpuClearDispFrame(i, pFrameState);
 	}
@@ -1799,7 +1800,7 @@ int VpuClearAllDispFrameFlag(DecHandle InVpuHandle,int Num)
 {
 	int i;
 	RetCode ret=RETCODE_SUCCESS;
-	for(i=0;i<Num;i++)
+	for(i=0; i<Num; i++)
 	{
 		VPU_API("%s: calling vpu_DecClrDispFlag(): %d \r\n",__FUNCTION__,i);
 		ret=vpu_DecClrDispFlag(InVpuHandle,i);
@@ -1811,23 +1812,23 @@ int VpuClearAllDispFrameFlag(DecHandle InVpuHandle,int Num)
 	return ((ret==RETCODE_SUCCESS)?1:0);
 }
 
-#ifdef IMX6_BUFNOTENOUGH_WORKAROUND 
+#ifdef IMX6_BUFNOTENOUGH_WORKAROUND
 int VpuQueryVpuHoldBufNum(VpuDecObj* pObj)
 {
 	//occupied by vpu: state = free or dec
 	int i;
 	int num=0;
-	for(i=0;i<pObj->frameNum;i++)
+	for(i=0; i<pObj->frameNum; i++)
 	{
 		if((pObj->frameBufState[i] == VPU_FRAME_STATE_DEC) ||(pObj->frameBufState[i] == VPU_FRAME_STATE_FREE))
-		{			
+		{
 			num++;
 		}
 	}
 	return num;
 }
 #endif
-	
+
 int VpuBitsBufIsEnough(DecHandle InVpuHandle,unsigned int nFillSize)
 {
 	PhysicalAddress Rd;
@@ -1841,9 +1842,9 @@ int VpuBitsBufIsEnough(DecHandle InVpuHandle,unsigned int nFillSize)
 	VPU_TRACE;
 
 	//check ret ??
-	
+
 	//check free space
-#ifdef IMX6_BITBUFSPACE_WORKAROUND	
+#ifdef IMX6_BITBUFSPACE_WORKAROUND
 	if(nSpace<nFillSize+512)
 #else
 	if(nSpace<nFillSize)
@@ -1887,7 +1888,7 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 	PhysicalAddress Rd;
 	PhysicalAddress Wr;
 	unsigned long nSpace;
-	unsigned int nFillSize,nFillUnit;	
+	unsigned int nFillSize,nFillUnit;
 	RetCode ret;
 	unsigned char* pFill;
 	unsigned char* pSrc;
@@ -1908,12 +1909,12 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 	}
 
 #ifdef VPU_ONE_EOS
-	if((1==eos_flag))		
+	if((1==eos_flag))
 	{
 		if (0==nSize)
 		{
 			// avoid repeated send EOS flag
-			return 1; 
+			return 1;
 		}
 		else
 		{
@@ -1922,7 +1923,7 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 		}
 	}
 #endif
-	
+
 
 	nFillSize=nSize;
 	pSrc=pInVirt;
@@ -1935,16 +1936,16 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 	VPU_TRACE;
 
 #ifdef IMX6_INTER_DEBUG_RD_WR
-{
-	unsigned int rd,wr;
+	{
+		unsigned int rd,wr;
 //#define BIT_RD_PTR_0			0x120
 //#define BIT_WR_PTR_0			0x124
-	IOClkGateSet(1);
-	rd=VpuReadReg(0x120);
-	wr=VpuReadReg(0x124);
-	IOClkGateSet(0);
-	printf("vpu register: wr: 0x%X, rd: 0x%X \r\n", wr, rd);
-}
+		IOClkGateSet(1);
+		rd=VpuReadReg(0x120);
+		wr=VpuReadReg(0x124);
+		IOClkGateSet(0);
+		printf("vpu register: wr: 0x%X, rd: 0x%X \r\n", wr, rd);
+	}
 #endif
 
 	if(0==InIsEnough)		//TODO: should remove it after wrapper is stable
@@ -1999,7 +2000,7 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 
 		//VPU_API("calling vpu_DecGetBitstreamBuffer() \r\n");
 		//ret = vpu_DecGetBitstreamBuffer(InVpuHandle, &Rd, &Wr, &nSpace);
-		//VPU_LOG("nSpace: %d \r\n", nSpace);		
+		//VPU_LOG("nSpace: %d \r\n", nSpace);
 	}
 	else
 	{
@@ -2027,7 +2028,7 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 #endif
 
 #ifdef VPU_PROTECT_MULTI_INSTANCE
-	//TODO: In fact, we can merge two variables (eos_flag and filledEOS) into one 
+	//TODO: In fact, we can merge two variables (eos_flag and filledEOS) into one
 	if(nFillUnit==0)
 	{
 		pObj->filledEOS=1;
@@ -2043,11 +2044,11 @@ int VpuFillData(DecHandle InVpuHandle,VpuDecObj* pObj,unsigned char* pInVirt,uns
 	//nDumpSize+=nSize;
 	//LOG_PRINTF("dump size: %d \r\n",nDumpSize);
 #endif
-	
+
 	return 1;
 }
 
-int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int * pNoErr) 
+int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int * pNoErr)
 {
 	RetCode ret;
 	DecInitialInfo initInfo;
@@ -2057,10 +2058,10 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 
 	unsigned char aVC1Header[VC1_MAX_SEQ_HEADER_SIZE];
 	unsigned char aVP8Header[VP8_SEQ_HEADER_SIZE+VP8_FRM_HEADER_SIZE];
-	unsigned char aDIV3Header[DIV3_SEQ_HEADER_SIZE+DIV3_FRM_HEADER_SIZE];	
+	unsigned char aDIV3Header[DIV3_SEQ_HEADER_SIZE+DIV3_FRM_HEADER_SIZE];
 	int bufIsEnough=1;
 
-	//FIXME: total_* is only for internal debug now after we adding macro VPU_AVOID_DEAD_LOOP 
+	//FIXME: total_* is only for internal debug now after we adding macro VPU_AVOID_DEAD_LOOP
 	static int total_size=0;		// avoid dead loop for unsupported clips
 	static int total_loop=0;		// avoid dead loop for crashed file
 	*pNoErr=1;	//set default: no error
@@ -2068,71 +2069,115 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 	//for special formats, we need to re-organize data
 	switch(pObj->CodecFormat)
 	{
-		case VPU_V_VC1:
-		case VPU_V_VC1_AP:
-			pHeader=aVC1Header;
-			if (0==pInData->sCodecData.nSize)
+	case VPU_V_VC1:
+	case VPU_V_VC1_AP:
+		pHeader=aVC1Header;
+		if (0==pInData->sCodecData.nSize)
+		{
+			//raw file: .rcv/.vc1
+			//do nothing
+			//1 for identify raw data ( .rcv/.vc1), user should not clear sCodecData.nSize before seqinit finished !!!
+		}
+		else if(pObj->nPrivateSeqHeaderInserted==0)
+		{
+			//insert private data
+			if((pObj->CodecFormat==VPU_V_VC1_AP))
 			{
-				//raw file: .rcv/.vc1
-				//do nothing
-				//1 for identify raw data ( .rcv/.vc1), user should not clear sCodecData.nSize before seqinit finished !!!
-			}
-			else if(pObj->nPrivateSeqHeaderInserted==0)
-			{
-				//insert private data
-				if((pObj->CodecFormat==VPU_V_VC1_AP))
+				if((pInData->pVirAddr==NULL) ||(pInData->nSize<4))
 				{
-					if((pInData->pVirAddr==NULL) ||(pInData->nSize<4))
-					{
-						//we need pInData->pVirAddr to create correct VC1 header
-						//TODO: or define one default value when pInData->pVirAddr is NULL
-						VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);	
-						*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
-						return 0;
-					}
-					VC1CreateNALSeqHeader(pHeader, (int*)(&headerLen),pInData->sCodecData.pData, (int)pInData->sCodecData.nSize, (unsigned int*)pInData->pVirAddr,VC1_MAX_SEQ_HEADER_SIZE);
-				}
-				else
-				{
-					//1 nSize must == frame size ??? 
-					VPU_LOG("%s: [width x height]=[%d x %d] , frame size =%d \r\n",__FUNCTION__,pObj->picWidth,pObj->picHeight,pInData->nSize);
-					VC1CreateRCVSeqHeader(pHeader, (int*)(&headerLen),pInData->sCodecData.pData, pInData->nSize,pObj->picWidth,pObj->picHeight);
-				}
-
-#ifdef VPU_WRAPPER_DEBUG
-				printf_memory(pHeader, headerLen, 1, headerLen);
-#endif				
-
-			}
-			else
-			{
-				//private data have already been inserted before
-				//so we need to insert frame header !!! when we enable macro VPU_DEC_CHECK_INIT_LENGTH
-
-				if((pInData->pVirAddr==NULL)/* ||(pInData->nSize<4)*/)
-				{
-					VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);	
+					//we need pInData->pVirAddr to create correct VC1 header
+					//TODO: or define one default value when pInData->pVirAddr is NULL
+					VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);
 					*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
 					return 0;
 				}
-
-				if((pObj->CodecFormat==VPU_V_VC1_AP))
-				{
-					ASSERT(pInData->nSize>=4);
-					VC1CreateNalFrameHeader(pHeader,(int*)(&headerLen),(unsigned int*)(pInData->pVirAddr));
-				}
-				else
-				{
-					//need to insert header : frame size
-					VC1CreateRCVFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize);
-				}					
-			}	
-			break;
-		case VPU_V_VP8:
-			pHeader=aVP8Header;
-			if (pInData->sCodecData.nSize==0xFFFFFFFF)	
+				VC1CreateNALSeqHeader(pHeader, (int*)(&headerLen),pInData->sCodecData.pData, (int)pInData->sCodecData.nSize, (unsigned int*)pInData->pVirAddr,VC1_MAX_SEQ_HEADER_SIZE);
+			}
+			else
 			{
-				//raw data
+				//1 nSize must == frame size ???
+				VPU_LOG("%s: [width x height]=[%d x %d] , frame size =%d \r\n",__FUNCTION__,pObj->picWidth,pObj->picHeight,pInData->nSize);
+				VC1CreateRCVSeqHeader(pHeader, (int*)(&headerLen),pInData->sCodecData.pData, pInData->nSize,pObj->picWidth,pObj->picHeight);
+			}
+
+#ifdef VPU_WRAPPER_DEBUG
+			printf_memory(pHeader, headerLen, 1, headerLen);
+#endif
+
+		}
+		else
+		{
+			//private data have already been inserted before
+			//so we need to insert frame header !!! when we enable macro VPU_DEC_CHECK_INIT_LENGTH
+
+			if((pInData->pVirAddr==NULL)/* ||(pInData->nSize<4)*/)
+			{
+				VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);
+				*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
+				return 0;
+			}
+
+			if((pObj->CodecFormat==VPU_V_VC1_AP))
+			{
+				ASSERT(pInData->nSize>=4);
+				VC1CreateNalFrameHeader(pHeader,(int*)(&headerLen),(unsigned int*)(pInData->pVirAddr));
+			}
+			else
+			{
+				//need to insert header : frame size
+				VC1CreateRCVFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize);
+			}
+		}
+		break;
+	case VPU_V_VP8:
+		pHeader=aVP8Header;
+		if (pInData->sCodecData.nSize==0xFFFFFFFF)
+		{
+			//raw data
+			//do nothing
+			//1 for identify raw data , user should set 0xFFFFFFF to sCodecData.nSize before seqinit finished !!!
+		}
+		else
+		{
+			if(pObj->nPrivateSeqHeaderInserted==0)
+			{
+				unsigned int frmHdrLen=0;
+				if(pInData->sCodecData.nSize!=0)
+				{
+					VPU_ERROR("Warning: VP8 CodecData is not NULL, and it will be ignored by wrapper !\r\n");
+				}
+				//insert private data: seq+frm header
+				VPU_LOG("%s: [width x height]=[%d x %d] , frame size =%d \r\n",__FUNCTION__,pObj->picWidth,pObj->picHeight,pInData->nSize);
+				VP8CreateSeqHeader(pHeader, (int*)(&headerLen),1,1,0,pObj->picWidth,pObj->picHeight);
+				VP8CreateFrameHeader(pHeader+headerLen,(int*)(&frmHdrLen),pInData->nSize,0,0);
+				headerLen+=frmHdrLen;
+#ifdef VPU_WRAPPER_DEBUG
+				printf_memory(pHeader, headerLen, 1, headerLen);
+#endif
+			}
+			else
+			{
+				//seq header have already been inserted before
+				//so we need to insert frame header !!! when we enable macro VPU_DEC_CHECK_INIT_LENGTH
+				if((pInData->pVirAddr==NULL)/* ||(pInData->nSize<4)*/)
+				{
+					VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);
+					*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
+					return 0;
+				}
+				//need to insert header : frame size
+				VP8CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
+			}
+		}
+		break;
+	default:
+		if((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3))
+		{
+			//for iMX6: DivX3
+			pHeader=aDIV3Header;
+			if (pInData->sCodecData.nSize==0xFFFFFFFF)
+			{
+				//raw data ??
 				//do nothing
 				//1 for identify raw data , user should set 0xFFFFFFF to sCodecData.nSize before seqinit finished !!!
 			}
@@ -2143,12 +2188,12 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 					unsigned int frmHdrLen=0;
 					if(pInData->sCodecData.nSize!=0)
 					{
-						VPU_ERROR("Warning: VP8 CodecData is not NULL, and it will be ignored by wrapper !\r\n");
+						VPU_ERROR("Warning: DIV3 CodecData is not NULL, and it will be ignored by wrapper !\r\n");
 					}
 					//insert private data: seq+frm header
 					VPU_LOG("%s: [width x height]=[%d x %d] , frame size =%d \r\n",__FUNCTION__,pObj->picWidth,pObj->picHeight,pInData->nSize);
-					VP8CreateSeqHeader(pHeader, (int*)(&headerLen),1,1,0,pObj->picWidth,pObj->picHeight);
-					VP8CreateFrameHeader(pHeader+headerLen,(int*)(&frmHdrLen),pInData->nSize,0,0);
+					DIV3CreateSeqHeader(pHeader, (int*)(&headerLen),1,1,0,pObj->picWidth,pObj->picHeight);
+					DIV3CreateFrameHeader(pHeader+headerLen,(int*)(&frmHdrLen),pInData->nSize,0,0);
 					headerLen+=frmHdrLen;
 #ifdef VPU_WRAPPER_DEBUG
 					printf_memory(pHeader, headerLen, 1, headerLen);
@@ -2160,80 +2205,36 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 					//so we need to insert frame header !!! when we enable macro VPU_DEC_CHECK_INIT_LENGTH
 					if((pInData->pVirAddr==NULL)/* ||(pInData->nSize<4)*/)
 					{
-						VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);	
+						VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);
 						*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
 						return 0;
 					}
 					//need to insert header : frame size
-					VP8CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
-				}	
+					DIV3CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
+				}
 			}
-			break;
-		default:
-			if((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3))
+		}
+		else
+		{
+			//other formats
+			if (0==pInData->sCodecData.nSize)
 			{
-				//for iMX6: DivX3
-				pHeader=aDIV3Header;
-				if (pInData->sCodecData.nSize==0xFFFFFFFF)	
-				{
-					//raw data ??
-					//do nothing
-					//1 for identify raw data , user should set 0xFFFFFFF to sCodecData.nSize before seqinit finished !!!
-				}
-				else
-				{
-					if(pObj->nPrivateSeqHeaderInserted==0)
-					{
-						unsigned int frmHdrLen=0;
-						if(pInData->sCodecData.nSize!=0)
-						{
-							VPU_ERROR("Warning: DIV3 CodecData is not NULL, and it will be ignored by wrapper !\r\n");
-						}
-						//insert private data: seq+frm header
-						VPU_LOG("%s: [width x height]=[%d x %d] , frame size =%d \r\n",__FUNCTION__,pObj->picWidth,pObj->picHeight,pInData->nSize);
-						DIV3CreateSeqHeader(pHeader, (int*)(&headerLen),1,1,0,pObj->picWidth,pObj->picHeight);
-						DIV3CreateFrameHeader(pHeader+headerLen,(int*)(&frmHdrLen),pInData->nSize,0,0);
-						headerLen+=frmHdrLen;
-#ifdef VPU_WRAPPER_DEBUG
-						printf_memory(pHeader, headerLen, 1, headerLen);
-#endif
-					}
-					else
-					{
-						//seq header have already been inserted before
-						//so we need to insert frame header !!! when we enable macro VPU_DEC_CHECK_INIT_LENGTH
-						if((pInData->pVirAddr==NULL)/* ||(pInData->nSize<4)*/)
-						{
-							VPU_LOG("%s: no input buffer, return and do nothing \r\n",__FUNCTION__);	
-							*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
-							return 0;
-						}
-						//need to insert header : frame size
-						DIV3CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
-					}	
-				}
+				//raw data
+				//do nothing
+			}
+			else if(pObj->nPrivateSeqHeaderInserted==0)
+			{
+				//insert private data
+				pHeader=pInData->sCodecData.pData;
+				headerLen=pInData->sCodecData.nSize;
 			}
 			else
 			{
-				//other formats
-				if (0==pInData->sCodecData.nSize)
-				{
-					//raw data
-					//do nothing
-				}
-				else if(pObj->nPrivateSeqHeaderInserted==0)
-				{
-					//insert private data
-					pHeader=pInData->sCodecData.pData;
-					headerLen=pInData->sCodecData.nSize;				
-				}			
-				else
-				{
-					//private data have already been inserted before
-					//do nothing
-				}
+				//private data have already been inserted before
+				//do nothing
 			}
-			break;
+		}
+		break;
 	}
 
 
@@ -2242,7 +2243,7 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 
 #ifdef VPU_INIT_FREE_SIZE_LIMITATION
 	{
-		#define VPU_INIT_UNIT_SIZE	512
+#define VPU_INIT_UNIT_SIZE	512
 		unsigned int validSize;
 		unsigned int freeSize;
 		VpuBitsBufValidDataLength(InVpuHandle, pObj, &validSize,&freeSize);
@@ -2274,26 +2275,26 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 		if(0!=headerLen)
 		{
 			fill_ret=VpuFillData(InVpuHandle,pObj,pHeader,headerLen,1,0);
-			
+
 			if(0==pObj->nPrivateSeqHeaderInserted)
 			{
-				VpuAccumulateConsumedBytes(pObj, headerLen, 0,NULL,NULL);	//seq/config 
+				VpuAccumulateConsumedBytes(pObj, headerLen, 0,NULL,NULL);	//seq/config
 			}
 			else
 			{
 				VpuAccumulateConsumedBytes(pObj, headerLen, 1,NULL,NULL);	//frame header
 			}
-			
+
 			if(0!=pInData->sCodecData.nSize)
 			{
 				//not raw data : .rcv/.vc1
 				pObj->nPrivateSeqHeaderInserted=1; // we need to re-open vpu wrapper if user want to re-seqinit
 			}
 			else if((pObj->CodecFormat==VPU_V_VP8)||
-				((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3)))
+			        ((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3)))
 			{
 				//for VP8/DivX3(iMX6), regard it as non-raw data as long as headerLen!=0
-				pObj->nPrivateSeqHeaderInserted=1; 
+				pObj->nPrivateSeqHeaderInserted=1;
 			}
 		}
 		//allow pInData->nSize==0 ???
@@ -2319,7 +2320,7 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 			return 0;
 		}
 		VPU_LOG("have collect %d bytes data to start seq init \r\n",VPU_MIN_INIT_SIZE);
-#endif	
+#endif
 	}
 	else
 	{
@@ -2332,7 +2333,7 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 	VPU_TRACE;
 	VPU_API("calling vpu_DecSetEscSeqInit(): 1 \r\n");
 	vpu_DecSetEscSeqInit(InVpuHandle, 1);
-	VPU_TRACE;	
+	VPU_TRACE;
 	VPU_API("calling vpu_DecGetInitialInfo() \r\n");
 	vpu_memset(&initInfo, 0, sizeof(DecInitialInfo));
 	ret = vpu_DecGetInitialInfo(InVpuHandle, &initInfo);
@@ -2382,7 +2383,7 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 		{
 			pObj->initInfo.nMjpgSourceFormat=initInfo.mjpg_sourceFormat;
 		}
-		
+
 		if(CPU_IS_MX6X())
 		{
 			pObj->initInfo.nFrameRateRes=(int)initInfo.frameRateRes;
@@ -2398,7 +2399,7 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 				pObj->initInfo.nFrameRateDiv=-1;
 			}
 		}
-		
+
 		//1 FIXME: set correct nConsumedByte value
 		pObj->initInfo.nConsumedByte=-1;	//unknow
 
@@ -2411,11 +2412,11 @@ int VpuSeqInit(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,in
 		{
 			pObj->initInfo.nAddressAlignment=VPU_TILE_ALIGN;
 		}
-		
+
 		//record crop info
 		if(((0==initInfo.picCropRect.bottom)&&(0==initInfo.picCropRect.right))
-			||(initInfo.picCropRect.right<=initInfo.picCropRect.left)
-			||(initInfo.picCropRect.bottom<=initInfo.picCropRect.top))
+		        ||(initInfo.picCropRect.right<=initInfo.picCropRect.left)
+		        ||(initInfo.picCropRect.bottom<=initInfo.picCropRect.top))
 		{
 			//Init info is invalid
 			pObj->initInfo.PicCropRect.nLeft= 0;
@@ -2460,7 +2461,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 	RetCode ret;
 	DecOutputInfo outInfo;
 	VpuFrameBuffer * pFrameDisp;
-	VpuFrameBuffer * pFrameDecode=NULL;	
+	VpuFrameBuffer * pFrameDecode=NULL;
 #ifdef VPU_WRAPPER_DUMP
 	static FILE* fpYUV=NULL;
 #endif
@@ -2468,7 +2469,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 	int disOrderOutput=0;		// the state of output buffer is error
 #endif
 
-#ifdef VPU_BACKDOOR		
+#ifdef VPU_BACKDOOR
 	VpuLogClearFlag(InVpuHandle);
 #endif
 
@@ -2480,24 +2481,24 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 	ret = vpu_DecGetOutputInfo(InVpuHandle, &outInfo);
 	VPU_API("calling vpu_DecGetOutputInfo(), indexFrmDec: %d, return indexFrmDis: %d, type: %d, success: 0x%X, errMB: %d, consumed: %d \r\n",outInfo.indexFrameDecoded,outInfo.indexFrameDisplay,outInfo.picType,outInfo.decodingSuccess,outInfo.numOfErrMBs,outInfo.consumedByte);
 	VPU_LOG("fieldSequence: %d, vc1_repeatFrame: %d,interlacedFrame: %d, indexFrameRangemap: %d, progressiveFrame: %d, topFieldFirst: %d \r\n",outInfo.fieldSequence,outInfo.vc1_repeatFrame,outInfo.interlacedFrame,outInfo.indexFrameRangemap,outInfo.progressiveFrame,outInfo.topFieldFirst);
-#ifdef VPU_BACKDOOR		
+#ifdef VPU_BACKDOOR
 	VpuLogClearFlag(InVpuHandle);
 #endif
 
 #if 0//def IMX6_INTER_DEBUG_RD_WR
-{
-	unsigned int rd,wr;
-	unsigned int start,end;
+	{
+		unsigned int rd,wr;
+		unsigned int start,end;
 //#define BIT_RD_PTR_0			0x120
 //#define BIT_WR_PTR_0			0x124
-	IOClkGateSet(1);
-	rd=VpuReadReg(0x120);
-	wr=VpuReadReg(0x124);
-	start=VpuReadReg(0x144);
-	end=VpuReadReg(0x148);	
-	IOClkGateSet(0);
-	printf("vpu register: wr: 0x%X, rd: 0x%X, start: 0x%X, end: 0x%X \r\n", wr, rd,start,end);
-}
+		IOClkGateSet(1);
+		rd=VpuReadReg(0x120);
+		wr=VpuReadReg(0x124);
+		start=VpuReadReg(0x144);
+		end=VpuReadReg(0x148);
+		IOClkGateSet(0);
+		printf("vpu register: wr: 0x%X, rd: 0x%X, start: 0x%X, end: 0x%X \r\n", wr, rd,start,end);
+	}
 #endif
 
 	if((CPU_IS_MX6X()) &&(outInfo.indexFrameDisplay>=pObj->frameNum))
@@ -2505,7 +2506,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 		//FIXME: iMX6X workaround to fix the display index overflow
 		VPU_ERROR("%s: indexFrameDisplay overflow: %d, will rectify it maunally !!! \r\n",__FUNCTION__,outInfo.indexFrameDisplay);
 		outInfo.decodingSuccess=0x10;
-		outInfo.indexFrameDecoded=VPU_OUT_DEC_INDEX_NOMEANING;		
+		outInfo.indexFrameDecoded=VPU_OUT_DEC_INDEX_NOMEANING;
 		outInfo.indexFrameDisplay=VPU_OUT_DIS_INDEX_NODIS;
 	}
 
@@ -2530,12 +2531,12 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 			outInfo.decodingSuccess=0x1;
 		}
 	}
-	
+
 	if(!CPU_IS_MX6X())
-	{	
+	{
 		//enhance for iMX5
 		if((ret==RETCODE_SUCCESS)&&(outInfo.indexFrameDecoded>=0)&&
-			(((outInfo.prescanresult==1)&&(pObj->filemode==0))||(pObj->filemode==1)))
+		        (((outInfo.prescanresult==1)&&(pObj->filemode==0))||(pObj->filemode==1)))
 			/*
 				ret ok
 				decoded frame is valid
@@ -2543,8 +2544,8 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 			*/
 		{
 			if((VPU_V_AVC==pObj->CodecFormat)&&
-				((outInfo.decPicWidth!=pObj->initInfo.nPicWidth)||(outInfo.decPicHeight!=pObj->initInfo.nPicHeight)
-				||((outInfo.numOfErrMBs==-1)&&(outInfo.decodingSuccess==0))))
+			        ((outInfo.decPicWidth!=pObj->initInfo.nPicWidth)||(outInfo.decPicHeight!=pObj->initInfo.nPicHeight)
+			         ||((outInfo.numOfErrMBs==-1)&&(outInfo.decodingSuccess==0))))
 			{
 				/*for some avc corrupted clips: often occur unrecoverable display issue even if inserting sps/pps header again after seeking
 					-resolution change
@@ -2556,19 +2557,19 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 		}
 	}
 #ifdef IMX6_INTER_DEBUG
-{
-	static int valid_deccnt=0;
-	static int valid_discnt=0;
-	if(outInfo.indexFrameDisplay>=0)
 	{
-		valid_discnt++;
+		static int valid_deccnt=0;
+		static int valid_discnt=0;
+		if(outInfo.indexFrameDisplay>=0)
+		{
+			valid_discnt++;
+		}
+		if(outInfo.indexFrameDecoded>=0)
+		{
+			valid_deccnt++;
+		}
+		printf("dec cnt: %d , dis cnt: %d \r\n",valid_deccnt,valid_discnt);
 	}
-	if(outInfo.indexFrameDecoded>=0)	
-	{
-		valid_deccnt++;
-	}	
-	printf("dec cnt: %d , dis cnt: %d \r\n",valid_deccnt,valid_discnt);
-}
 #endif
 
 #ifdef IMX6_RANGEMAP_WORKAROUND_IGNORE //for iMX6
@@ -2580,11 +2581,11 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 #endif
 
 	pObj->pbPacket=outInfo.mp4PackedPBframe;
-	if((pObj->pbClips==0) && (0!=pObj->pbPacket)) 
+	if((pObj->pbClips==0) && (0!=pObj->pbPacket))
 	{
 		pObj->pbClips=1;
 	}
-#ifdef VPU_FILEMODE_SUPPORT_INTERLACED_SKIPMODE	
+#ifdef VPU_FILEMODE_SUPPORT_INTERLACED_SKIPMODE
 #if 0	// it is difficult to check since "skipframeMode!=0" will affect the result of "interlacedFrame" and "topFieldFirst"
 	if((VPU_V_AVC==pObj->CodecFormat)&&(0!=pObj->initInfo.nInterlace))
 	{
@@ -2603,7 +2604,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 	}
 #endif
 	//FIXME: Now, only support H.264 interlaced in file mode
-	if((VPU_V_AVC==pObj->CodecFormat)&&(0!=pObj->initInfo.nInterlace)&&(1==pObj->filemode))		
+	if((VPU_V_AVC==pObj->CodecFormat)&&(0!=pObj->initInfo.nInterlace)&&(1==pObj->filemode))
 	{
 		if((outInfo.indexFrameDecoded!=VPU_OUT_DEC_INDEX_EOS)&&(0!=InFilemodeChunkSize))
 		{
@@ -2626,7 +2627,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 		//check err MB
 		//VPU_LOG("err MB: %d \r\n",outInfo.numOfErrMBs);
 
-		//VPU_LOG("pic type: %d \r\n",outInfo.picType);		
+		//VPU_LOG("pic type: %d \r\n",outInfo.picType);
 #ifdef VPU_FLUSH_BEFORE_DEC_WORKAROUND
 		//if(outInfo.indexFrameDecoded>=0)	//need to check decindex or prescanresult ???
 		{
@@ -2636,11 +2637,11 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 
 #ifdef VPU_PROTECT_MULTI_INSTANCE
 		if(((CPU_IS_MX6X()) && (outInfo.decodingSuccess & 0x10)) ||
-			((CPU_IS_MX5X())&&((outInfo.prescanresult==0)&&(pObj->filemode==0))))
+		        ((CPU_IS_MX5X())&&((outInfo.prescanresult==0)&&(pObj->filemode==0))))
 		{
 			/*
 			iMX6: rollback
-			iMX5: stream mode with prescan 
+			iMX5: stream mode with prescan
 			*/
 			//1 FIXME:  add rollback for iMX5 ??
 			VPU_LOG("not completed frame \r\n");
@@ -2649,14 +2650,14 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 			/*workaround for decindex==-1: pepsi-p-diddy.mp4
 			   we need to carefully when enable: VPU_SUPPORT_NO_ENOUGH_FRAME
 			*/
-			outInfo.indexFrameDecoded=VPU_OUT_DEC_INDEX_NOMEANING;	//skip below some special process, such as VPU_DEC_NO_ENOUGH_BUF/VPU_DEC_OUTPUT_DROPPED 
+			outInfo.indexFrameDecoded=VPU_OUT_DEC_INDEX_NOMEANING;	//skip below some special process, such as VPU_DEC_NO_ENOUGH_BUF/VPU_DEC_OUTPUT_DROPPED
 			*pOutInStreamModeEnough=0;
 		}
 		else
-#endif		
+#endif
 		{
 			if(VPU_V_MJPG==pObj->CodecFormat)
-			{				
+			{
 				//for MJPG, output frame isn't related with indexFrameDisplay
 				//1 how to judge error output ??
 				if(outInfo.indexFrameDecoded>=0)		//???
@@ -2673,7 +2674,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 
 			//set return code
 			if(VPU_OUT_DEC_INDEX_EOS==outInfo.indexFrameDecoded)
-			{	
+			{
 				// decode EOS, skip, no enough frame...?
 				//pFrameDecode==NULL;
 			}
@@ -2694,12 +2695,12 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				{
 					//backup current decoded frame info
 					//VpuSaveDecodedFrameInfo(pObj,outInfo.indexFrameDecoded,&outInfo);
-#ifdef VPU_VC1_AP_SKIP_WORKAROUND	
+#ifdef VPU_VC1_AP_SKIP_WORKAROUND
 					if((pObj->CodecFormat==VPU_V_VC1_AP)
-						&&(VpuConvertPicType(pObj->CodecFormat,outInfo.picType,outInfo.idrFlg)==VPU_SKIP_PIC))
+					        &&(VpuConvertPicType(pObj->CodecFormat,outInfo.picType,outInfo.idrFlg)==VPU_SKIP_PIC))
 					{
 						//ENGR00157397:we should not call VpuSaveDecodedFrameInfo(), avoid no display at the first seconds (mosaic type)
-						//don't change the state: 
+						//don't change the state:
 						//for skip frame, sometimes,may only have two states: free and display ??
 						VPU_ERROR("Caution: VC1 AP: SKIP frame, skip setting decode state(it may be in decode/display state) \r\n");
 					}
@@ -2735,7 +2736,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 						}
 					}
 				}
-//#endif				
+//#endif
 #ifdef VPU_SEEK_ANYPOINT_WORKAROUND
 				//only consider case: (H.264, filemode,non-interlaced)
 				if(0==pObj->seekKeyLoc)
@@ -2761,7 +2762,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 								//{
 								//	VPU_ERROR("%s: vpu flush bit failure (in while loop), ret=%d \r\n",__FUNCTION__,ret);
 								//	//return 0;
-								//}	
+								//}
 								pObj->recommendFlush=1;
 							}
 						}
@@ -2777,7 +2778,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 
 #ifdef VPU_FILEMODE_WORKAROUND
 			if(1==VpuSearchFrameBuf(pObj,outInfo.indexFrameDisplay,&pFrameDisp))
-			{	
+			{
 				int state;
 				state=VpuGetDispFrameState(outInfo.indexFrameDisplay, pObj->frameBufState);
 				if((pObj->CodecFormat==VPU_V_VC1_AP) && (outInfo.indexFrameRangemap>=0))
@@ -2793,7 +2794,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 						{
 							if(VPU_FRAME_STATE_FREE==VpuGetDispFrameState(outInfo.indexFrameDisplay, pObj->frameBufState))
 							{
-								VpuSetDispFrameState(outInfo.indexFrameDisplay,pObj->frameBufState,VPU_FRAME_STATE_DEC );	
+								VpuSetDispFrameState(outInfo.indexFrameDisplay,pObj->frameBufState,VPU_FRAME_STATE_DEC );
 							}
 							else
 							{
@@ -2810,7 +2811,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				if(VPU_FRAME_STATE_DEC!=state)
 				{
 					//FIXME: we should set dropped, but not discard it internally. otherwise, the timestamp is not matched!!!!
-					VPU_API("%s: calling vpu_DecClrDispFlag(): %d (invalid output) \r\n",__FUNCTION__,outInfo.indexFrameDisplay);				
+					VPU_API("%s: calling vpu_DecClrDispFlag(): %d (invalid output) \r\n",__FUNCTION__,outInfo.indexFrameDisplay);
 					ret=vpu_DecClrDispFlag(InVpuHandle,outInfo.indexFrameDisplay);
 					ASSERT(RETCODE_SUCCESS==ret);
 					//needn't clear frame state ?
@@ -2823,12 +2824,12 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 						VPU_ERROR("error: output one frame not decoded at all !!!!!(may be in disp/free state) \r\n");
 					}
 					else if((pObj->CodecFormat==VPU_V_MPEG4)
-						||(pObj->CodecFormat==VPU_V_DIVX4)
-						||(pObj->CodecFormat==VPU_V_DIVX56)
-						||(pObj->CodecFormat==VPU_V_XVID)
-						||(pObj->CodecFormat==VPU_V_H263))
+					        ||(pObj->CodecFormat==VPU_V_DIVX4)
+					        ||(pObj->CodecFormat==VPU_V_DIVX56)
+					        ||(pObj->CodecFormat==VPU_V_XVID)
+					        ||(pObj->CodecFormat==VPU_V_H263))
 					{
-						//now, we can't call vpu_DecBitBufferFlush, so the frame buffers may be not cleared enough at flush step 
+						//now, we can't call vpu_DecBitBufferFlush, so the frame buffers may be not cleared enough at flush step
 						outInfo.indexFrameDisplay=VPU_OUT_DIS_INDEX_NODIS;
 						VPU_ERROR("error:  output one frame not decoded at all !!!!!, we will discard it !!!!! \r\n");
 						disOrderOutput=1;
@@ -2846,7 +2847,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 #endif
 
 			if(VPU_OUT_DIS_INDEX_NODIS==outInfo.indexFrameDisplay)
-			{	
+			{
 				// not display
 				pFrameDisp=NULL;
 				*pOutRetCode=VPU_DEC_OUTPUT_NODIS;
@@ -2875,7 +2876,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				VPU_LOG("indexFrameDisplay=%d \r\n",index);
 				search_ret=VpuSearchFrameBuf(pObj,index,&pFrameDisp);
 				if(search_ret)
-				{				
+				{
 					pObj->frameInfo.pDisplayFrameBuf=pFrameDisp;
 					//load current display frame info
 					ASSERT(pObj->frameBufInfo[index].viewID==outInfo.mvcPicInfo.viewIdxDisplay);
@@ -2907,7 +2908,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 					if(pObj->dropBCnt>=MAX_DROPB_CNT)
 					{
 						//avoid freeze for real closed gop (I B B B B ... B B)
-						pObj->dropBCnt=0;	//clear cnt to 0	
+						pObj->dropBCnt=0;	//clear cnt to 0
 						pObj->refCnt=MIN_REF_CNT;
 					}
 				}
@@ -2915,11 +2916,11 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				//(2) check drop non-I frame case
 #if 0			//FIXME: for some .ts clips, I Field + P Field, no KEY frame return, So we have to loose the condition
 				if(FRAME_IS_KEY(picType))
-#else			
+#else
 				if(((1==pObj->initInfo.nInterlace)&&FRAME_IS_REF(picType))
-					|| ((0==pObj->initInfo.nInterlace)&&FRAME_IS_KEY(picType)))
-				/*if(FRAME_IS_REF(picType))*/
-#endif					
+				        || ((0==pObj->initInfo.nInterlace)&&FRAME_IS_KEY(picType)))
+					/*if(FRAME_IS_REF(picType))*/
+#endif
 				{
 					VPU_LOG("%s: Key frame %d \r\n",__FUNCTION__,picType);
 					if(pObj->keyCnt<MIN_KEY_CNT)
@@ -2931,11 +2932,11 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				if(FRAME_ISNOT_KEY(picType)&&(pObj->keyCnt<MIN_KEY_CNT))
 				{
 					//drop non-I frame
-					//here: we have not max drop number, not like drop B 
+					//here: we have not max drop number, not like drop B
 					dropFlag=1;
 					VPU_LOG("%s: change non-I frame to dropped frame : \r\n",__FUNCTION__);
 				}
-#ifdef DIS_DROP_FRAME								
+#ifdef DIS_DROP_FRAME
 				if(1==dropFlag)
 				{
 					VPU_LOG("unclosed gop: set it mosaic \r\n");
@@ -2945,13 +2946,13 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 				if(1==dropFlag)
 				{
 					//drop current frame
-					pFrameDisp=NULL;				
+					pFrameDisp=NULL;
 					//add one type ( dropped ), but not VPU_DEC_OUTPUT_NODIS, since we need to notify user get one timestamp !!!
 					//*pOutRetCode=VPU_DEC_OUTPUT_NODIS;
 					*pOutRetCode=VPU_DEC_OUTPUT_DROPPED;
 
 					//we need to clear current frame, since user will not fetch/clear the frame buffer
-					VPU_API("%s: calling vpu_DecClrDispFlag(): %d \r\n",__FUNCTION__,outInfo.indexFrameDisplay);				
+					VPU_API("%s: calling vpu_DecClrDispFlag(): %d \r\n",__FUNCTION__,outInfo.indexFrameDisplay);
 					ret=vpu_DecClrDispFlag(InVpuHandle,outInfo.indexFrameDisplay);
 					if(RETCODE_SUCCESS!=ret)
 					{
@@ -2959,15 +2960,15 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 						search_ret=0; //return fail
 					}
 					//clear frame state
-					VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);					
+					VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);
 				}
 				else
 #endif
 #endif
 				{
-//#ifdef VPU_VC1_AP_SKIP_WORKAROUND	
+//#ifdef VPU_VC1_AP_SKIP_WORKAROUND
 					int disIndex=outInfo.indexFrameDisplay;
-					//for case: display order: I B P(skip) 
+					//for case: display order: I B P(skip)
 					//FIXME: we only simply drop P(skip) to avoid conflict logic
 					//if(pObj->CodecFormat==VPU_V_VC1_AP)
 					{
@@ -3001,7 +3002,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 					pObj->pPreDisplayFrameBuf=pFrameDisp;
 					//pObj->pPreDecodedFrameBuf=pFrameDecode;
 				}
-			}	
+			}
 		}
 
 		//update state
@@ -3021,14 +3022,14 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 					colorformat=pObj->initInfo.nMjpgSourceFormat;
 				}
 				WrapperFileDumpYUV(&fpYUV,pObj->frameInfo.pDisplayFrameBuf->pbufVirtY,
-					pObj->frameInfo.pDisplayFrameBuf->pbufVirtCb,
-					pObj->frameInfo.pDisplayFrameBuf->pbufVirtCr,
-					nPadStride*pObj->picHeight,nPadStride*pObj->picHeight/4,colorformat);
-			}			
+				                   pObj->frameInfo.pDisplayFrameBuf->pbufVirtCb,
+				                   pObj->frameInfo.pDisplayFrameBuf->pbufVirtCr,
+				                   nPadStride*pObj->picHeight,nPadStride*pObj->picHeight/4,colorformat);
+			}
 #endif
 #if 1	//fix (-2,>0) case: 
-		//(1) for interlace/corrupt case: there is one valid output. eg. user will get two time stamps
-		//(2) for not codec case: [P B] chunk + not coded: only need to get one time stamps
+			//(1) for interlace/corrupt case: there is one valid output. eg. user will get two time stamps
+			//(2) for not codec case: [P B] chunk + not coded: only need to get one time stamps
 			if(0!=InSkipMode)
 			{
 				if(outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
@@ -3046,12 +3047,12 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 						}
 						else
 						{
-							*pOutRetCode=(*pOutRetCode)|VPU_DEC_SKIP;							
+							*pOutRetCode=(*pOutRetCode)|VPU_DEC_SKIP;
 						}
 #else
 						*pOutRetCode=(*pOutRetCode)|VPU_DEC_SKIP;
 #endif
-						//needn't clear it , only notify user to get one timestamp						
+						//needn't clear it , only notify user to get one timestamp
 					}
 					/*notify user to get skipped frame length info*/
 					VpuSaveDecodedFrameInfo(pObj,-1,&outInfo,NULL);
@@ -3064,7 +3065,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 		{
 			pObj->state=VPU_DEC_STATE_EOS;	// user should feed valid data for next play
 		}
-		else	
+		else
 		{
 			pObj->state=VPU_DEC_STATE_DEC;	//user need not call get output again
 //#ifdef VPU_IFRAME_SEARCH
@@ -3072,23 +3073,23 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 			{
 				//we suppose: display index is also unvalid when decode index is unvalid, eg. when skipping, (decIndex<0 && disIndex<0)
 				if((pObj->keyDecCnt==0)
-					&& (outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
-					&& (outInfo.indexFrameDisplay<0))
+				        && (outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
+				        && (outInfo.indexFrameDisplay<0))
 				{
 					//FIXME: need to check VPU_FILEMODE_INTERLACE_TIMESTAMP_ENHANCE ???
 					*pOutRetCode=VPU_DEC_OUTPUT_DROPPED;
 					//needn't clear it , only notify user to get one timestamp
 				}
 			}
-//#endif			
+//#endif
 
 #if 1 //skip mode ??
 			if(0!=InSkipMode)
 			{
 				if(((CPU_IS_MX6X())&&((outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
-					&& ((outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS)||(outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS_SKIP/*eg. ==-2 or -3??*/))))||
-					((CPU_IS_MX5X())&&((outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
-					&& (outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS/*eg. ==-3 ??*/))))
+				                      && ((outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS)||(outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS_SKIP/*eg. ==-2 or -3??*/))))||
+				        ((CPU_IS_MX5X())&&((outInfo.indexFrameDecoded==VPU_OUT_DEC_INDEX_UNDEC/*eg. ==-2 ???*/)
+				                           && (outInfo.indexFrameDisplay==VPU_OUT_DIS_INDEX_NODIS/*eg. ==-3 ??*/))))
 				{
 					/*
 						iMX5: -2, -3
@@ -3101,7 +3102,7 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 					}
 					else
 					{
-						*pOutRetCode=VPU_DEC_OUTPUT_DROPPED;					
+						*pOutRetCode=VPU_DEC_OUTPUT_DROPPED;
 					}
 #else
 					*pOutRetCode=VPU_DEC_OUTPUT_DROPPED;
@@ -3127,8 +3128,8 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 		if((1==pObj->fieldDecoding)&&(pObj->oweFieldTS>0))
 		{
 			if((*pOutRetCode==VPU_DEC_OUTPUT_DIS)||
-				(*pOutRetCode==VPU_DEC_OUTPUT_MOSAIC_DIS)||
-				(*pOutRetCode==VPU_DEC_OUTPUT_DROPPED))
+			        (*pOutRetCode==VPU_DEC_OUTPUT_MOSAIC_DIS)||
+			        (*pOutRetCode==VPU_DEC_OUTPUT_DROPPED))
 			{
 				*pOutRetCode=(*pOutRetCode)|VPU_DEC_SKIP;
 				pObj->oweFieldTS--;
@@ -3153,15 +3154,15 @@ int VpuGetOutput(DecHandle InVpuHandle, VpuDecObj* pObj,int* pOutRetCode,int InS
 #endif
 
 		return search_ret;		//0 or 1
-	}	
+	}
 }
 
 int VpuBitFlush(VpuDecHandleInternal * pVpuObj, int location)
 {
-	RetCode ret;		
+	RetCode ret;
 	int flush=0;
 
-	if(0==pVpuObj->obj.filemode)		
+	if(0==pVpuObj->obj.filemode)
 	{
 		flush=1;
 		if(0)//if(CPU_IS_MX6X())	//for iMX6: workaround for some codecs
@@ -3169,14 +3170,14 @@ int VpuBitFlush(VpuDecHandleInternal * pVpuObj, int location)
 			switch (pVpuObj->obj.CodecFormat)
 			{
 				////case VPU_V_H263:
-				case VPU_V_RV: // for RV9_1080x720_30_9590_NoAudio.mkv
+			case VPU_V_RV: // for RV9_1080x720_30_9590_NoAudio.mkv
 				//case VPU_V_VC1:	// for WMV9_MPML_360x240_30fps_1500K_4sec_10min.wmv
 				//case VPU_V_VC1_AP:	// for Test_1440x576_WVC1_6Mbps.wmv
-					flush=0;	
-					break;
-				default:
-					//flush=0;
-					break;
+				flush=0;
+				break;
+			default:
+				//flush=0;
+				break;
 			}
 		}
 	}
@@ -3185,45 +3186,45 @@ int VpuBitFlush(VpuDecHandleInternal * pVpuObj, int location)
 	{
 		switch (pVpuObj->obj.CodecFormat)
 		{
-			case VPU_V_MPEG4:
-			case VPU_V_DIVX4:
-			case VPU_V_DIVX56:
-			case VPU_V_XVID:
-			case VPU_V_H263:
-				//flush=1;	//seek failed for clips: H.263_mp3_352x288.avi;10s-vga-senchiro.avi
-				break;			
-			case VPU_V_AVC:
-				//flush=1;	//mosaic issue: DongxieXidu.ultra.mkv(e 0 80, or e 0 3), --now it is fixed, so we still can set flush=1
-				flush=1;		//technicolor/h264.mp4
+		case VPU_V_MPEG4:
+		case VPU_V_DIVX4:
+		case VPU_V_DIVX56:
+		case VPU_V_XVID:
+		case VPU_V_H263:
+			//flush=1;	//seek failed for clips: H.263_mp3_352x288.avi;10s-vga-senchiro.avi
+			break;
+		case VPU_V_AVC:
+			//flush=1;	//mosaic issue: DongxieXidu.ultra.mkv(e 0 80, or e 0 3), --now it is fixed, so we still can set flush=1
+			flush=1;		//technicolor/h264.mp4
 #ifdef VPU_SEEK_ANYPOINT_WORKAROUND
-				flush=1;		//philips: zdfhd.ts
+			flush=1;		//philips: zdfhd.ts
 #endif
-				break;
-			case VPU_V_MPEG2:
-				flush=1;
-				break;
-			default:
-				//
-				break;
+			break;
+		case VPU_V_MPEG2:
+			flush=1;
+			break;
+		default:
+			//
+			break;
 		}
 	}
 #endif
 
 	if(1==flush)
-	{	
+	{
 #ifdef IMX6_INTER_DEBUG_RD_WR
-{
-	unsigned int rd,wr;
+		{
+			unsigned int rd,wr;
 //#define BIT_RD_PTR_0			0x120
 //#define BIT_WR_PTR_0			0x124
-	IOClkGateSet(1);
-	rd=VpuReadReg(0x120);
-	wr=VpuReadReg(0x124);
-	IOClkGateSet(0);
-	printf("vpu register: wr: 0x%X, rd: 0x%X \r\n", wr, rd);
-}
+			IOClkGateSet(1);
+			rd=VpuReadReg(0x120);
+			wr=VpuReadReg(0x124);
+			IOClkGateSet(0);
+			printf("vpu register: wr: 0x%X, rd: 0x%X \r\n", wr, rd);
+		}
 #endif
-	
+
 		//we skip bit bufferflush operation for file mode
 		VPU_API("calling vpu_DecBitBufferFlush() : %d \r\n",location);
 		ret=vpu_DecBitBufferFlush(pVpuObj->handle);
@@ -3231,16 +3232,16 @@ int VpuBitFlush(VpuDecHandleInternal * pVpuObj, int location)
 		{
 			VPU_ERROR("%s: vpu flush bit failure (in while loop), ret=%d \r\n",__FUNCTION__,ret);
 			return 0;
-		}	
-	}	
+		}
+	}
 	return 1;
 }
 
 int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 {
 	VpuDecHandleInternal * pVpuObj;
-		
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
 		return 0;
 	}
@@ -3260,7 +3261,7 @@ int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 	{
 		RetCode ret;
 		int i;
-		for(i=0;i<pVpuObj->obj.frameNum;i++)
+		for(i=0; i<pVpuObj->obj.frameNum; i++)
 		{
 			//for iMX6: we only need to clear buffers that is already decoded by vpu but still not be output to user.
 			if(pVpuObj->obj.frameBufState[i]==VPU_FRAME_STATE_DEC)
@@ -3273,7 +3274,7 @@ int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 				}
 				VpuClearDispFrame(i, pVpuObj->obj.frameBufState);
 			}
-		}	
+		}
 	}
 	/*FIXME: add process "else if(CPU_IS_MX5X){}" for iMX5X
 	else if(CPU_IS_MX5X())
@@ -3282,7 +3283,7 @@ int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 		int i;
 		for(i=0;i<pVpuObj->obj.frameNum;i++)
 		{
-			//for iMX5: vpu will clear all frame buffers automatically, so we need to reset those buffers which have not been released by user. 
+			//for iMX5: vpu will clear all frame buffers automatically, so we need to reset those buffers which have not been released by user.
 			if(pVpuObj->obj.frameBufState[i]==VPU_FRAME_STATE_DISP)
 			{
 				VpuSetClearFlag(pVpuObj->handle,&pVpuObj->obj,i);
@@ -3315,7 +3316,7 @@ int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 	//}
 
 
-	//we skip bit bufferflush operation for file mode	
+	//we skip bit bufferflush operation for file mode
 	// In EOS, the bistream buffer may become disorder, such as RD pointer will overflow WR pointer
 	// So, we must flush bitstream here again, otherwise following data may not be filled since buffer is full (may have only 511 bytes).
 	if (0==VpuBitFlush(pVpuObj,2/*at the eos*/))
@@ -3324,29 +3325,29 @@ int VpuDecClearOperationEOStoDEC(VpuDecHandle InHandle)
 	}
 
 #ifdef IMX6_SKIPMODE_WORKAROUND_FILL_DUMMY//for iMX6 testing
-if(CPU_IS_MX6X())
-{
-#define DUMY_LEN	512
-	unsigned char* tmp=NULL;
-	switch(pVpuObj->obj.CodecFormat)
+	if(CPU_IS_MX6X())
 	{
+#define DUMY_LEN	512
+		unsigned char* tmp=NULL;
+		switch(pVpuObj->obj.CodecFormat)
+		{
 		case VPU_V_MPEG4:
-		//case VPU_V_DIVX3:
+			//case VPU_V_DIVX3:
 		case VPU_V_DIVX4:
 		case VPU_V_DIVX56:
 		case VPU_V_XVID:
 		case VPU_V_H263:
 		case VPU_V_AVC:
-		//case VPU_V_VC1:	
+			//case VPU_V_VC1:
 		case VPU_V_VC1_AP:
 		case VPU_V_MPEG2:
-		//case VPU_V_RV:
-			tmp=malloc(DUMY_LEN);	
+			//case VPU_V_RV:
+			tmp=malloc(DUMY_LEN);
 			if(tmp)
 			{
 				vpu_memset(tmp,0,DUMY_LEN);
 				VpuFillData(pVpuObj->handle, &pVpuObj->obj, tmp, DUMY_LEN, 1, 0);
-				free(tmp);		
+				free(tmp);
 			}
 			else
 			{
@@ -3355,10 +3356,10 @@ if(CPU_IS_MX6X())
 			break;
 		default:
 			break;
+		}
 	}
-}
 #endif
-	
+
 	return 1;
 
 }
@@ -3371,7 +3372,7 @@ int VpuWaitBusy(int needWait)
 #if 0	//for rollback mode, we should not return 0(busy)
 		int ret=0;
 		if(needWait)
-		{	
+		{
 			VPU_API("while: calling vpu_WaitForInt(%d) \r\n",VPU_POLLING_TIME_OUT);
 			ret=vpu_WaitForInt(VPU_POLLING_TIME_OUT);
 		}
@@ -3408,7 +3409,7 @@ int VpuWaitBusy(int needWait)
 	}
 	else
 	{
-#ifdef VPU_PROTECT_MULTI_INSTANCE	
+#ifdef VPU_PROTECT_MULTI_INSTANCE
 		busy_cnt=0;
 		VPU_API("while: calling vpu_WaitForInt(%d) \r\n",VPU_POLLING_PRESCAN_TIME_OUT);
 		while(0!=vpu_WaitForInt(VPU_POLLING_PRESCAN_TIME_OUT))
@@ -3457,9 +3458,9 @@ int VpuWaitBusy(int needWait)
 #endif	//#ifdef VPU_PROTECT_MULTI_INSTANCE
 	}
 	return 1;	//not busy
-}	
+}
 
-int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int* pNoErr,int* pOutInStreamModeEnough) 
+int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int* pNoErr,int* pOutInStreamModeEnough)
 {
 	RetCode ret;
 	VpuDecBufRetCode bufUseState=VPU_DEC_INPUT_USED;
@@ -3482,39 +3483,69 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 
 	switch(pObj->CodecFormat)
 	{
-		case VPU_V_VC1:
-		case VPU_V_VC1_AP:
-			//for VC1, special header info may need to be inserted
-			pHeader=aVC1Head;
-			if(0==pObj->nPrivateSeqHeaderInserted)
+	case VPU_V_VC1:
+	case VPU_V_VC1_AP:
+		//for VC1, special header info may need to be inserted
+		pHeader=aVC1Head;
+		if(0==pObj->nPrivateSeqHeaderInserted)
+		{
+			//for raw file : .rcv/.vc1
+			//do nothing
+		}
+		else if (pInData->nSize==0) //(NULL==pInData->pVirAddr)
+		{
+			//eos
+		}
+		else
+		{
+			//insert frame header
+			if((pObj->CodecFormat==VPU_V_VC1_AP))
 			{
-				//for raw file : .rcv/.vc1
-				//do nothing
-			}
-			else if (pInData->nSize==0) //(NULL==pInData->pVirAddr)
-			{
-				//eos
+				VC1CreateNalFrameHeader(pHeader,(int*)(&headerLen),(unsigned int*)(pInData->pVirAddr));
 			}
 			else
 			{
-				//insert frame header
-				if((pObj->CodecFormat==VPU_V_VC1_AP))
-				{
-					VC1CreateNalFrameHeader(pHeader,(int*)(&headerLen),(unsigned int*)(pInData->pVirAddr));
-				}
-				else
-				{
-					//need to insert header : frame size
-					VC1CreateRCVFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize);
-				}	
+				//need to insert header : frame size
+				VC1CreateRCVFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize);
 			}
-			break;
-		case VPU_V_VP8:
-			//for VP8, special header info may need to be inserted
-			pHeader=aVP8Head;
+		}
+		break;
+	case VPU_V_VP8:
+		//for VP8, special header info may need to be inserted
+		pHeader=aVP8Head;
+		if(0==pObj->nPrivateSeqHeaderInserted)
+		{
+			//for raw file
+			//do nothing
+		}
+		else if (pInData->nSize==0) //(NULL==pInData->pVirAddr)
+		{
+			//eos
+		}
+		else
+		{
+			//insert frame header
+			//need to insert header : frame size
+			VP8CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
+		}
+		break;
+	case  VPU_V_MJPG:
+		//for MJPG, need to user appoint the output frame
+		if(0==VpuSearchFreeFrameBuf(pObj, &pObj->mjpg_frmidx))
+		{
+			//no frame buffer
+			*pOutRetCode=VPU_DEC_OUTPUT_NODIS|VPU_DEC_NO_ENOUGH_BUF;
+			return 1;
+		}
+		break;
+	default:
+		if((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3))
+		{
+			//for iMX6: DivX3
+			pHeader=aDIV3Head;
 			if(0==pObj->nPrivateSeqHeaderInserted)
 			{
-				//for raw file 
+				//for raw file
 				//do nothing
 			}
 			else if (pInData->nSize==0) //(NULL==pInData->pVirAddr)
@@ -3525,44 +3556,14 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 			{
 				//insert frame header
 				//need to insert header : frame size
-				VP8CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
+				DIV3CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
 			}
-			break;
-		case  VPU_V_MJPG:
-			//for MJPG, need to user appoint the output frame
-			if(0==VpuSearchFreeFrameBuf(pObj, &pObj->mjpg_frmidx))
-			{
-				//no frame buffer
-				*pOutRetCode=VPU_DEC_OUTPUT_NODIS|VPU_DEC_NO_ENOUGH_BUF;
-				return 1;
-			}
-			break;
-		default:
-			if((CPU_IS_MX6X())&&(pObj->CodecFormat==VPU_V_DIVX3))
-			{
-				//for iMX6: DivX3
-				pHeader=aDIV3Head;
-				if(0==pObj->nPrivateSeqHeaderInserted)
-				{
-					//for raw file 
-					//do nothing
-				}
-				else if (pInData->nSize==0) //(NULL==pInData->pVirAddr)
-				{
-					//eos
-				}
-				else
-				{
-					//insert frame header
-					//need to insert header : frame size
-					DIV3CreateFrameHeader(pHeader,(int*)(&headerLen),pInData->nSize,0,0);
-				}
-			}
-			else
-			{
-				//do nothing for other formats
-			}
-			break;
+		}
+		else
+		{
+			//do nothing for other formats
+		}
+		break;
 	}
 
 	if(0==pObj->filemode)
@@ -3570,8 +3571,8 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 		//check free space and fill data into vpu
 		if(0==VpuBitsBufIsEnough(InVpuHandle,headerLen+pInData->nSize))
 		{
-			//buffer is full	
-			bufUseState=VPU_DEC_INPUT_NOT_USED;	
+			//buffer is full
+			bufUseState=VPU_DEC_INPUT_NOT_USED;
 		}
 		else
 		{
@@ -3591,7 +3592,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 	else
 	{
 		//file mode: only fill data at decode state
-		bufUseState=VPU_DEC_INPUT_NOT_USED;	
+		bufUseState=VPU_DEC_INPUT_NOT_USED;
 	}
 
 
@@ -3612,19 +3613,19 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 			//case (0!=pInData->nSize): avoid delay including no normal eos output at end of stream.
 			//case (0==pObj->filledEOS): avoid no normal eos output
 			if((((VPU_BITS_BUF_SIZE-nSpace)<VPU_MIN_UINT_SIZE)&&(0==pObj->filledEOS))
-				||((NotEnoughDecData(nSpace,(unsigned long)pObj->streamBufDelaySize))&&(0!=pInData->nSize)))
+			        ||((NotEnoughDecData(nSpace,(unsigned long)pObj->streamBufDelaySize))&&(0!=pInData->nSize)))
 			{
 				//return directly without decoding
 				VPU_LOG("nSpace: %d, filled : %d \r\n",(int)nSpace, (int)(VPU_BITS_BUF_SIZE-nSpace));
-				*pOutRetCode=bufUseState;				
+				*pOutRetCode=bufUseState;
 				return 0;
-			}	
+			}
 			VPU_LOG("nSpace: %d, filled : %d \r\n",(int)nSpace, (int)(VPU_BITS_BUF_SIZE-nSpace));
 		}
 #endif
 
 		//set dec parameters
-		//clear 0 firstly	
+		//clear 0 firstly
 		vpu_memset(&decParam,0,sizeof(DecParam));
 		decParam.skipframeMode=pObj->skipFrameMode;
 		decParam.skipframeNum=pObj->skipFrameNum;
@@ -3652,26 +3653,26 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 			{
 				switch (pObj->CodecFormat)
 				{
-					case VPU_V_H263: // for H263_BP3_352x288_25_AACLC_48Khz_190kbps_pixar-ice_age_extra.avi
+				case VPU_V_H263: // for H263_BP3_352x288_25_AACLC_48Khz_190kbps_pixar-ice_age_extra.avi
 					//case VPU_V_VC1:	//for WMV9_MPML_360x240_30fps_1500K_4sec_10min.wmv
 					//case VPU_V_VC1_AP:  // for WVC1_APL1_720x480_30fps_1000kbps_NoAudio_MA10055.WMV: the first frame is I/P field pair
-						decParam.iframeSearchEnable=0;
-						decParam.skipframeMode=0;
-						decParam.skipframeNum=0;	
-						break;
-					default:
-						break;
-				}	
+					decParam.iframeSearchEnable=0;
+					decParam.skipframeMode=0;
+					decParam.skipframeNum=0;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 //#endif
 
 #ifdef VPU_DEC_DIRECT_INPUT
 		decParam.chunkSize=...
-		decParam.picStreamBufferAddr=...
-		decParam.picStartByteOffset=...
+		                   decParam.picStreamBufferAddr=...
+		                           decParam.picStartByteOffset=...
 #endif
-		if(1==pObj->filemode)
+		                                   if(1==pObj->filemode)
 		{
 			//decParam.picStreamBufferAddr=	// don't need to set it, since we don't enable dynamic buffer allocation.
 			if(1==pObj->firstData)
@@ -3679,13 +3680,13 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 				//re-use data at seqinit step
 				decParam.chunkSize=pObj->firstDataSize;
 				pObj->firstData=0;	//need not set it again later, since we only do seqinit once.
-				bufUseState=VPU_DEC_INPUT_NOT_USED;	
+				bufUseState=VPU_DEC_INPUT_NOT_USED;
 #ifdef VPU_FILEMODE_MERGE_INTERLACE_DEBUG
 				//just filled the first field, record the offset and return directly
 				pObj->lastFieldOffset=decParam.chunkSize;
 				*pOutRetCode=VPU_DEC_INPUT_NOT_USED|VPU_DEC_SKIP;
 				return 1;
-#endif				
+#endif
 			}
 #ifdef VPU_SUPPORT_NO_ENOUGH_FRAME
 			else if (1==pObj->dataUsedInFileMode)
@@ -3704,11 +3705,11 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 				ASSERT(fill_ret==1);	//always enough to fill data
 				decParam.chunkSize=pObj->lastFieldOffset+pInData->nSize;
 				pObj->lastFieldOffset=0;	//clear 0
-				bufUseState=VPU_DEC_INPUT_USED;	
+				bufUseState=VPU_DEC_INPUT_USED;
 			}
 #endif
 			else
-			{			
+			{
 				//Here, we need to check headerLen !
 				int fill_ret;
 				if(0!=headerLen)
@@ -3719,7 +3720,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 				fill_ret=VpuFillData(InVpuHandle,pObj,pInData->pVirAddr,pInData->nSize,1,headerLen);
 				ASSERT(fill_ret==1);	//always enough to fill data
 				decParam.chunkSize=pInData->nSize+headerLen;
-				bufUseState=VPU_DEC_INPUT_USED;	
+				bufUseState=VPU_DEC_INPUT_USED;
 #ifdef VPU_FILEMODE_MERGE_INTERLACE_DEBUG
 				//just filled the first field, record the offset and return directly
 				pObj->lastFieldOffset=decParam.chunkSize;
@@ -3731,7 +3732,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 #ifdef VPU_FILEMODE_WORKAROUND
 			//IOClkGateSet(true);
 			//VpuWriteReg(0x124, pObj->pBsBufPhyStart+decParam.chunkSize);	//how to get instance number ?
-			//IOClkGateSet(false);			
+			//IOClkGateSet(false);
 #endif
 #if 0		// can not enable this check !!!
 			if(0==decParam.chunkSize)
@@ -3741,14 +3742,14 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 			}
 #else
 			//Here: decParam.chunkSize==0 is allowed and required ???.
-#endif			
+#endif
 			VPU_LOG("file mode: data size: %d \r\n",decParam.chunkSize);
 #if 0 // file mode debug
 			{
 				static FILE* fpBitstream=NULL;
 				LOG_PRINTF("0x%X \r\n",*((unsigned int*)pObj->pBsBufVirtStart));
 				WrapperFileDumpBitstrem(&fpBitstream,(unsigned char*)pObj->pBsBufVirtStart,decParam.chunkSize);
-			}			
+			}
 #endif
 
 #ifdef VPU_FILEMODE_SUPPORT_INTERLACED_SKIPMODE
@@ -3791,7 +3792,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 				//So, disable skip mode.
 				decParam.skipframeMode=0;
 			}
-			
+
 		}
 		else
 		{
@@ -3822,15 +3823,15 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 				{
 					decParam.phyJpgChunkBase=(PhysicalAddress)pObj->pBsBufPhyStart;
 					decParam.virtJpgChunkBase=pObj->pBsBufVirtStart;
-					//decParam.chunkSize=;  //already been set 
+					//decParam.chunkSize=;  //already been set
 				}
 			}
 		}
-#ifdef VPU_BACKDOOR		
+#ifdef VPU_BACKDOOR
 		VpuLogClearFlag(InVpuHandle);
 #endif
 		// start decode frame
-		VPU_LOG("===================vpu_DecStartOneFrame: chunkSize: %d, search: %d \r\n",decParam.chunkSize,decParam.iframeSearchEnable);		
+		VPU_LOG("===================vpu_DecStartOneFrame: chunkSize: %d, search: %d \r\n",decParam.chunkSize,decParam.iframeSearchEnable);
 		VPU_TRACE;
 		VPU_API("calling vpu_DecStartOneFrame(): %d, skipmode: %d \r\n",decParam.chunkSize,decParam.skipframeMode);
 		ret = vpu_DecStartOneFrame(InVpuHandle, &decParam);
@@ -3865,7 +3866,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 #ifdef VPU_FILEMODE_INTERLACE_WORKAROUND
 		if((0==skipframeMode)&&(0!=pObj->initInfo.nInterlace)&&(1==pObj->filemode)&&(0!=decParam.chunkSize))
 		{
-			//for interlace clips: 
+			//for interlace clips:
 			//if user feed two fields seperately, we should drop the second field and get one timestamp
 			//clips: FHD025.Sanyo(1min).1920x1080.MPEG2.AAC.1536Kbps.48KHz.mp4
 			skipframeMode=1;
@@ -3878,7 +3879,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 #ifdef VPU_FILEMODE_CORRUPT_WORKAROUND
 		if((0==skipframeMode)&&(1==pObj->filemode)&&(0!=decParam.chunkSize))
 		{
-			//for corrupt clips: 
+			//for corrupt clips:
 			//if user feed one valid frame(size!=0), and vpu may return decIndex,disIndex=(-2,-3), in this case, we should drop it and get one timestamp
 			//clips: h264_P_B1.3_25.0fps_730k_320x240_aac_48KHz_128Kbps_c2_3min3s_Tomsk_iPod.mp4
 			skipframeMode=1;
@@ -3888,7 +3889,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 			//here: we only consider filemode, for streammode, the timestamp will be not matched and timestamp queue may overflow.
 		}
 #endif
-		
+
 	}
 
 	ASSERT(pObj->state==VPU_DEC_STATE_STARTFRAMEOK);
@@ -3910,7 +3911,7 @@ int VpuDecBuf(DecHandle InVpuHandle, VpuDecObj* pObj ,VpuBufferNode* pInData,int
 		*pOutRetCode=bufUseState;
 		return busyState;
 	}
-	
+
 	//Be careful: We must make sure: one and only one successful vpu_WaitForInt() is called before calling VpuGetOutput()
 	*pNoErr=VpuGetOutput(InVpuHandle, pObj, pOutRetCode,skipframeMode,pOutInStreamModeEnough,decParam.chunkSize,&frmDecoded);
 
@@ -3929,7 +3930,7 @@ AfterGetOuput:
 
 #ifdef VPU_SUPPORT_NO_ENOUGH_FRAME
 	if((VPU_DEC_NO_ENOUGH_BUF&(*pOutRetCode))
-		||(0!=pObj->pbPacket))
+	        ||(0!=pObj->pbPacket))
 	{
 		//record data length to avoid repeat copy next time, only for file mode
 		//we need not consider this issue in stream mode
@@ -3946,7 +3947,7 @@ AfterGetOuput:
 	}
 
 #endif
-	
+
 	*pOutRetCode=(*pOutRetCode)|bufUseState;
 
 	/*check whether one frame is consumed by vpu: notify user get frame info*/
@@ -3955,7 +3956,7 @@ AfterGetOuput:
 		*pOutRetCode=(*pOutRetCode)|VPU_DEC_ONE_FRM_CONSUMED;
 	}
 
-	return 1;	
+	return 1;
 }
 
 #ifdef VPU_FILEMODE_PBCHUNK_FLUSH_WORKAROUND
@@ -3968,12 +3969,12 @@ int VpuPBChunkFlush(VpuDecHandleInternal * pVpuObj)
 	DecOutputInfo outInfo;
 
 	pObj=&pVpuObj->obj;
-	
+
 	vpu_memset(&decParam,0,sizeof(DecParam));
 	decParam.skipframeMode=3;  // skip all
 	decParam.skipframeNum=1;
 	decParam.iframeSearchEnable=0;
-	decParam.chunkSize=pObj->lastDatLenInFileMode;	
+	decParam.chunkSize=pObj->lastDatLenInFileMode;
 	decParam.skipframeMode=pObj->lastConfigMode;
 	VPU_API("calling vpu_DecStartOneFrame(): PB chunk: %d \r\n",decParam.chunkSize);
 	ret = vpu_DecStartOneFrame(pVpuObj->handle, &decParam);
@@ -3981,14 +3982,14 @@ int VpuPBChunkFlush(VpuDecHandleInternal * pVpuObj)
 	{
 		VPU_ERROR("%s: vpu start one frame PB chunk failure: ret = 0x%X \r\n",__FUNCTION__,ret);
 		return 0;//return VPU_DEC_RET_FAILURE;
-	}		
+	}
 	VPU_API("calling PB chunk: vpu_WaitForInt(%d) \r\n",VPU_TIME_OUT);
 	while(0!=vpu_WaitForInt(VPU_TIME_OUT))
 	{
 		cnt++;
 		if(cnt >VPU_MAX_TIME_OUT_CNT)
 		{
-			VPU_ERROR("%s: flush PB chunk time out \r\n",__FUNCTION__);	
+			VPU_ERROR("%s: flush PB chunk time out \r\n",__FUNCTION__);
 			pObj->state=VPU_DEC_STATE_CORRUPT;
 			return 0;//return VPU_DEC_RET_FAILURE_TIMEOUT;
 		}
@@ -3996,7 +3997,7 @@ int VpuPBChunkFlush(VpuDecHandleInternal * pVpuObj)
 	VPU_API("calling PB chunk: vpu_DecGetOutputInfo() \r\n");
 	ret = vpu_DecGetOutputInfo(pVpuObj->handle, &outInfo);
 	VPU_API("calling PB chunk: vpu_DecGetOutputInfo(), indexFrameDecoded: %d, return indexFrameDisplay: %d  \r\n",outInfo.indexFrameDecoded,outInfo.indexFrameDisplay);
-	
+
 	if (ret != RETCODE_SUCCESS)
 	{
 		VPU_ERROR("%s: vpu get output info failure: ret = 0x%X \r\n",__FUNCTION__,ret);
@@ -4012,7 +4013,7 @@ int VpuPBChunkFlush(VpuDecHandleInternal * pVpuObj)
 			return 0;//return VPU_DEC_RET_FAILURE;
 		}
 		//clear frame state
-		VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);	
+		VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);
 	}
 
 #ifdef VPU_FLUSH_BEFORE_DEC_WORKAROUND
@@ -4021,17 +4022,17 @@ int VpuPBChunkFlush(VpuDecHandleInternal * pVpuObj)
 		pObj->realWork=1;
 	}
 #endif
-	
+
 	return 1;	//OK
 }
 #endif
 
-int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int* pNoErr) 
+int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,int* pNoErr)
 {
 	//*pNoErr=1;		//don't reset it !!!!: the *pNoErr already has one valid value.
 #ifdef VPU_AVOID_DEAD_LOOP
 	static int total_init_size=0;		// avoid dead loop at init step
-	static int total_init_loop=0;	// avoid dead loop at init step 
+	static int total_init_loop=0;	// avoid dead loop at init step
 	static int total_dec_size=0;	// avoid dead loop at decode step
 	static int total_dec_loop=0;	// avoid dead loop at decode step
 	int size;
@@ -4044,7 +4045,7 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 	//here, we don't consider the pInData->sCodecData.nSize
 	if(VPU_DEC_INPUT_USED&(*pOutRetCode))
 	{
-		size=pInData->nSize;		
+		size=pInData->nSize;
 		if(size>0)	//it is important !!!
 		{
 			cnt=1;
@@ -4060,32 +4061,32 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 	VPU_LOG("%s: total_dec_size: %d, total_dec_loop: %d \r\n",__FUNCTION__,total_dec_size,total_dec_loop);
 	switch (pObj->state)
 	{
-		case VPU_DEC_STATE_OPEN:
-			total_init_size+=size;
-			total_init_loop+=cnt;
-			break;
-		case VPU_DEC_STATE_DEC:
-		case VPU_DEC_STATE_STARTFRAMEOK:
-			total_dec_size+=size;
-			total_dec_loop+=cnt;
-			break;	
-		default:
-			//clear 0
-			total_init_size=0;
-			total_init_loop=0;
-			total_dec_size=0;
-			total_dec_loop=0;
-			break;
+	case VPU_DEC_STATE_OPEN:
+		total_init_size+=size;
+		total_init_loop+=cnt;
+		break;
+	case VPU_DEC_STATE_DEC:
+	case VPU_DEC_STATE_STARTFRAMEOK:
+		total_dec_size+=size;
+		total_dec_loop+=cnt;
+		break;
+	default:
+		//clear 0
+		total_init_size=0;
+		total_init_loop=0;
+		total_dec_size=0;
+		total_dec_loop=0;
+		break;
 	}
 #if 0	//dangerous !!
 	if((total_dec_size>VPU_MAX_DEC_SIZE)||(total_dec_loop>VPU_MAX_DEC_LOOP))
-	//for some clips: MPEG1SS_MP2_720x480_29.97fps_a_32khz_224_welcometoBJ.mpg
-	//will timeout even set VPU_MAX_DEC_LOOP=4000, such as CMD_PLAY_STOP test
+		//for some clips: MPEG1SS_MP2_720x480_29.97fps_a_32khz_224_welcometoBJ.mpg
+		//will timeout even set VPU_MAX_DEC_LOOP=4000, such as CMD_PLAY_STOP test
 #else
-	if((total_dec_size>VPU_MAX_DEC_SIZE))	
-	// for clip:H264_BP40_640x480_15_15107_MP3_48_192_2.avi, it will cache about 15 frames before the first ouput
-	// as result, VPU_MAX_DEC_SIZE == 1M isn't enough too. Now, we set bigger value to VPU_MAX_DEC_SIZE
-#endif		
+	if((total_dec_size>VPU_MAX_DEC_SIZE))
+		// for clip:H264_BP40_640x480_15_15107_MP3_48_192_2.avi, it will cache about 15 frames before the first ouput
+		// as result, VPU_MAX_DEC_SIZE == 1M isn't enough too. Now, we set bigger value to VPU_MAX_DEC_SIZE
+#endif
 	{
 		//dead loop at decode step
 		noerr=0;
@@ -4102,7 +4103,7 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 		{
 			//EOS: (addr!=NULL && size==0)
 			//here: we should not sent error event for eos case !!!!
-			*pOutRetCode=VPU_DEC_INPUT_NOT_USED|VPU_DEC_OUTPUT_EOS;		
+			*pOutRetCode=VPU_DEC_INPUT_NOT_USED|VPU_DEC_OUTPUT_EOS;
 			pObj->state=VPU_DEC_STATE_EOS;
 		}
 		else
@@ -4113,7 +4114,7 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 	}
 
 #ifdef VPU_FILEMODE_QUICK_EXIT
-#define VPU_MAX_INIT_FILEMODE_LOOP	(100)	
+#define VPU_MAX_INIT_FILEMODE_LOOP	(100)
 	if((1==pObj->filemode) )
 	{
 		if(total_init_loop>VPU_MAX_INIT_FILEMODE_LOOP)
@@ -4122,7 +4123,7 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 			{
 				//EOS: (addr!=NULL && size==0)
 				//here: we should not sent error event for eos case !!!!
-				*pOutRetCode=VPU_DEC_INPUT_NOT_USED|VPU_DEC_OUTPUT_EOS;		
+				*pOutRetCode=VPU_DEC_INPUT_NOT_USED|VPU_DEC_OUTPUT_EOS;
 				pObj->state=VPU_DEC_STATE_EOS;
 			}
 			else
@@ -4130,7 +4131,7 @@ int VpuCheckDeadLoop(VpuDecObj* pObj ,VpuBufferNode* pInData,int* pOutRetCode,in
 				//will send error event
 				noerr=0;
 			}
-			VPU_ERROR("seq init dead loop (file mode): total_size: %d, total_cnt: %d \r\n",total_init_size,total_init_loop);			
+			VPU_ERROR("seq init dead loop (file mode): total_size: %d, total_cnt: %d \r\n",total_init_size,total_init_loop);
 		}
 		else
 		{
@@ -4163,17 +4164,17 @@ VpuDecRetCode VPU_DecLoad()
 {
 	RetCode ret;
 	VPU_TRACE;
-	VPU_API("calling vpu_Init() \r\n");	
+	VPU_API("calling vpu_Init() \r\n");
 	ret=vpu_Init(NULL);
 	VPU_TRACE;
 	if(RETCODE_SUCCESS !=ret)
 	{
-		VPU_ERROR("%s: vpu init failure \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: vpu init failure \r\n",__FUNCTION__);
 		return VPU_DEC_RET_FAILURE;
 	}
 
 	TIMER_INIT;
-	
+
 	//TODO: add protection for exception exist ?
 
 	return VPU_DEC_RET_SUCCESS;
@@ -4186,7 +4187,7 @@ VpuDecRetCode VPU_DecGetVersionInfo(VpuVersionInfo * pOutVerInfo)
 
 	if(pOutVerInfo==NULL)
 	{
-		VPU_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_PARAM;
 	}
 	VPU_TRACE;
@@ -4205,9 +4206,9 @@ VpuDecRetCode VPU_DecGetVersionInfo(VpuVersionInfo * pOutVerInfo)
 	pOutVerInfo->nLibMajor=ver.lib_major;
 	pOutVerInfo->nLibMinor=ver.lib_minor;
 	pOutVerInfo->nLibRelease=ver.lib_release;
-#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))	
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
 	pOutVerInfo->nFwCode=ver.fw_code;
-#else	
+#else
 	pOutVerInfo->nFwCode=0;
 #endif
 	VPU_API("%s: VPU FW: [major.minor.release_rcode]=[%d.%d.%d_r%d] \r\n",__FUNCTION__,pOutVerInfo->nFwMajor,pOutVerInfo->nFwMinor,pOutVerInfo->nFwRelease,pOutVerInfo->nFwCode);
@@ -4223,12 +4224,12 @@ VpuDecRetCode VPU_DecGetWrapperVersionInfo(VpuWrapperVersionInfo * pOutVerInfo)
 	pOutVerInfo->nMinor= (VPU_WRAPPER_VERSION_CODE >> (8)) & 0xff;
 	pOutVerInfo->nRelease= (VPU_WRAPPER_VERSION_CODE) & 0xff;
 #ifdef USER_SPECIFY_BINARY_VER
-printf("user specify version \r\n");
+	printf("user specify version \r\n");
 	pOutVerInfo->pBinary=(char*)STR_USER_SPECIFY_BINARY_VER;
 #else
 	pOutVerInfo->pBinary=(char*)VPUWRAPPER_BINARY_VERSION_STR;
-#endif	
-	return VPU_DEC_RET_SUCCESS;	
+#endif
+	return VPU_DEC_RET_SUCCESS;
 }
 
 VpuDecRetCode VPU_DecQueryMem(VpuMemInfo* pOutMemInfo)
@@ -4237,8 +4238,8 @@ VpuDecRetCode VPU_DecQueryMem(VpuMemInfo* pOutMemInfo)
 
 	if(pOutMemInfo==NULL)
 	{
-		VPU_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);	
-		return VPU_DEC_RET_INVALID_PARAM;	
+		VPU_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
 	pMem=&pOutMemInfo->MemSubBlock[VIRT_INDEX];
 	pMem->MemType=VPU_MEM_VIRT;
@@ -4259,11 +4260,11 @@ VpuDecRetCode VPU_DecQueryMem(VpuMemInfo* pOutMemInfo)
 		ASSERT(VPU_VP8_MBPARA_SIZE<=(VPU_SLICE_SAVE_SIZE+VPU_PS_SAVE_SIZE));
 		//for vp8, use the same memory with avc
 	}
-	/*add slice/ps buffer support for avc */	
+	/*add slice/ps buffer support for avc */
 	pMem->nSize+=VPU_SLICE_SAVE_SIZE+VPU_PS_SAVE_SIZE;
 
 	pOutMemInfo->nSubBlockNum=2;
-	
+
 	return VPU_DEC_RET_SUCCESS;
 }
 
@@ -4277,33 +4278,33 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 
 	RetCode ret;
 	DecOpenParam sDecOpenParam;
-	
+
 	pMemVirt=&pInMemInfo->MemSubBlock[VIRT_INDEX];
 	pMemPhy=&pInMemInfo->MemSubBlock[PHY_INDEX];
 	if ((pMemVirt->pVirtAddr==NULL) || MemNotAlign(pMemVirt->pVirtAddr,VPU_MEM_ALIGN)
-		||(pMemVirt->nSize!=sizeof(VpuDecHandleInternal)))
+	        ||(pMemVirt->nSize!=sizeof(VpuDecHandleInternal)))
 	{
-		VPU_ERROR("%s: failure: invalid parameter ! \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: invalid parameter ! \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
 	if ((pMemPhy->pVirtAddr==NULL) || MemNotAlign(pMemPhy->pVirtAddr,VPU_MEM_ALIGN)
-		||(pMemPhy->pPhyAddr==NULL) || MemNotAlign(pMemPhy->pPhyAddr,VPU_MEM_ALIGN)
-		||(pMemPhy->nSize!=(VPU_BITS_BUF_SIZE+VPU_SLICE_SAVE_SIZE+VPU_PS_SAVE_SIZE)))
+	        ||(pMemPhy->pPhyAddr==NULL) || MemNotAlign(pMemPhy->pPhyAddr,VPU_MEM_ALIGN)
+	        ||(pMemPhy->nSize!=(VPU_BITS_BUF_SIZE+VPU_SLICE_SAVE_SIZE+VPU_PS_SAVE_SIZE)))
 	{
-		VPU_ERROR("%s: failure: invalid parameter !! \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: invalid parameter !! \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
 	pVpuObj=(VpuDecHandleInternal*)pMemVirt->pVirtAddr;
 	pObj=&pVpuObj->obj;
 
-	// clear vpu obj 
+	// clear vpu obj
 	vpu_memset(pObj, 0, sizeof(VpuDecObj));
 	//clear 0 firstly
 	vpu_memset(&sDecOpenParam, 0, sizeof(DecOpenParam));
 
-	if(CPU_IS_MX6X())  
+	if(CPU_IS_MX6X())
 	{
 		if(VPU_V_MJPG==pInParam->CodecFormat)
 		{
@@ -4325,93 +4326,94 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 
 	//sDecOpenParam.dynamicAllocEnable = 0;
 	VPU_LOG("format: %d \r\n",pInParam->CodecFormat);
-	switch (pInParam->CodecFormat) {
-		case VPU_V_MPEG2: 	 /**< AKA: H.262 */
-			sDecOpenParam.bitstreamFormat = STD_MPEG2;
-			//sDecOpenParam.filePlayEnable = 0;
-			VPU_LOG("open Mpeg2 \r\n");
-			break;
-		case VPU_V_H263:		 /**< H.263 */
-			sDecOpenParam.bitstreamFormat = STD_H263;
-			VPU_LOG("open H263 \r\n");
-			break;
-		case VPU_V_MPEG4: 	 /**< MPEG-4 */
-			sDecOpenParam.bitstreamFormat = STD_MPEG4;
-			sDecOpenParam.mp4Class = 0;
-			VPU_LOG("open Mpeg4 \r\n");
-			break;	
-		case VPU_V_DIVX56:		/**< DIVX 5/6 */
-			sDecOpenParam.bitstreamFormat = STD_MPEG4;
-			sDecOpenParam.mp4Class = 1;
-			VPU_LOG("open DIVX 56 \r\n");
-			LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX56, not supported ! \r\n");
-			break;
-		case VPU_V_XVID:		/**< XVID */
-			sDecOpenParam.bitstreamFormat = STD_MPEG4;
-			sDecOpenParam.mp4Class = 2;
-			VPU_LOG("open XVID \r\n");
-			break;			
-		case VPU_V_DIVX4:		/**< DIVX 4 */
-			sDecOpenParam.bitstreamFormat = STD_MPEG4;
-			sDecOpenParam.mp4Class = 5;
-			VPU_LOG("open DIVX 4 \r\n");
-			LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX4, not supported ! \r\n");
-			break;	
-		case VPU_V_DIVX3:		/**< DIVX 3 */ 
-			sDecOpenParam.bitstreamFormat = STD_DIV3;
-			sDecOpenParam.reorderEnable = 1;
-			//sDecOpenParam.filePlayEnable = 1; 
-			VPU_LOG("open DIVX 3 \r\n");
-			LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX3, not supported ! \r\n");
-			break;		
-		case VPU_V_RV:		
-			sDecOpenParam.bitstreamFormat = STD_RV;
-			sDecOpenParam.reorderEnable = 1;
-			//sDecOpenParam.filePlayEnable = 1; 
-			VPU_LOG("open RV \r\n");
-			break;		
-		case VPU_V_VC1:		 /**< all versions of Windows Media Video */
-		case VPU_V_VC1_AP:
-			sDecOpenParam.bitstreamFormat = STD_VC1;
-			//sDecOpenParam.filePlayEnable = 1; 
-			sDecOpenParam.reorderEnable = 1;
-			VPU_LOG("open VC1 \r\n");
-			break;
-		case VPU_V_AVC_MVC:
-			sDecOpenParam.avcExtension=1;
-		case VPU_V_AVC:
-			sDecOpenParam.bitstreamFormat = STD_AVC;
-			//pCodecPriv->sPsSaveBuffer.size = PS_SAVE_SIZE;
-			//GET_PHY_MEM(&(pCodecPriv->sPsSaveBuffer));
-			//pCodecPriv->sSliceBuffer.size = SLICE_SAVE_SIZE;
-			//GET_PHY_MEM(&(pCodecPriv->sSliceBuffer));
-			sDecOpenParam.reorderEnable = pInParam->nReorderEnable;
-			//sDecOpenParam.filePlayEnable = 0;
-			VPU_LOG("open H.264 \r\n");
-			break;
-		case VPU_V_MJPG:
-			sDecOpenParam.bitstreamFormat = STD_MJPG;
-			sDecOpenParam.mjpg_thumbNailDecEnable=0;	//no thumbnail ??
-			if(CPU_IS_MX6X())
-			{
-				sDecOpenParam.pBitStream=pMemPhy->pVirtAddr;
-				//sDecOpenParam.jpgLineBufferMode=1;	/*need to enable it*/
-			}
-			VPU_LOG("open MJPEG \r\n");
-			break;
-		case VPU_V_AVS:
-			sDecOpenParam.bitstreamFormat = STD_AVS;
-			sDecOpenParam.reorderEnable = 1;
-			VPU_LOG("open AVS \r\n");
-			break;
-		case VPU_V_VP8:
-			sDecOpenParam.bitstreamFormat = STD_VP8;
-			sDecOpenParam.reorderEnable = 1;
-			VPU_LOG("open VP8 \r\n");
-			break;
-		default:
-			VPU_ERROR("%s: failure: invalid format !!! \r\n",__FUNCTION__);	
-			return VPU_DEC_RET_INVALID_PARAM;
+	switch (pInParam->CodecFormat)
+	{
+	case VPU_V_MPEG2: 	 /**< AKA: H.262 */
+		sDecOpenParam.bitstreamFormat = STD_MPEG2;
+		//sDecOpenParam.filePlayEnable = 0;
+		VPU_LOG("open Mpeg2 \r\n");
+		break;
+	case VPU_V_H263:		 /**< H.263 */
+		sDecOpenParam.bitstreamFormat = STD_H263;
+		VPU_LOG("open H263 \r\n");
+		break;
+	case VPU_V_MPEG4: 	 /**< MPEG-4 */
+		sDecOpenParam.bitstreamFormat = STD_MPEG4;
+		sDecOpenParam.mp4Class = 0;
+		VPU_LOG("open Mpeg4 \r\n");
+		break;
+	case VPU_V_DIVX56:		/**< DIVX 5/6 */
+		sDecOpenParam.bitstreamFormat = STD_MPEG4;
+		sDecOpenParam.mp4Class = 1;
+		VPU_LOG("open DIVX 56 \r\n");
+		LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX56, not supported ! \r\n");
+		break;
+	case VPU_V_XVID:		/**< XVID */
+		sDecOpenParam.bitstreamFormat = STD_MPEG4;
+		sDecOpenParam.mp4Class = 2;
+		VPU_LOG("open XVID \r\n");
+		break;
+	case VPU_V_DIVX4:		/**< DIVX 4 */
+		sDecOpenParam.bitstreamFormat = STD_MPEG4;
+		sDecOpenParam.mp4Class = 5;
+		VPU_LOG("open DIVX 4 \r\n");
+		LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX4, not supported ! \r\n");
+		break;
+	case VPU_V_DIVX3:		/**< DIVX 3 */
+		sDecOpenParam.bitstreamFormat = STD_DIV3;
+		sDecOpenParam.reorderEnable = 1;
+		//sDecOpenParam.filePlayEnable = 1;
+		VPU_LOG("open DIVX 3 \r\n");
+		LOG_DIVX_WARNING("LEVEL: 1 Error: Find DivX3, not supported ! \r\n");
+		break;
+	case VPU_V_RV:
+		sDecOpenParam.bitstreamFormat = STD_RV;
+		sDecOpenParam.reorderEnable = 1;
+		//sDecOpenParam.filePlayEnable = 1;
+		VPU_LOG("open RV \r\n");
+		break;
+	case VPU_V_VC1:		 /**< all versions of Windows Media Video */
+	case VPU_V_VC1_AP:
+		sDecOpenParam.bitstreamFormat = STD_VC1;
+		//sDecOpenParam.filePlayEnable = 1;
+		sDecOpenParam.reorderEnable = 1;
+		VPU_LOG("open VC1 \r\n");
+		break;
+	case VPU_V_AVC_MVC:
+		sDecOpenParam.avcExtension=1;
+	case VPU_V_AVC:
+		sDecOpenParam.bitstreamFormat = STD_AVC;
+		//pCodecPriv->sPsSaveBuffer.size = PS_SAVE_SIZE;
+		//GET_PHY_MEM(&(pCodecPriv->sPsSaveBuffer));
+		//pCodecPriv->sSliceBuffer.size = SLICE_SAVE_SIZE;
+		//GET_PHY_MEM(&(pCodecPriv->sSliceBuffer));
+		sDecOpenParam.reorderEnable = pInParam->nReorderEnable;
+		//sDecOpenParam.filePlayEnable = 0;
+		VPU_LOG("open H.264 \r\n");
+		break;
+	case VPU_V_MJPG:
+		sDecOpenParam.bitstreamFormat = STD_MJPG;
+		sDecOpenParam.mjpg_thumbNailDecEnable=0;	//no thumbnail ??
+		if(CPU_IS_MX6X())
+		{
+			sDecOpenParam.pBitStream=pMemPhy->pVirtAddr;
+			//sDecOpenParam.jpgLineBufferMode=1;	/*need to enable it*/
+		}
+		VPU_LOG("open MJPEG \r\n");
+		break;
+	case VPU_V_AVS:
+		sDecOpenParam.bitstreamFormat = STD_AVS;
+		sDecOpenParam.reorderEnable = 1;
+		VPU_LOG("open AVS \r\n");
+		break;
+	case VPU_V_VP8:
+		sDecOpenParam.bitstreamFormat = STD_VP8;
+		sDecOpenParam.reorderEnable = 1;
+		VPU_LOG("open VP8 \r\n");
+		break;
+	default:
+		VPU_ERROR("%s: failure: invalid format !!! \r\n",__FUNCTION__);
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
 	sDecOpenParam.bitstreamBuffer = (PhysicalAddress)pMemPhy->pPhyAddr;
@@ -4420,7 +4422,7 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 	//sDecOpenParam.psSaveBufferSize = 0;
 	sDecOpenParam.chromaInterleave = pInParam->nChromaInterleave;
 #if 1	//needed for divx3
-	sDecOpenParam.picWidth = pInParam->nPicWidth;	
+	sDecOpenParam.picWidth = pInParam->nPicWidth;
 	sDecOpenParam.picHeight = pInParam->nPicHeight;
 #endif
 
@@ -4430,7 +4432,7 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 	sDecOpenParam.psSaveBuffer=(PhysicalAddress)pObj->pAvcSPSPhyBuf;
 	sDecOpenParam.psSaveBufferSize=VPU_PS_SAVE_SIZE;
 
-#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))	
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
 	ASSERT(0==LINEAR_FRAME_MAP);
 	ASSERT(1==TILED_FRAME_MB_RASTER_MAP);
 	ASSERT(2==TILED_FIELD_MB_RASTER_MAP);
@@ -4464,9 +4466,9 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 	pObj->inputType=VPU_DEC_IN_NORMAL; //default: normal
 
 	//record resolution for some special formats (such as VC1,...)
-	pObj->picWidth = pInParam->nPicWidth;	
+	pObj->picWidth = pInParam->nPicWidth;
 	pObj->picHeight = pInParam->nPicHeight;
-	
+
 	// init bitstream buf info
 	pObj->pBsBufVirtStart= pMemPhy->pVirtAddr;
 	pObj->pBsBufPhyStart= pMemPhy->pPhyAddr;
@@ -4482,22 +4484,22 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 	pObj->dropBCnt=0;
 	//pObj->keyCnt=MIN_KEY_CNT;	//we only consider flush operation(eg. seek) ???
 	pObj->keyCnt=0;				//for some .ts clips, we need to skip the first corrupt frames
-#endif	
+#endif
 //#ifdef VPU_IFRAME_SEARCH
 	//pObj->keyDecCnt=MIN_KEY_CNT;//we only consider flush operation(eg.seek)
 	pObj->keyDecCnt=0;
 	if(CPU_IS_MX6X())
-	{	
+	{
 		// iMX6X: stream mode
 		pObj->iframesearch_allowed=1;
 		pObj->fake_flush=1;
 	}
 	else
-	{	
+	{
 		// iMX5X: file mode
 		pObj->iframesearch_allowed=0;
 		pObj->fake_flush=0;
-	}		
+	}
 //#endif
 #ifdef VPU_SEEK_ANYPOINT_WORKAROUND
 	pObj->seekKeyLoc=0;			//we consider the normal play (for .ts clips)
@@ -4554,17 +4556,17 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 		switch(pObj->CodecFormat)
 		{
 			//1 FIXME later
-			case VPU_V_DIVX4:
-			case VPU_V_DIVX56:
-			case VPU_V_XVID:
-			case VPU_V_MPEG4:
-			case VPU_V_AVC:				
-			case VPU_V_MPEG2:
-				pObj->nDecFrameRptEnabled=1;
-				break;
-			default:
-				pObj->nDecFrameRptEnabled=0;
-				break;
+		case VPU_V_DIVX4:
+		case VPU_V_DIVX56:
+		case VPU_V_XVID:
+		case VPU_V_MPEG4:
+		case VPU_V_AVC:
+		case VPU_V_MPEG2:
+			pObj->nDecFrameRptEnabled=1;
+			break;
+		default:
+			pObj->nDecFrameRptEnabled=0;
+			break;
 		}
 	}
 	pObj->nAccumulatedConsumedStufferBytes=0;
@@ -4575,7 +4577,7 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 	pObj->nAdditionalFrmHeaderBytes=0;
 	pObj->nLastFrameEndPosPhy=(unsigned int)pObj->pBsBufPhyEnd-1+FRAME_END_OFFSET;	//make sure we can compute the length of sequence/config before the first frame
 
-	*pOutHandle=(VpuDecHandle)pVpuObj;	
+	*pOutHandle=(VpuDecHandle)pVpuObj;
 
 	return VPU_DEC_RET_SUCCESS;
 }
@@ -4583,11 +4585,11 @@ VpuDecRetCode VPU_DecOpen(VpuDecHandle *pOutHandle, VpuDecOpenParam * pInParam,V
 
 VpuDecRetCode VPU_DecGetCapability(VpuDecHandle InHandle,VpuDecCapability eInCapability, int* pOutCapbility)
 {
-/*
-	Trick:
-	InHandle: NULL, get capability before open
-	InHandle: !NULL, get capability after open
-*/
+	/*
+		Trick:
+		InHandle: NULL, get capability before open
+		InHandle: !NULL, get capability after open
+	*/
 	VpuDecHandleInternal * pVpuObj=NULL;
 	VpuDecObj* pObj=NULL;
 	if (InHandle)
@@ -4597,23 +4599,23 @@ VpuDecRetCode VPU_DecGetCapability(VpuDecHandle InHandle,VpuDecCapability eInCap
 	}
 	switch(eInCapability)
 	{
-		case VPU_DEC_CAP_FILEMODE:
-			*pOutCapbility=(CPU_IS_MX6X())?0:1;	//only supported by iMX5
-			break;
-		case VPU_DEC_CAP_TILE:
-			*pOutCapbility=(CPU_IS_MX6X())?1:0;	//only supported by iMX6
-			break;
-		case VPU_DEC_CAP_FRAMESIZE:
-			if(pObj==NULL)
-			{
-				VPU_ERROR("%s: get capability(%d) failure: vpu hasn't been opened \r\n",__FUNCTION__,eInCapability);
-				return VPU_DEC_RET_INVALID_PARAM;
-			}
-			*pOutCapbility=pObj->nDecFrameRptEnabled;
-			break;
-		default:
-			VPU_ERROR("%s: unknown capability: 0x%X \r\n",__FUNCTION__,eInCapability);
+	case VPU_DEC_CAP_FILEMODE:
+		*pOutCapbility=(CPU_IS_MX6X())?0:1;	//only supported by iMX5
+		break;
+	case VPU_DEC_CAP_TILE:
+		*pOutCapbility=(CPU_IS_MX6X())?1:0;	//only supported by iMX6
+		break;
+	case VPU_DEC_CAP_FRAMESIZE:
+		if(pObj==NULL)
+		{
+			VPU_ERROR("%s: get capability(%d) failure: vpu hasn't been opened \r\n",__FUNCTION__,eInCapability);
 			return VPU_DEC_RET_INVALID_PARAM;
+		}
+		*pOutCapbility=pObj->nDecFrameRptEnabled;
+		break;
+	default:
+		VPU_ERROR("%s: unknown capability: 0x%X \r\n",__FUNCTION__,eInCapability);
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
 	return VPU_DEC_RET_SUCCESS;
 }
@@ -4625,77 +4627,77 @@ VpuDecRetCode VPU_DecConfig(VpuDecHandle InHandle, VpuDecConfig InDecConf, void*
 	int para;
 	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);		
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
-	
+
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
 	pObj=&pVpuObj->obj;
-	
+
 	switch(InDecConf)
 	{
-		case VPU_DEC_CONF_SKIPMODE:
-			para=*((int*)pInParam);
-			if(para==VPU_DEC_SKIPNONE)
-			{
-				pObj->skipFrameMode=0;
-				pObj->skipFrameNum=0;
-				pObj->iframeSearchEnable=0;
-			}
-			else if(para==VPU_DEC_SKIPPB)
-			{
-				pObj->skipFrameMode=1;
-				pObj->skipFrameNum=1;
-				pObj->iframeSearchEnable=0;
-			}
-			else if(para==VPU_DEC_SKIPB)
-			{
-				pObj->skipFrameMode=2;
-				pObj->skipFrameNum=1;
-				pObj->iframeSearchEnable=0;
-			}
-			else if(para==VPU_DEC_SKIPALL)
-			{
-				pObj->skipFrameMode=3;
-				pObj->skipFrameNum=1;
-				pObj->iframeSearchEnable=0;
-			}
-			else if(para==VPU_DEC_ISEARCH)
-			{
-				pObj->skipFrameMode=0;
-				pObj->skipFrameNum=0;
-				pObj->iframeSearchEnable=1;
-			}
-			else
-			{
-				VPU_ERROR("%s: failure: invalid skip parameter: %d \r\n",__FUNCTION__,para);	
-				return VPU_DEC_RET_INVALID_PARAM;
-			}
-			break;			
-		case VPU_DEC_CONF_INPUTTYPE:
-			para=*((int*)pInParam);
-			if((para!=VPU_DEC_IN_NORMAL)&&(para!=VPU_DEC_IN_KICK)&&(para!=VPU_DEC_IN_DRAIN))
-			{
-				VPU_ERROR("%s: failure: invalid inputtype parameter: %d \r\n",__FUNCTION__,para);	
-				return VPU_DEC_RET_INVALID_PARAM;				
-			}
-			pObj->inputType=para;
-			break;	
+	case VPU_DEC_CONF_SKIPMODE:
+		para=*((int*)pInParam);
+		if(para==VPU_DEC_SKIPNONE)
+		{
+			pObj->skipFrameMode=0;
+			pObj->skipFrameNum=0;
+			pObj->iframeSearchEnable=0;
+		}
+		else if(para==VPU_DEC_SKIPPB)
+		{
+			pObj->skipFrameMode=1;
+			pObj->skipFrameNum=1;
+			pObj->iframeSearchEnable=0;
+		}
+		else if(para==VPU_DEC_SKIPB)
+		{
+			pObj->skipFrameMode=2;
+			pObj->skipFrameNum=1;
+			pObj->iframeSearchEnable=0;
+		}
+		else if(para==VPU_DEC_SKIPALL)
+		{
+			pObj->skipFrameMode=3;
+			pObj->skipFrameNum=1;
+			pObj->iframeSearchEnable=0;
+		}
+		else if(para==VPU_DEC_ISEARCH)
+		{
+			pObj->skipFrameMode=0;
+			pObj->skipFrameNum=0;
+			pObj->iframeSearchEnable=1;
+		}
+		else
+		{
+			VPU_ERROR("%s: failure: invalid skip parameter: %d \r\n",__FUNCTION__,para);
+			return VPU_DEC_RET_INVALID_PARAM;
+		}
+		break;
+	case VPU_DEC_CONF_INPUTTYPE:
+		para=*((int*)pInParam);
+		if((para!=VPU_DEC_IN_NORMAL)&&(para!=VPU_DEC_IN_KICK)&&(para!=VPU_DEC_IN_DRAIN))
+		{
+			VPU_ERROR("%s: failure: invalid inputtype parameter: %d \r\n",__FUNCTION__,para);
+			return VPU_DEC_RET_INVALID_PARAM;
+		}
+		pObj->inputType=para;
+		break;
 		//case VPU_DEC_CONF_BLOCK:
 		//	pObj->blockmode=1;
 		//	break;
 		//case VPU_DEC_CONF_NONEBLOCK:
 		//	pObj->blockmode=0;
 		//	break;
-		case VPU_DEC_CONF_BUFDELAY:
-			para=*((int*)pInParam);
-			pObj->streamBufDelaySize=para;
-			break;
-		default:
-			VPU_ERROR("%s: failure: invalid setting \r\n",__FUNCTION__);	
-			return VPU_DEC_RET_INVALID_PARAM;
+	case VPU_DEC_CONF_BUFDELAY:
+		para=*((int*)pInParam);
+		pObj->streamBufDelaySize=para;
+		break;
+	default:
+		VPU_ERROR("%s: failure: invalid setting \r\n",__FUNCTION__);
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
-	
+
 	return VPU_DEC_RET_SUCCESS;
 }
 
@@ -4710,9 +4712,9 @@ VpuDecRetCode VPU_DecDecodeBuf(VpuDecHandle InHandle, VpuBufferNode* pInDataNode
 	VpuBufferNode sInDataBak;
 	VpuBufferNode* pInData;
 
-	if(InHandle==NULL) 
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);		
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 
@@ -4763,15 +4765,15 @@ VpuDecRetCode VPU_DecDecodeBuf(VpuDecHandle InHandle, VpuBufferNode* pInDataNode
 		if((NULL==pInData->pVirAddr)&&(0==pInData->nSize))
 		{
 			*pOutRetCode=VPU_DEC_INPUT_USED;
-#ifdef VPU_SUPPORT_NO_INBUF		
+#ifdef VPU_SUPPORT_NO_INBUF
 			*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
-#endif			
+#endif
 			return VPU_DEC_RET_SUCCESS;
 		}
 	}
 
 	//check MJPG
-	
+
 	if(VPU_V_MJPG==pObj->CodecFormat)
 	{
 		//ASSERT(1==pObj->filemode);
@@ -4780,7 +4782,7 @@ VpuDecRetCode VPU_DecDecodeBuf(VpuDecHandle InHandle, VpuBufferNode* pInDataNode
 			if(NULL==pInData->pVirAddr)
 			{
 				*pOutRetCode=VPU_DEC_INPUT_USED;
-#ifdef VPU_SUPPORT_NO_INBUF		
+#ifdef VPU_SUPPORT_NO_INBUF
 				*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
 #endif
 				return VPU_DEC_RET_SUCCESS;
@@ -4802,143 +4804,143 @@ VpuDecRetCode VPU_DecDecodeBuf(VpuDecHandle InHandle, VpuBufferNode* pInDataNode
 					{
 						VPU_API("MJPG: return EOS manually \r\n");
 						*pOutRetCode=VPU_DEC_OUTPUT_EOS;
-						pObj->state=VPU_DEC_STATE_EOS;	// user should feed valid data for next play					
+						pObj->state=VPU_DEC_STATE_EOS;	// user should feed valid data for next play
 					}
 					return VPU_DEC_RET_SUCCESS;
 				}
-			}			
+			}
 		}
 	}
 
 RepeatDec:
 	switch (pObj->state)
 	{
-		case VPU_DEC_STATE_OPEN:
-			//need to check (pInData->nSize==0) ?? we should not send 0 bytes at seqinit step 
-			seqOk=VpuSeqInit(pVpuObj->handle,pObj,pInData,pOutRetCode,&noerr);
+	case VPU_DEC_STATE_OPEN:
+		//need to check (pInData->nSize==0) ?? we should not send 0 bytes at seqinit step
+		seqOk=VpuSeqInit(pVpuObj->handle,pObj,pInData,pOutRetCode,&noerr);
 #ifdef VPU_SUPPORT_NO_INBUF
-			if((seqOk==0)&&((*pOutRetCode)&VPU_DEC_INPUT_USED))
+		if((seqOk==0)&&((*pOutRetCode)&VPU_DEC_INPUT_USED))
+		{
+			if((NULL!=pInData->pVirAddr)&&(0==pInData->nSize))	//for iMX6X(stream mode)
 			{
-				if((NULL!=pInData->pVirAddr)&&(0==pInData->nSize))	//for iMX6X(stream mode)
-				{
-					//do nothing if meeting eos: stream mode: WVC1_APL4_16x16_30fps_46kbps_NoAudio_MA40263
-				}
-				else
-				{
-					*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
-				}
-			}
-#endif
-			break;
-		case VPU_DEC_STATE_INITOK:
-			VPU_ERROR("%s: failure: missing VPU_DecGetInitialInfo() \r\n",__FUNCTION__);
-			return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
-		case VPU_DEC_STATE_REGFRMOK:
-			VPU_ERROR("%s: failure: missing VPU_DecRegisterFrameBuffer() \r\n",__FUNCTION__);
-			return VPU_DEC_RET_WRONG_CALL_SEQUENCE;			
-		case VPU_DEC_STATE_DEC:
-		case VPU_DEC_STATE_STARTFRAMEOK:
-#ifdef IMX6_BUFNOTENOUGH_WORKAROUND
-			//if(CPU_IS_MX6X())
-			if((CPU_IS_MX6X())&&(VPU_V_VP8==pVpuObj->obj.CodecFormat))  //now, only for iMX6/VP8
-			{
-				int used_num=0;
-				used_num=VpuQueryVpuHoldBufNum(pObj);
-				//if(used_num<pVpuObj->obj.initInfo.nMinFrameBufferCount)
-				if(used_num<pVpuObj->obj.initInfo.nMinFrameBufferCount-1)
-				{
-					VPU_LOG("buf may not enough, %d may been used by vpu , mini cnt: %d \r\n",used_num,pVpuObj->obj.initInfo.nMinFrameBufferCount);
-					*pOutRetCode=VPU_DEC_NO_ENOUGH_BUF|VPU_DEC_OUTPUT_NODIS;	
-					return VPU_DEC_RET_SUCCESS;
-				}
-			}
-#endif
-#ifdef VPU_BACKDOOR
-			//verify clear flag 
-			VpuVerifyClearFlag(pVpuObj->handle,pObj);
-#endif
-			if(-1==VpuDecBuf(pVpuObj->handle,pObj,pInData,pOutRetCode,&noerr,&streamModeEnough))
-			{
-				VPU_ERROR("%s: time out \r\n",__FUNCTION__);	
-				pObj->state=VPU_DEC_STATE_CORRUPT;
-				return VPU_DEC_RET_FAILURE_TIMEOUT;
-			}
-#ifdef VPU_SUPPORT_NO_INBUF
-			if((*pOutRetCode)&VPU_DEC_INPUT_USED)
-			{
-				if((pInData->pVirAddr!=NULL)&&(pInData->nSize==0))
-				{
-					//in eos: shouldn't set no_enough_input
-				}
-				else
-				{
-					//if(1==pObj->filemode)
-					//{
-					//	*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;					
-					//}
-					//else
-					{
-						if(0==streamModeEnough)
-						{
-							*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;	
-						}
-					}
-				}
-			}
-#endif
-			
-			break;
-		case VPU_DEC_STATE_OUTOK:
-			VPU_ERROR("%s: failure: missing VPU_DecGetOutputFrame() \r\n",__FUNCTION__);
-			return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
-		case VPU_DEC_STATE_EOS:
-			if(pInData->nSize>0)
-			{
-				if(0==VpuDecClearOperationEOStoDEC(InHandle))
-				{
-					VPU_ERROR("%s: trans eos to dec state failure ! \r\n",__FUNCTION__);
-					return VPU_DEC_RET_FAILURE;
-				}
-				pObj->state=VPU_DEC_STATE_DEC;  //repeat play
-				goto RepeatDec;
-			}
-			else if((pInData->pVirAddr!=NULL)&&(pInData->nSize==0))
-			{
-				//fix case: special EOS flag with 0 bytes
-				if(0==VpuDecClearOperationEOStoDEC(InHandle))
-				{
-					VPU_ERROR("%s: trans eos to dec state failure !!! \r\n",__FUNCTION__);
-					return VPU_DEC_RET_FAILURE;
-				}
-				pObj->state=VPU_DEC_STATE_DEC;  //repeat play
-				goto RepeatDec;				
+				//do nothing if meeting eos: stream mode: WVC1_APL4_16x16_30fps_46kbps_NoAudio_MA40263
 			}
 			else
 			{
-				*pOutRetCode=VPU_DEC_INPUT_USED;   //do nothing and return
-#ifdef VPU_SUPPORT_NO_INBUF
 				*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
-#endif				
-				break;
-			}	
-		case VPU_DEC_STATE_CORRUPT:
-			// do nothing, wait calling VPU_Reset(), and then reload vpu again
-			*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
+			}
+		}
+#endif
+		break;
+	case VPU_DEC_STATE_INITOK:
+		VPU_ERROR("%s: failure: missing VPU_DecGetInitialInfo() \r\n",__FUNCTION__);
+		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
+	case VPU_DEC_STATE_REGFRMOK:
+		VPU_ERROR("%s: failure: missing VPU_DecRegisterFrameBuffer() \r\n",__FUNCTION__);
+		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
+	case VPU_DEC_STATE_DEC:
+	case VPU_DEC_STATE_STARTFRAMEOK:
+#ifdef IMX6_BUFNOTENOUGH_WORKAROUND
+		//if(CPU_IS_MX6X())
+		if((CPU_IS_MX6X())&&(VPU_V_VP8==pVpuObj->obj.CodecFormat))  //now, only for iMX6/VP8
+		{
+			int used_num=0;
+			used_num=VpuQueryVpuHoldBufNum(pObj);
+			//if(used_num<pVpuObj->obj.initInfo.nMinFrameBufferCount)
+			if(used_num<pVpuObj->obj.initInfo.nMinFrameBufferCount-1)
+			{
+				VPU_LOG("buf may not enough, %d may been used by vpu , mini cnt: %d \r\n",used_num,pVpuObj->obj.initInfo.nMinFrameBufferCount);
+				*pOutRetCode=VPU_DEC_NO_ENOUGH_BUF|VPU_DEC_OUTPUT_NODIS;
+				return VPU_DEC_RET_SUCCESS;
+			}
+		}
+#endif
+#ifdef VPU_BACKDOOR
+		//verify clear flag
+		VpuVerifyClearFlag(pVpuObj->handle,pObj);
+#endif
+		if(-1==VpuDecBuf(pVpuObj->handle,pObj,pInData,pOutRetCode,&noerr,&streamModeEnough))
+		{
+			VPU_ERROR("%s: time out \r\n",__FUNCTION__);
+			pObj->state=VPU_DEC_STATE_CORRUPT;
+			return VPU_DEC_RET_FAILURE_TIMEOUT;
+		}
+#ifdef VPU_SUPPORT_NO_INBUF
+		if((*pOutRetCode)&VPU_DEC_INPUT_USED)
+		{
+			if((pInData->pVirAddr!=NULL)&&(pInData->nSize==0))
+			{
+				//in eos: shouldn't set no_enough_input
+			}
+			else
+			{
+				//if(1==pObj->filemode)
+				//{
+				//	*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
+				//}
+				//else
+				{
+					if(0==streamModeEnough)
+					{
+						*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
+					}
+				}
+			}
+		}
+#endif
+
+		break;
+	case VPU_DEC_STATE_OUTOK:
+		VPU_ERROR("%s: failure: missing VPU_DecGetOutputFrame() \r\n",__FUNCTION__);
+		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
+	case VPU_DEC_STATE_EOS:
+		if(pInData->nSize>0)
+		{
+			if(0==VpuDecClearOperationEOStoDEC(InHandle))
+			{
+				VPU_ERROR("%s: trans eos to dec state failure ! \r\n",__FUNCTION__);
+				return VPU_DEC_RET_FAILURE;
+			}
+			pObj->state=VPU_DEC_STATE_DEC;  //repeat play
+			goto RepeatDec;
+		}
+		else if((pInData->pVirAddr!=NULL)&&(pInData->nSize==0))
+		{
+			//fix case: special EOS flag with 0 bytes
+			if(0==VpuDecClearOperationEOStoDEC(InHandle))
+			{
+				VPU_ERROR("%s: trans eos to dec state failure !!! \r\n",__FUNCTION__);
+				return VPU_DEC_RET_FAILURE;
+			}
+			pObj->state=VPU_DEC_STATE_DEC;  //repeat play
+			goto RepeatDec;
+		}
+		else
+		{
+			*pOutRetCode=VPU_DEC_INPUT_USED;   //do nothing and return
+#ifdef VPU_SUPPORT_NO_INBUF
+			*pOutRetCode=(*pOutRetCode)|VPU_DEC_NO_ENOUGH_INBUF;
+#endif
 			break;
-		default:
-			VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pObj->state);
-			return VPU_DEC_RET_INVALID_PARAM;
+		}
+	case VPU_DEC_STATE_CORRUPT:
+		// do nothing, wait calling VPU_Reset(), and then reload vpu again
+		*pOutRetCode=VPU_DEC_INPUT_NOT_USED;
+		break;
+	default:
+		VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pObj->state);
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
 	VpuCheckDeadLoop(pObj,pInData,pOutRetCode,&noerr);
-	
+
 	if(noerr)
 	{
 		return VPU_DEC_RET_SUCCESS;
 	}
 	else
 	{
-		VPU_ERROR("%s: return failure \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: return failure \r\n",__FUNCTION__);
 		return VPU_DEC_RET_FAILURE;
 	}
 }
@@ -4948,16 +4950,16 @@ VpuDecRetCode VPU_DecGetInitialInfo(VpuDecHandle InHandle, VpuDecInitInfo * pOut
 {
 	VpuDecHandleInternal * pVpuObj;
 
-	if(InHandle==NULL) 
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
 	if(pVpuObj->obj.state!=VPU_DEC_STATE_INITOK)
 	{
-		VPU_ERROR("%s: failure: error state %d \r\n",__FUNCTION__,pVpuObj->obj.state);	
+		VPU_ERROR("%s: failure: error state %d \r\n",__FUNCTION__,pVpuObj->obj.state);
 		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
 	}
 
@@ -4966,7 +4968,7 @@ VpuDecRetCode VPU_DecGetInitialInfo(VpuDecHandle InHandle, VpuDecInitInfo * pOut
 	VPU_TRACE;
 	*pOutInitInfo=pVpuObj->obj.initInfo;
 	VPU_TRACE;
-	
+
 	return VPU_DEC_RET_SUCCESS;
 }
 
@@ -4978,27 +4980,27 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 	//FrameBuffer vpu_regframebuf[VPU_MAX_FRAME_INDEX];
 	DecBufInfo sBufInfo;
 	int i;
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
 	if(pVpuObj->obj.state!=VPU_DEC_STATE_REGFRMOK)
 	{
-		VPU_ERROR("%s: failure: error state %d \r\n",__FUNCTION__,pVpuObj->obj.state);	
+		VPU_ERROR("%s: failure: error state %d \r\n",__FUNCTION__,pVpuObj->obj.state);
 		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
 	}
 
 	if(nNum>VPU_MAX_FRAME_INDEX)
 	{
-		VPU_ERROR("%s: failure: register frame number is too big(%d) \r\n",__FUNCTION__,nNum);		
+		VPU_ERROR("%s: failure: register frame number is too big(%d) \r\n",__FUNCTION__,nNum);
 		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
-	for(i=0;i<nNum;i++)
+	for(i=0; i<nNum; i++)
 	{
 		//record frame buf info
 		pVpuObj->obj.frameBuf[i]=*pInFrameBufArray;
@@ -5007,16 +5009,16 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 		pVpuObj->obj.vpu_regframebuf[i].myIndex=i;
 		pVpuObj->obj.vpu_regframebuf[i].strideY=(unsigned long)pInFrameBufArray->nStrideY;
 		pVpuObj->obj.vpu_regframebuf[i].strideC=(unsigned long)pInFrameBufArray->nStrideC;
-#ifdef USE_NEW_VPU_API			
+#ifdef USE_NEW_VPU_API
 		pVpuObj->obj.vpu_regframebuf[i].myIndex=i;
 #endif
 
-		//need to remap Y/Cb/Cr for tile format frame buffer 
+		//need to remap Y/Cb/Cr for tile format frame buffer
 		if(pVpuObj->obj.nMapType!=0)
 		{
-			VpuTiledAddressMapping(pVpuObj->obj.nMapType, 
-				(unsigned int)pInFrameBufArray->pbufY, (unsigned int)pInFrameBufArray->pbufY_tilebot, (unsigned int)pInFrameBufArray->pbufCb, (unsigned int)pInFrameBufArray->pbufCb_tilebot, 
-				(unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufY), (unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufCb), (unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufCr));
+			VpuTiledAddressMapping(pVpuObj->obj.nMapType,
+			                       (unsigned int)pInFrameBufArray->pbufY, (unsigned int)pInFrameBufArray->pbufY_tilebot, (unsigned int)pInFrameBufArray->pbufCb, (unsigned int)pInFrameBufArray->pbufCb_tilebot,
+			                       (unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufY), (unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufCb), (unsigned int*)(&pVpuObj->obj.vpu_regframebuf[i].bufCr));
 		}
 		else
 		{
@@ -5030,7 +5032,7 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 		VPU_API("input register frame %d: (phy)	Y:0x%X, U:0x%X, V:0x%X , Y_TileBot: 0x%X, Cb_TileBot: 0x%X \r\n",i,(unsigned int)pInFrameBufArray->pbufY,(unsigned int)pInFrameBufArray->pbufCb,(unsigned int)pInFrameBufArray->pbufCr,(unsigned int)pInFrameBufArray->pbufY_tilebot,(unsigned int)pInFrameBufArray->pbufCb_tilebot);
 		VPU_API("input register frame %d: (virt)	Y:0x%X, U:0x%X, V:0x%X , Y_TileBot: 0x%X, Cb_TileBot: 0x%X \r\n",i,(unsigned int)pInFrameBufArray->pbufVirtY,(unsigned int)pInFrameBufArray->pbufVirtCb,(unsigned int)pInFrameBufArray->pbufVirtCr,(unsigned int)pInFrameBufArray->pbufVirtY_tilebot,(unsigned int)pInFrameBufArray->pbufVirtCb_tilebot);
 		VPU_API("vpu register frame %d: (phy)	Y:0x%X, U:0x%X, V:0x%X \r\n",i,(unsigned int)pVpuObj->obj.vpu_regframebuf[i].bufY,(unsigned int)pVpuObj->obj.vpu_regframebuf[i].bufCb,(unsigned int)pVpuObj->obj.vpu_regframebuf[i].bufCr);
-		VPU_API("register mv    %d: (phy)	0x%X,    (virt)    0x%X \r\n",i,(unsigned int)pVpuObj->obj.vpu_regframebuf[i].bufMvCol,(unsigned int)pInFrameBufArray->pbufVirtMvCol);		
+		VPU_API("register mv    %d: (phy)	0x%X,    (virt)    0x%X \r\n",i,(unsigned int)pVpuObj->obj.vpu_regframebuf[i].bufMvCol,(unsigned int)pInFrameBufArray->pbufVirtMvCol);
 		pInFrameBufArray++;
 	}
 	pVpuObj->obj.frameNum=nNum;
@@ -5039,13 +5041,13 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 	vpu_memset(&sBufInfo, 0, sizeof(DecBufInfo));
 
 	/*set slice save buf*/
-#ifdef USE_NEW_VPU_API		
+#ifdef USE_NEW_VPU_API
 	sBufInfo.avcSliceBufInfo.bufferBase =(PhysicalAddress)pVpuObj->obj.pAvcSlicePhyBuf;
-	sBufInfo.avcSliceBufInfo.bufferSize =VPU_SLICE_SAVE_SIZE;	
+	sBufInfo.avcSliceBufInfo.bufferSize =VPU_SLICE_SAVE_SIZE;
 #else
 	sBufInfo.avcSliceBufInfo.sliceSaveBuffer=(PhysicalAddress)pVpuObj->obj.pAvcSlicePhyBuf;
 	sBufInfo.avcSliceBufInfo.sliceSaveBufferSize=VPU_SLICE_SAVE_SIZE;
-#endif	
+#endif
 //#if 1 //for iMX6: Vp8
 #if 0	//we set maxDecFrmInfo with 0 : in order to support dynamic resolution
 	sBufInfo.maxDecFrmInfo.maxMbX=(pVpuObj->obj.initInfo.nPicWidth+15)/16;
@@ -5058,7 +5060,7 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 		sBufInfo.maxDecFrmInfo.maxMbY=(pVpuObj->obj.initInfo.nPicHeight+15)/16;
 	}
 	sBufInfo.maxDecFrmInfo.maxMbNum=sBufInfo.maxDecFrmInfo.maxMbX*sBufInfo.maxDecFrmInfo.maxMbY;
-#endif	
+#endif
 	if(VPU_V_VP8==pVpuObj->obj.CodecFormat)
 	{
 		//use the same memory with avc
@@ -5067,20 +5069,20 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 		sBufInfo.vp8MbDataBufInfo.bufferBase=(PhysicalAddress)pVpuObj->obj.pAvcSlicePhyBuf;
 		sBufInfo.vp8MbDataBufInfo.bufferSize=VPU_VP8_MBPARA_SIZE;
 	}
-//#endif		
+//#endif
 	VPU_TRACE;
 	VPU_API("calling vpu_DecRegisterFrameBuffer() \r\n");
 	ret = vpu_DecRegisterFrameBuffer(pVpuObj->handle,
-			pVpuObj->obj.vpu_regframebuf,
-			nNum,
-			pVpuObj->obj.vpu_regframebuf[0].strideY, /* necessary ? */
-			&sBufInfo);
+	                                 pVpuObj->obj.vpu_regframebuf,
+	                                 nNum,
+	                                 pVpuObj->obj.vpu_regframebuf[0].strideY, /* necessary ? */
+	                                 &sBufInfo);
 	VPU_TRACE;
 	if(RETCODE_SUCCESS!=ret)
 	{
 		VPU_ERROR("%s: vpu register frame failure, ret=%d \r\n",__FUNCTION__,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 
 	if(VPU_V_MJPG==pVpuObj->obj.CodecFormat)
 	{
@@ -5096,7 +5098,7 @@ VpuDecRetCode VPU_DecRegisterFrameBuffer(VpuDecHandle InHandle,VpuFrameBuffer *p
 	}
 
 	//update state
-	pVpuObj->obj.state=VPU_DEC_STATE_DEC;	
+	pVpuObj->obj.state=VPU_DEC_STATE_DEC;
 
 	return VPU_DEC_RET_SUCCESS;
 }
@@ -5107,23 +5109,23 @@ VpuDecRetCode VPU_DecGetOutputFrame(VpuDecHandle InHandle, VpuDecOutFrameInfo * 
 {
 	VpuDecHandleInternal * pVpuObj;
 
-	if(InHandle==NULL) 
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
 	if(pVpuObj->obj.state!=VPU_DEC_STATE_OUTOK)
 	{
-		VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pVpuObj->obj.state);	
+		VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pVpuObj->obj.state);
 		return VPU_DEC_RET_WRONG_CALL_SEQUENCE;
 	}
 
 	//update state
 	pVpuObj->obj.state=VPU_DEC_STATE_DEC;
 	VPU_TRACE;
-	*pOutFrameInfo=pVpuObj->obj.frameInfo;	
+	*pOutFrameInfo=pVpuObj->obj.frameInfo;
 	VPU_TRACE;
 
 	return VPU_DEC_RET_SUCCESS;
@@ -5153,7 +5155,7 @@ VpuDecRetCode VPU_DecGetConsumedFrameInfo(VpuDecHandle InHandle,VpuDecFrameLengt
 	pVpuObj->obj.nAccumulatedConsumedStufferBytes=0;
 	pVpuObj->obj.nAccumulatedConsumedFrmBytes=0;
 	pVpuObj->obj.nAccumulatedConsumedBytes=0;
-	
+
 	return VPU_DEC_RET_SUCCESS;
 #endif
 }
@@ -5163,21 +5165,21 @@ VpuDecRetCode VPU_DecOutFrameDisplayed(VpuDecHandle InHandle, VpuFrameBuffer* pI
 	VpuDecHandleInternal * pVpuObj;
 	RetCode ret;
 	int index;
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
 
 	switch(pVpuObj->obj.state)
 	{
-		case VPU_DEC_STATE_CORRUPT:
-			//skip calling vpu api
-			return VPU_DEC_RET_SUCCESS;
-		default:
-			break;
+	case VPU_DEC_STATE_CORRUPT:
+		//skip calling vpu api
+		return VPU_DEC_RET_SUCCESS;
+	default:
+		break;
 	}
 
 	//search frame buffer index
@@ -5185,7 +5187,7 @@ VpuDecRetCode VPU_DecOutFrameDisplayed(VpuDecHandle InHandle, VpuFrameBuffer* pI
 	if (-1==index)
 	{
 		VPU_ERROR("%s: failure: vpu can not find the frame buf, pInFrameBuf=0x%X \r\n",__FUNCTION__,(unsigned int)pInFrameBuf);
-		return VPU_DEC_RET_INVALID_PARAM;		
+		return VPU_DEC_RET_INVALID_PARAM;
 	}
 
 
@@ -5202,7 +5204,7 @@ VpuDecRetCode VPU_DecOutFrameDisplayed(VpuDecHandle InHandle, VpuFrameBuffer* pI
 		if(RETCODE_SUCCESS!=ret)
 		{
 			VPU_ERROR("%s: vpu clear display frame failure, index=0x%X, ret=%d \r\n",__FUNCTION__,index,ret);
-			return VPU_DEC_RET_FAILURE;			
+			return VPU_DEC_RET_FAILURE;
 		}
 
 		//reset historical info
@@ -5224,10 +5226,10 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 	DecOutputInfo outInfo;
 	int startFrameOK=0;
 	int nExtCount;		// for external while loop
-		
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
@@ -5237,33 +5239,33 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 	switch (pObj->state)
 	{
 		//allowed state
-		case VPU_DEC_STATE_OPEN:	//not sure the feasibility ??
-			VPU_ERROR("calling flush operation before seq init ok \r\n");
-		case VPU_DEC_STATE_INITOK:	
-		case VPU_DEC_STATE_REGFRMOK:
-			if(0==VpuBitFlush(pVpuObj, 0/*before decode state*/))
-			{
-				return VPU_DEC_RET_FAILURE;
-			}
-			//need not change state
-			return VPU_DEC_RET_SUCCESS;
-		case VPU_DEC_STATE_DEC:
-			break;
-		case VPU_DEC_STATE_STARTFRAMEOK:
-			startFrameOK=1;	//in this case, vpu may be busy status, we should not call vpu_DecBitBufferFlush()
-			//adjust state !!!
-			//pObj->state=VPU_DEC_STATE_DEC;
-			break;
-		case VPU_DEC_STATE_EOS:
-			break;
-		case VPU_DEC_STATE_CORRUPT:
-			//do nothing
-			return VPU_DEC_RET_SUCCESS;
-		default:
-			//forbidden state
-			//user should not call flush before seq init OK (eg, before getting correct resolution ???)
-			VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pObj->state);
+	case VPU_DEC_STATE_OPEN:	//not sure the feasibility ??
+		VPU_ERROR("calling flush operation before seq init ok \r\n");
+	case VPU_DEC_STATE_INITOK:
+	case VPU_DEC_STATE_REGFRMOK:
+		if(0==VpuBitFlush(pVpuObj, 0/*before decode state*/))
+		{
 			return VPU_DEC_RET_FAILURE;
+		}
+		//need not change state
+		return VPU_DEC_RET_SUCCESS;
+	case VPU_DEC_STATE_DEC:
+		break;
+	case VPU_DEC_STATE_STARTFRAMEOK:
+		startFrameOK=1;	//in this case, vpu may be busy status, we should not call vpu_DecBitBufferFlush()
+		//adjust state !!!
+		//pObj->state=VPU_DEC_STATE_DEC;
+		break;
+	case VPU_DEC_STATE_EOS:
+		break;
+	case VPU_DEC_STATE_CORRUPT:
+		//do nothing
+		return VPU_DEC_RET_SUCCESS;
+	default:
+		//forbidden state
+		//user should not call flush before seq init OK (eg, before getting correct resolution ???)
+		VPU_ERROR("%s: failure: error state: %d \r\n",__FUNCTION__,pObj->state);
+		return VPU_DEC_RET_FAILURE;
 	}
 
 	if(VPU_V_MJPG==pObj->CodecFormat)
@@ -5291,7 +5293,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 			return VPU_DEC_RET_FAILURE;
 		}
 	}
-#endif	
+#endif
 
 #ifdef VPU_FLUSH_BEFORE_DEC_WORKAROUND
 	if(0==pObj->realWork)
@@ -5321,19 +5323,19 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 				{
 					VPU_LOG("LEVEL: 1: in imx6 stream mode:  fake flush : no enough data , we should update 0 \r\n");
 					VPU_API("calling vpu_DecUpdateBitstreamBuffer(): %d \r\n",0);
-					ret=vpu_DecUpdateBitstreamBuffer(pVpuObj->handle, 0);	
+					ret=vpu_DecUpdateBitstreamBuffer(pVpuObj->handle, 0);
 					if (ret != RETCODE_SUCCESS)
 					{
-						VPU_ERROR("%s: vpu update data failure: ret = 0x%X \r\n",__FUNCTION__,ret);	
+						VPU_ERROR("%s: vpu update data failure: ret = 0x%X \r\n",__FUNCTION__,ret);
 						return VPU_DEC_RET_FAILURE_TIMEOUT;
 					}
 					VPU_API("calling vpu_WaitForInt(%d) \r\n",VPU_TIME_OUT);
-					if(0!=vpu_WaitForInt(VPU_TIME_OUT))			
+					if(0!=vpu_WaitForInt(VPU_TIME_OUT))
 					{
 						VPU_ERROR("LEVEL: 1: in imx6 stream mode: fake flush failure: timeout after update 0 \r\n");
 						return VPU_DEC_RET_FAILURE_TIMEOUT;
-					}			
-				}		
+					}
+				}
 			}
 			else
 			{
@@ -5344,7 +5346,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 					cnt++;
 					if(cnt >VPU_MAX_TIME_OUT_CNT)
 					{
-						VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);	
+						VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);
 						pObj->state=VPU_DEC_STATE_CORRUPT;
 						return VPU_DEC_RET_FAILURE_TIMEOUT;
 					}
@@ -5353,7 +5355,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 			VPU_API("calling vpu_DecGetOutputInfo() \r\n");
 			ret = vpu_DecGetOutputInfo(pVpuObj->handle, &outInfo);
 			VPU_API("calling vpu_DecGetOutputInfo(), indexFrameDecoded: %d, return indexFrameDisplay: %d, success: 0x%X  \r\n",outInfo.indexFrameDecoded,outInfo.indexFrameDisplay,outInfo.decodingSuccess);
-			
+
 			if (ret != RETCODE_SUCCESS)
 			{
 				VPU_ERROR("%s: vpu get output info failure: ret = 0x%X \r\n",__FUNCTION__,ret);
@@ -5365,7 +5367,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 				//current frame is not integrated, rollback to frame header
 			}
 			else
-			{		
+			{
 				if(outInfo.indexFrameDisplay>=0)
 				{
 					VPU_API("%s: calling vpu_DecClrDispFlag(): %d \r\n",__FUNCTION__,outInfo.indexFrameDisplay);
@@ -5376,11 +5378,11 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 						return VPU_DEC_RET_FAILURE;
 					}
 					//clear frame state
-					VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);						
+					VpuClearDispFrame(outInfo.indexFrameDisplay, pObj->frameBufState);
 				}
 			}
 		}
-		
+
 		if(0==VpuBitFlush(pVpuObj, 1/*before eos*/))
 		{
 			return VPU_DEC_RET_FAILURE;
@@ -5405,14 +5407,14 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 
 	//send EOS flag
 	VPU_API("calling vpu_DecUpdateBitstreamBuffer(): %d \r\n",0);
-	ret=vpu_DecUpdateBitstreamBuffer(pVpuObj->handle, 0);	
+	ret=vpu_DecUpdateBitstreamBuffer(pVpuObj->handle, 0);
 	if (ret != RETCODE_SUCCESS)
 	{
-		VPU_ERROR("%s: vpu update data failure: ret = 0x%X \r\n",__FUNCTION__,ret);	
+		VPU_ERROR("%s: vpu update data failure: ret = 0x%X \r\n",__FUNCTION__,ret);
 		return VPU_DEC_RET_FAILURE;
 	}
 
-	//set dec parameters		
+	//set dec parameters
 	//clear 0 firstly
 	vpu_memset(&decParam,0,sizeof(DecParam));
 
@@ -5424,7 +5426,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 	decParam.skipframeMode=3;  // skip all
 	decParam.skipframeNum=1;
 	decParam.iframeSearchEnable=0;
-#endif	
+#endif
 
 	decParam.chunkSize=0;	//for file mode
 
@@ -5464,14 +5466,14 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 	{
 		int nCount=0;			// for internal while loop
 		// wait finished
-#if 1 
+#if 1
 		VPU_API("calling vpu_WaitForInt(%d) \r\n",VPU_TIME_OUT);
 		while(0!=vpu_WaitForInt(VPU_TIME_OUT))
 		{
 			nCount++;
 			if(nCount >VPU_MAX_TIME_OUT_CNT)
 			{
-				VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);	
+				VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);
 				pObj->state=VPU_DEC_STATE_CORRUPT;
 				return VPU_DEC_RET_FAILURE_TIMEOUT;
 			}
@@ -5483,7 +5485,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 			nCount++;
 			if(nCount >VPU_MAX_TIME_OUT_CNT)
 			{
-				VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);	
+				VPU_ERROR("%s: flush time out \r\n",__FUNCTION__);
 				pObj->state=VPU_DEC_STATE_CORRUPT;
 				return VPU_DEC_RET_FAILURE_TIMEOUT;
 			}
@@ -5524,7 +5526,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 				VpuClearAllDispFrame(pVpuObj->obj.frameNum, pVpuObj->obj.frameBufState);
 			}
 #endif
-			
+
 		}
 		else
 		{
@@ -5549,7 +5551,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 			//if(pVpuObj->obj.frameBuf[outInfo.indexFrameDisplay]==pVpuObj->obj.pPreDisplayFrameBuf)
 			//{
 			//	pVpuObj->obj.pPreDisplayFrameBuf=NULL;
-			//}				
+			//}
 		}
 
 		//check the EOS
@@ -5570,7 +5572,7 @@ VpuDecRetCode VPU_DecFlushAll(VpuDecHandle InHandle)
 			if(0==VpuBitFlush(pVpuObj, 1/*before eos*/))
 			{
 				return VPU_DEC_RET_FAILURE;
-			}		
+			}
 			startFrameOK=0; //clear it to avoid repeat calling vpu_DecBitBufferFlush() in current while(1) loop
 		}
 
@@ -5606,13 +5608,13 @@ FLUSH_FINISH:
 
 	//FIX case: if user send 0 bytes after flush operation, decoder will always return EOS. it is not reasonable.
 	//so we set VPU_DEC_STATE_EOS state, but not VPU_DEC_STATE_DEC.
-	pObj->state=VPU_DEC_STATE_EOS;	
+	pObj->state=VPU_DEC_STATE_EOS;
 
 #ifdef VPU_SUPPORT_UNCLOSED_GOP
 	pObj->refCnt=0;
 	pObj->dropBCnt=0;
 	pObj->keyCnt=0;
-#endif		
+#endif
 //#ifdef VPU_IFRAME_SEARCH
 	pObj->keyDecCnt=0;
 //#endif
@@ -5659,7 +5661,7 @@ VpuDecRetCode VPU_DecAllRegFrameInfo(VpuDecHandle InHandle, VpuFrameBuffer** ppO
 	int i;
 
 	pVpuObj=(VpuDecHandleInternal *)InHandle;
-	for(i=0;i<pVpuObj->obj.frameNum;i++)
+	for(i=0; i<pVpuObj->obj.frameNum; i++)
 	{
 		*ppOutFrameBuf++=&pVpuObj->obj.frameBuf[i];
 	}
@@ -5671,10 +5673,10 @@ VpuDecRetCode VPU_DecClose(VpuDecHandle InHandle)
 {
 	VpuDecHandleInternal * pVpuObj;
 	RetCode ret;
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
-		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_DEC_RET_INVALID_HANDLE;
 	}
 
@@ -5688,9 +5690,9 @@ VpuDecRetCode VPU_DecClose(VpuDecHandle InHandle)
 	//		break;
 	//}
 #if 0 //for iMX6: reset is not recommended !!!!
-	if (CPU_IS_MX5X()) 
+	if (CPU_IS_MX5X())
 	{
-		//add robust : if busy(fix some timeout issue) , reset it 
+		//add robust : if busy(fix some timeout issue) , reset it
 		VPU_API("calling vpu_IsBusy() \r\n");
 		if(vpu_IsBusy())
 		{
@@ -5700,10 +5702,10 @@ VpuDecRetCode VPU_DecClose(VpuDecHandle InHandle)
 			{
 				VPU_ERROR("%s: vpu reset failure, ret=%d \r\n",__FUNCTION__,ret);
 				//return VPU_DEC_RET_FAILURE;
-			}	
-		}	
+			}
+		}
 	}
-#endif	
+#endif
 
 	//normal close
 	VPU_TRACE;
@@ -5714,7 +5716,7 @@ VpuDecRetCode VPU_DecClose(VpuDecHandle InHandle)
 	{
 		VPU_ERROR("%s: vpu close failure, ret=%d \r\n",__FUNCTION__,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 
 	return VPU_DEC_RET_SUCCESS;
 }
@@ -5725,25 +5727,25 @@ VpuDecRetCode VPU_DecUnLoad()
 #if 0//#ifdef IMX6_MULTI_FORMATS_WORKAROUND	//below has been merged into vpu_SWReset()
 	printf("imx6: will reset \r\n");
 	ret=vpu_SWReset(pVpuObj->handle,0);
-/*
-	IOClkGateSet(1);
-	VpuWriteReg(0x24, 0x1F8);
-	usleep(1000);
-	// wait until reset is done
-	while(VpuReadReg(0x34) != 0){};
-	// clear sw reset (not automatically cleared)
-	VpuWriteReg(0x24, 0);
-	IOClkGateSet(0);
-*/	
+	/*
+		IOClkGateSet(1);
+		VpuWriteReg(0x24, 0x1F8);
+		usleep(1000);
+		// wait until reset is done
+		while(VpuReadReg(0x34) != 0){};
+		// clear sw reset (not automatically cleared)
+		VpuWriteReg(0x24, 0);
+		IOClkGateSet(0);
+	*/
 #endif
 
 #ifdef VPU_RESET_TEST
-	if (CPU_IS_MX6X()) 
+	if (CPU_IS_MX6X())
 	{
 		//loading fw, avoid reset board after fw changing
 		IOClkGateSet(1);
 		VpuWriteReg(0x0, 0);
-		VpuWriteReg(0x14, 1);		
+		VpuWriteReg(0x14, 1);
 		IOClkGateSet(0);
 	}
 	else
@@ -5758,8 +5760,8 @@ VpuDecRetCode VPU_DecUnLoad()
 
 	TIMER_MARK_REPORT(TIMER_MARK_GETOUTPUT_ID);
 	//TIMER_REPORT(TIMER_CLEARDISP_ID);
-	
-	return VPU_DEC_RET_SUCCESS;	
+
+	return VPU_DEC_RET_SUCCESS;
 }
 
 
@@ -5768,8 +5770,8 @@ VpuDecRetCode VPU_DecReset(VpuDecHandle InHandle)
 	VpuDecHandleInternal * pVpuObj;
 	RetCode ret;
 	VPU_LOG("in VPU_DecReset, InHandle: 0x%X  \r\n",InHandle);
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
 #if 0	//no use	
 #define MAX_NUM_INSTANCE	4	//in vpu_util.h
@@ -5777,7 +5779,7 @@ VpuDecRetCode VPU_DecReset(VpuDecHandle InHandle)
 		//return VPU_DEC_RET_INVALID_HANDLE;
 		//reset all instances:
 		int index;
-		for(index=0;index<MAX_NUM_INSTANCE;index++)
+		for(index=0; index<MAX_NUM_INSTANCE; index++)
 		{
 			VPU_API("calling vpu_SWReset(0,%d) \r\n",index);
 			ret=vpu_SWReset(0,index);
@@ -5785,9 +5787,9 @@ VpuDecRetCode VPU_DecReset(VpuDecHandle InHandle)
 			{
 				VPU_ERROR("%s: vpu reset failure, ret=%d \r\n",__FUNCTION__,ret);
 				return VPU_DEC_RET_FAILURE;
-			}	
+			}
 		}
-#endif		
+#endif
 		return VPU_DEC_RET_SUCCESS;
 	}
 
@@ -5806,7 +5808,7 @@ VpuDecRetCode VPU_DecReset(VpuDecHandle InHandle)
 	VpuWriteReg(0x24, 0x1F8);
 	usleep(1000);
 	// wait until reset is done
-	while(VpuReadReg(0x34) != 0){};
+	while(VpuReadReg(0x34) != 0) {};
 	// clear sw reset (not automatically cleared)
 	VpuWriteReg(0x24, 0);
 	IOClkGateSet(0);
@@ -5815,26 +5817,26 @@ VpuDecRetCode VPU_DecReset(VpuDecHandle InHandle)
 	//loading fw, avoid reset board after fw changing
 	IOClkGateSet(1);
 	VpuWriteReg(0x0, 0);
-	VpuWriteReg(0x14, 1);	
+	VpuWriteReg(0x14, 1);
 	IOClkGateSet(0);
-#endif	
+#endif
 #endif
 
 	if(RETCODE_SUCCESS!=ret)
 	{
 		VPU_ERROR("%s: vpu reset failure, ret=%d \r\n",__FUNCTION__,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 
 	return VPU_DEC_RET_SUCCESS;
-	
+
 }
 
 
 VpuDecRetCode VPU_DecGetMem(VpuMemDesc* pInOutMem)
 {
 	int ret;
-	
+
 #ifdef __WINCE
 	VPUMemAlloc buff;
 	ret=vpu_AllocPhysMem(pInOutMem->nSize,&buff);
@@ -5842,10 +5844,10 @@ VpuDecRetCode VPU_DecGetMem(VpuMemDesc* pInOutMem)
 	{
 		VPU_ERROR("%s: get memory failure: size=%d, ret=%d \r\n",__FUNCTION__,pInOutMem->nSize,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 	pInOutMem->nPhyAddr=buff.PhysAdd;
 	pInOutMem->nVirtAddr=buff.VirtAdd;
-	pInOutMem->nCpuAddr=buff.Reserved;	
+	pInOutMem->nCpuAddr=buff.Reserved;
 #else
 	vpu_mem_desc buff;
 	buff.size=pInOutMem->nSize;
@@ -5878,13 +5880,13 @@ VpuDecRetCode VPU_DecFreeMem(VpuMemDesc* pInMem)
 	VPUMemAlloc buff;
 	buff.PhysAdd=pInMem->nPhyAddr;
 	buff.VirtAdd=pInMem->nVirtAddr;
-	buff.Reserved=pInMem->nCpuAddr;	
+	buff.Reserved=pInMem->nCpuAddr;
 	ret=vpu_FreePhysMem(&buff);
 	if(ret!=RETCODE_SUCCESS)
 	{
 		VPU_ERROR("%s: free memory failure: size=%d, ret=%d \r\n",__FUNCTION__,pInMem->nSize,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 #else
 	vpu_mem_desc buff;
 	buff.size=pInMem->nSize;
@@ -5896,16 +5898,16 @@ VpuDecRetCode VPU_DecFreeMem(VpuMemDesc* pInMem)
 	{
 		VPU_ERROR("%s: free virtual memory failure: size=%d, ret=%d \r\n",__FUNCTION__,buff.size,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 	ret=IOFreePhyMem(&buff);
 	if(ret!=RETCODE_SUCCESS)
 	{
 		VPU_ERROR("%s: free phy memory failure: size=%d, ret=%d \r\n",__FUNCTION__,buff.size,ret);
 		return VPU_DEC_RET_FAILURE;
-	}	
+	}
 #endif
 
-	return VPU_DEC_RET_SUCCESS;	
+	return VPU_DEC_RET_SUCCESS;
 }
 
 /****************************** encoder part **************************************/
@@ -5914,31 +5916,31 @@ typedef struct
 	int nHeaderNeeded;	// indicate whether need to fill header(vos/pps/sps/...) info
 #ifdef VPU_ENC_SEQ_DATA_SEPERATE
 	int nJustOutputOneHeader;	//record the state
-	int nOutputHeaderCnt;		//for H.264: In fact, muxer may only receive the first header, So we had better 
-								//(1) for first header: output header and frame seperately
-								//(2) for non-first header: merge header and frame data
+	int nOutputHeaderCnt;		//for H.264: In fact, muxer may only receive the first header, So we had better
+	//(1) for first header: output header and frame seperately
+	//(2) for non-first header: merge header and frame data
 #endif
 	int nDynamicEnabled;			//0: output is bitstream buf, 1(not supported on iMX6): output is pointed by user
 	unsigned char* pPhyBitstream;
 	unsigned char* pVirtBitstream;
 	int nBitstreamSize;
-	unsigned char* pPhyScratch;		//for mpeg4	
+	unsigned char* pPhyScratch;		//for mpeg4
 	unsigned char* pVirtScratch;		//for mpeg4
 	int nScratchSize;
 	unsigned char* pPhyMjpgTable;		//for mjpg(IMX5)
-	unsigned char* pVirtMjpgTable;		//for mjpg(iMX5)	
+	unsigned char* pVirtMjpgTable;		//for mjpg(iMX5)
 	int nFrameCnt;
 	int nMapType;
 	int nLinear2TiledEnable;
 	//int nChromaInterleave;
-	VpuColorFormat eColor;		// only for MJPEG non-420 color format	
-}VpuEncObj;
+	VpuColorFormat eColor;		// only for MJPEG non-420 color format
+} VpuEncObj;
 
-typedef struct 
+typedef struct
 {
 	EncHandle handle;
-	VpuEncObj obj;	
-}VpuEncHandleInternal;
+	VpuEncObj obj;
+} VpuEncHandleInternal;
 
 
 #ifdef VPU_ENC_OUTFRAME_ALIGN
@@ -5972,142 +5974,157 @@ typedef struct
 #define VPU_ENC_MAX_BUSY_CNT			(4)		//used for prescan mode: max counts 
 
 /*******  jpeg part ******/
-unsigned char lumaDcBits[16] = {
-0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01,
-0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+unsigned char lumaDcBits[16] =
+{
+	0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01,
+	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char lumaDcValue[16] = {
-0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-0x08, 0x09, 0x0A, 0x0B, 0x00, 0x00, 0x00, 0x00,
+unsigned char lumaDcValue[16] =
+{
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x08, 0x09, 0x0A, 0x0B, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char lumaAcBits[16] = {
-0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03,
-0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D,
+unsigned char lumaAcBits[16] =
+{
+	0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03,
+	0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D,
 };
-unsigned char lumaAcValue[168] = {
-0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
-0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
-0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08,
-0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0,
-0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16,
-0x17, 0x18, 0x19, 0x1A, 0x25, 0x26, 0x27, 0x28,
-0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
-0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
-0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
-0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
-0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79,
-0x7A, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98,
-0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7,
-0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6,
-0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5,
-0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4,
-0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2,
-0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA,
-0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
-0xF9, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+unsigned char lumaAcValue[168] =
+{
+	0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
+	0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
+	0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08,
+	0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0,
+	0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16,
+	0x17, 0x18, 0x19, 0x1A, 0x25, 0x26, 0x27, 0x28,
+	0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
+	0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
+	0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
+	0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
+	0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79,
+	0x7A, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+	0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98,
+	0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7,
+	0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6,
+	0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5,
+	0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4,
+	0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2,
+	0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA,
+	0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
+	0xF9, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char chromaDcBits[16] = {
-0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+unsigned char chromaDcBits[16] =
+{
+	0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+	0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char chromaDcValue[16] = {
-0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-0x08, 0x09, 0x0A, 0x0B, 0x00, 0x00, 0x00, 0x00,
+unsigned char chromaDcValue[16] =
+{
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x08, 0x09, 0x0A, 0x0B, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char chromaAcBits[16] = {
-0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04,
-0x07, 0x05, 0x04, 0x04, 0x00, 0x01, 0x02, 0x77,
+unsigned char chromaAcBits[16] =
+{
+	0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04,
+	0x07, 0x05, 0x04, 0x04, 0x00, 0x01, 0x02, 0x77,
 };
-unsigned char chromaAcValue[168] = {
-0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
-0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
-0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91,
-0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33, 0x52, 0xF0,
-0x15, 0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34,
-0xE1, 0x25, 0xF1, 0x17, 0x18, 0x19, 0x1A, 0x26,
-0x27, 0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38,
-0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
-0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
-0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
-0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78,
-0x79, 0x7A, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
-0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96,
-0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5,
-0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4,
-0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3,
-0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2,
-0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA,
-0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9,
-0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
-0xF9, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+unsigned char chromaAcValue[168] =
+{
+	0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
+	0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
+	0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91,
+	0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33, 0x52, 0xF0,
+	0x15, 0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34,
+	0xE1, 0x25, 0xF1, 0x17, 0x18, 0x19, 0x1A, 0x26,
+	0x27, 0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38,
+	0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
+	0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
+	0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
+	0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78,
+	0x79, 0x7A, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
+	0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96,
+	0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5,
+	0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4,
+	0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3,
+	0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2,
+	0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA,
+	0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9,
+	0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
+	0xF9, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-unsigned char lumaQ[64] = {
-0x0C, 0x08, 0x08, 0x08, 0x09, 0x08, 0x0C, 0x09,
-0x09, 0x0C, 0x11, 0x0B, 0x0A, 0x0B, 0x11, 0x15,
-0x0F, 0x0C, 0x0C, 0x0F, 0x15, 0x18, 0x13, 0x13,
-0x15, 0x13, 0x13, 0x18, 0x11, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char lumaQ[64] =
+{
+	0x0C, 0x08, 0x08, 0x08, 0x09, 0x08, 0x0C, 0x09,
+	0x09, 0x0C, 0x11, 0x0B, 0x0A, 0x0B, 0x11, 0x15,
+	0x0F, 0x0C, 0x0C, 0x0F, 0x15, 0x18, 0x13, 0x13,
+	0x15, 0x13, 0x13, 0x18, 0x11, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-unsigned char chromaBQ[64] = {
-0x0D, 0x0B, 0x0B, 0x0D, 0x0E, 0x0D, 0x10, 0x0E,
-0x0E, 0x10, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
-0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char chromaBQ[64] =
+{
+	0x0D, 0x0B, 0x0B, 0x0D, 0x0E, 0x0D, 0x10, 0x0E,
+	0x0E, 0x10, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
+	0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-unsigned char chromaRQ[64] = {
-0x0D, 0x0B, 0x0B, 0x0D, 0x0E, 0x0D, 0x10, 0x0E,
-0x0E, 0x10, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
-0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char chromaRQ[64] =
+{
+	0x0D, 0x0B, 0x0B, 0x0D, 0x0E, 0x0D, 0x10, 0x0E,
+	0x0E, 0x10, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
+	0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-unsigned char lumaQ2[64] = {
-0x06, 0x04, 0x04, 0x04, 0x05, 0x04, 0x06, 0x05,
-0x05, 0x06, 0x09, 0x06, 0x05, 0x06, 0x09, 0x0B,
-0x08, 0x06, 0x06, 0x08, 0x0B, 0x0C, 0x0A, 0x0A,
-0x0B, 0x0A, 0x0A, 0x0C, 0x10, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x10, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char lumaQ2[64] =
+{
+	0x06, 0x04, 0x04, 0x04, 0x05, 0x04, 0x06, 0x05,
+	0x05, 0x06, 0x09, 0x06, 0x05, 0x06, 0x09, 0x0B,
+	0x08, 0x06, 0x06, 0x08, 0x0B, 0x0C, 0x0A, 0x0A,
+	0x0B, 0x0A, 0x0A, 0x0C, 0x10, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x10, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-unsigned char chromaBQ2[64] = {
-0x07, 0x07, 0x07, 0x0D, 0x0C, 0x0D, 0x18, 0x10,
-0x10, 0x18, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
-0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char chromaBQ2[64] =
+{
+	0x07, 0x07, 0x07, 0x0D, 0x0C, 0x0D, 0x18, 0x10,
+	0x10, 0x18, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
+	0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-unsigned char chromaRQ2[64] = {
-0x07, 0x07, 0x07, 0x0D, 0x0C, 0x0D, 0x18, 0x10,
-0x10, 0x18, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
-0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
-0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+unsigned char chromaRQ2[64] =
+{
+	0x07, 0x07, 0x07, 0x0D, 0x0C, 0x0D, 0x18, 0x10,
+	0x10, 0x18, 0x14, 0x0E, 0x0E, 0x0E, 0x14, 0x14,
+	0x0E, 0x0E, 0x0E, 0x0E, 0x14, 0x11, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x11, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x11, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
+	0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C,
 };
-static unsigned char cInfoTable[5][24] = {
-    { 00, 02, 02, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //420
-    { 00, 02, 01, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //422H
-    { 00, 01, 02, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //422V
-    { 00, 01, 01, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //444
-    { 00, 01, 01, 00, 00, 00, 01, 00, 00, 00, 00, 00, 02, 00, 00, 00, 00, 00, 03, 00, 00, 00, 00, 00 }, //400
+static unsigned char cInfoTable[5][24] =
+{
+	{ 00, 02, 02, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //420
+	{ 00, 02, 01, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //422H
+	{ 00, 01, 02, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //422V
+	{ 00, 01, 01, 00, 00, 00, 01, 01, 01, 01, 01, 01, 02, 01, 01, 01, 01, 01, 03, 00, 00, 00, 00, 00 }, //444
+	{ 00, 01, 01, 00, 00, 00, 01, 00, 00, 00, 00, 00, 02, 00, 00, 00, 00, 00, 03, 00, 00, 00, 00, 00 }, //400
 };
 int VpuMJPGQueryTableSize()
 {
@@ -6145,7 +6162,7 @@ int VpuMJPGSetMX5Tables(unsigned char* pInBase,unsigned char** ppOutHuff, unsign
 	qMatTable=pInBase;
 	huffTable=pInBase+192;
 	/* Don't consider user defined hufftable this time */
-	/* Rearrange and insert pre-defined Huffman table to deticated variable. */		
+	/* Rearrange and insert pre-defined Huffman table to deticated variable. */
 	for(i = 0; i < 16; i += 4)
 	{
 		huffTable[i] = lumaDcBits[i + 3];
@@ -6271,15 +6288,15 @@ int VpuEncFillZeroBytesForAlign(unsigned int nInPhyAddr, unsigned int nInVirtAdd
 	nBaseAddr=nInPhyAddr;
 	nAlignedAddr=(unsigned int)Align(nBaseAddr, VPU_ALIGN_BYTES_NUM);
 	nFillZeroSize=nAlignedAddr-nBaseAddr;
-	vpu_memset((void*)nInVirtAddr,0,nFillZeroSize);	
+	vpu_memset((void*)nInVirtAddr,0,nFillZeroSize);
 	ASSERT(nFillZeroSize>=0);
 	return nFillZeroSize;
 }
 #endif
 
 int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char* pInHeaderBufPhy,
-	int* pOutHeaderLen,int* pOutPadLen,unsigned char* pInHeaderBufVirt,int mode,
-	unsigned char* pInBitstreamPhy,unsigned char* pInBitstreamVirt)
+                     int* pOutHeaderLen,int* pOutPadLen,unsigned char* pInHeaderBufVirt,int mode,
+                     unsigned char* pInBitstreamPhy,unsigned char* pInBitstreamVirt)
 {
 #define BitVirtAddr(phy)	((int)pInBitstreamVirt+(int)phy-(int)pInBitstreamPhy)
 	EncHeaderParam sEncHdrParam;
@@ -6292,7 +6309,7 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 	vpu_memset(&sEncHdrParam, 0, sizeof(EncHeaderParam));
 	//Now, sEncHdrParam.buf is only valid when mode==0 or 1(eg. dynamic)
 	sEncHdrParam.buf=(PhysicalAddress)pPhyPtr;
-	
+
 	/* Must put encode header before encoding */
 	//for MPEG4: at least VOL is required
 	//for H264: SPS/PPS are required
@@ -6301,7 +6318,7 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		int nFrameRate=pInParam->nFrameRate;
 		int nEncPicWidth=pInParam->nPicWidth;
 		int nEncPicHeight=pInParam->nPicHeight;
-		
+
 		sEncHdrParam.headerType = VOS_HEADER;
 		/*
 		* Please set userProfileLevelEnable to 0 if you need to generate
@@ -6338,7 +6355,7 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 
 		VPU_ENC_API("calling vpu_EncGiveCommand(VOS_HEADER) \r\n");
 		vpu_EncGiveCommand(InHandle, ENC_PUT_MP4_HEADER, &sEncHdrParam);
-		VPU_ENC_LOG("VOS length: %d \r\n",sEncHdrParam.size);		
+		VPU_ENC_LOG("VOS length: %d \r\n",sEncHdrParam.size);
 		if(mode==1)
 		{
 			nHeaderLen+=sEncHdrParam.size;	//record VOS length
@@ -6353,9 +6370,9 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		}
 		sEncHdrParam.headerType = VIS_HEADER;
 		sEncHdrParam.buf=(PhysicalAddress)(pPhyPtr+nHeaderLen);	//skip VOS
-		VPU_ENC_API("calling vpu_EncGiveCommand(VIS_HEADER) \r\n");		
+		VPU_ENC_API("calling vpu_EncGiveCommand(VIS_HEADER) \r\n");
 		vpu_EncGiveCommand(InHandle, ENC_PUT_MP4_HEADER, &sEncHdrParam);
-		VPU_ENC_LOG("VIS length: %d \r\n",sEncHdrParam.size);		
+		VPU_ENC_LOG("VIS length: %d \r\n",sEncHdrParam.size);
 		if(mode==1)
 		{
 			nHeaderLen+=sEncHdrParam.size;	//record VIS length
@@ -6370,9 +6387,9 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		}
 		sEncHdrParam.headerType = VOL_HEADER;
 		sEncHdrParam.buf=(PhysicalAddress)(pPhyPtr+nHeaderLen);	//skip VOS and VIS
-		VPU_ENC_API("calling vpu_EncGiveCommand(VOL_HEADER) \r\n");		
+		VPU_ENC_API("calling vpu_EncGiveCommand(VOL_HEADER) \r\n");
 		vpu_EncGiveCommand(InHandle, ENC_PUT_MP4_HEADER, &sEncHdrParam);
-		VPU_ENC_LOG("VOL length: %d \r\n",sEncHdrParam.size);		
+		VPU_ENC_LOG("VOL length: %d \r\n",sEncHdrParam.size);
 		if(mode==1)
 		{
 			nHeaderLen+=sEncHdrParam.size;	//record VOL length
@@ -6381,12 +6398,12 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		}
 		else if(mode==2)
 		{
-			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);	
+			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
 			vpu_memcpy((void*)(pVirtPtr+nHeaderLen),(void*)BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
-			nHeaderLen+=sEncHdrParam.size;	//record VOL length		
+			nHeaderLen+=sEncHdrParam.size;	//record VOL length
 		}
 	}
-	else if (pInParam->eFormat == VPU_V_AVC) 
+	else if (pInParam->eFormat == VPU_V_AVC)
 	{
 		sEncHdrParam.headerType = SPS_RBSP;
 		VPU_ENC_API("calling vpu_EncGiveCommand(SPS_RBSP) \r\n");
@@ -6400,12 +6417,12 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		}
 		else if(mode==2)
 		{
-			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);	
+			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
 			vpu_memcpy((void*)(pVirtPtr+nHeaderLen),(void*)BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
-			nHeaderLen+=sEncHdrParam.size;	//record SPS length		
+			nHeaderLen+=sEncHdrParam.size;	//record SPS length
 		}
 		sEncHdrParam.headerType = PPS_RBSP;
-		sEncHdrParam.buf=(PhysicalAddress)(pPhyPtr+nHeaderLen);	//skip SPS 
+		sEncHdrParam.buf=(PhysicalAddress)(pPhyPtr+nHeaderLen);	//skip SPS
 		VPU_ENC_API("calling vpu_EncGiveCommand(PPS_RBSP) \r\n");
 		vpu_EncGiveCommand(InHandle, ENC_PUT_AVC_HEADER, &sEncHdrParam);
 		VPU_ENC_LOG("PPS_RBSP length: %d \r\n",sEncHdrParam.size);
@@ -6417,14 +6434,14 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		}
 		else if(mode==2)
 		{
-			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);			
+			VPU_ENC_LOG("header memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pVirtPtr+nHeaderLen),BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
 			vpu_memcpy((void*)(pVirtPtr+nHeaderLen),(void*)BitVirtAddr(sEncHdrParam.buf),sEncHdrParam.size);
-			nHeaderLen+=sEncHdrParam.size;	//record PPS length		
+			nHeaderLen+=sEncHdrParam.size;	//record PPS length
 		}
 	}
-	else if (pInParam->eFormat == VPU_V_MJPG) 
+	else if (pInParam->eFormat == VPU_V_MJPG)
 	{
-		//don't care mode 
+		//don't care mode
 		if(CPU_IS_MX6X())
 		{
 			EncParamSet sEncJpgHdrParam;
@@ -6438,13 +6455,13 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 		{
 			//for IMX5: do nothing
 		}
-	}	
+	}
 	else
 	{
 		//
 	}
 
-	*pOutHeaderLen=nHeaderLen;	
+	*pOutHeaderLen=nHeaderLen;
 	*pOutPadLen=nFilledZeroBytes;
 	return 1;
 }
@@ -6452,43 +6469,43 @@ int VpuEncFillHeader(EncHandle InHandle,VpuEncEncParam* pInParam, unsigned char*
 int VpuEncSetSrcFrame(VpuColorFormat eColor,FrameBuffer* pFrame, unsigned char* pSrc, int nSize, int nPadW,int nPadH, unsigned char format)
 {
 	int yStride;
-	int uvStride;	
+	int uvStride;
 	int ySize;
 	int uvSize;
-	int mvSize;	
+	int mvSize;
 
 	yStride=nPadW;
 	ySize=yStride*nPadH;
 
 	switch(eColor)
 	{
-		case VPU_COLOR_420:
-			uvStride=yStride/2;
-			uvSize=ySize/4;
-			break;
-		case VPU_COLOR_422H:
-			uvStride=yStride/2;
-			uvSize=ySize/2;
-			break;
-		case VPU_COLOR_422V:
-			uvStride=yStride;
-			uvSize=ySize/2;
-			break;
-		case VPU_COLOR_444:
-			uvStride=yStride;
-			uvSize=ySize;
-			break;
-		case VPU_COLOR_400:
-			uvStride=0;
-			uvSize=0;
-			break;			
-		default: 
-			uvStride=yStride/2;
-			uvSize=ySize/4;
-			break;
+	case VPU_COLOR_420:
+		uvStride=yStride/2;
+		uvSize=ySize/4;
+		break;
+	case VPU_COLOR_422H:
+		uvStride=yStride/2;
+		uvSize=ySize/2;
+		break;
+	case VPU_COLOR_422V:
+		uvStride=yStride;
+		uvSize=ySize/2;
+		break;
+	case VPU_COLOR_444:
+		uvStride=yStride;
+		uvSize=ySize;
+		break;
+	case VPU_COLOR_400:
+		uvStride=0;
+		uvSize=0;
+		break;
+	default:
+		uvStride=yStride/2;
+		uvSize=ySize/4;
+		break;
 	}
 	mvSize=uvSize;	//1 set 0 ?
-	
+
 	pFrame->bufY=(PhysicalAddress)pSrc;
 	pFrame->bufCb=(PhysicalAddress)(pSrc+ySize);
 	pFrame->bufCr=(PhysicalAddress)(pSrc+ySize+uvSize);
@@ -6496,7 +6513,7 @@ int VpuEncSetSrcFrame(VpuColorFormat eColor,FrameBuffer* pFrame, unsigned char* 
 	pFrame->strideY=yStride;
 	pFrame->strideC=uvStride;
 
-	return 1;	
+	return 1;
 }
 
 int VpuEncWaitBusy()
@@ -6518,11 +6535,11 @@ int VpuEncWaitBusy()
 
 int VpuEncGetRotStride(int nInRot,int nInOriWidth,int nInOriHeight,int* pOutWidth,int* pOutHeight)
 {
-	if ((nInRot== 90) || (nInRot == 270)) 
+	if ((nInRot== 90) || (nInRot == 270))
 	{
 		*pOutWidth =nInOriHeight;
 		*pOutHeight = nInOriWidth;
-	} 
+	}
 	else
 	{
 		*pOutWidth =nInOriWidth;
@@ -6533,7 +6550,7 @@ int VpuEncGetRotStride(int nInRot,int nInOriWidth,int nInOriHeight,int* pOutWidt
 
 int VpuEncGetIntraQP(VpuEncOpenParamSimp * pInParam)
 {
-#if 0 
+#if 0
 	//FIXME: we need set one appropriate value for it based on other parameters (such as bitrate,resolution,framerate,...)
 	//based on bits/pixel  ???
 	if(VPU_V_AVC==pInParam->eFormat)
@@ -6552,11 +6569,11 @@ int VpuEncGetIntraQP(VpuEncOpenParamSimp * pInParam)
 VpuEncRetCode VPU_EncLoad()
 {
 	RetCode ret;
-	VPU_ENC_API("calling vpu_Init() \r\n");	
+	VPU_ENC_API("calling vpu_Init() \r\n");
 	ret=vpu_Init(NULL);
 	if(RETCODE_SUCCESS !=ret)
 	{
-		VPU_ENC_ERROR("%s: vpu init failure \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: vpu init failure \r\n",__FUNCTION__);
 		return VPU_ENC_RET_FAILURE;
 	}
 
@@ -6566,12 +6583,12 @@ VpuEncRetCode VPU_EncLoad()
 VpuEncRetCode VPU_EncUnLoad()
 {
 #ifdef VPU_RESET_TEST
-	if (CPU_IS_MX6X()) 
+	if (CPU_IS_MX6X())
 	{
 		//loading fw, avoid reset board after fw changing
 		IOClkGateSet(1);
 		VpuWriteReg(0x0, 0);
-		VpuWriteReg(0x14, 1);		
+		VpuWriteReg(0x14, 1);
 		IOClkGateSet(0);
 	}
 	else
@@ -6582,15 +6599,15 @@ VpuEncRetCode VPU_EncUnLoad()
 
 	VPU_ENC_API("calling vpu_UnInit() \r\n");
 	vpu_UnInit();
-	return VPU_ENC_RET_SUCCESS;	
+	return VPU_ENC_RET_SUCCESS;
 }
 
 VpuEncRetCode VPU_EncReset(VpuEncHandle InHandle)
 {
 	VpuEncHandleInternal * pVpuObj;
 	RetCode ret;
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
 		return VPU_ENC_RET_SUCCESS;
 	}
@@ -6604,10 +6621,10 @@ VpuEncRetCode VPU_EncReset(VpuEncHandle InHandle)
 	{
 		VPU_ENC_ERROR("%s: vpu reset failure, ret=%d \r\n",__FUNCTION__,ret);
 		return VPU_ENC_RET_FAILURE;
-	}	
-	
+	}
+
 	return VPU_ENC_RET_SUCCESS;
-	
+
 }
 
 VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEncOpenParam* pInParam)
@@ -6621,21 +6638,21 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 	EncOpenParam sEncOpenParam;
 	int nValidWidth;
 	int nValidHeight;
-	
+
 	pMemVirt=&pInMemInfo->MemSubBlock[ENC_VIRT_INDEX];
 	pMemPhy=&pInMemInfo->MemSubBlock[ENC_PHY_INDEX];
 	if ((pMemVirt->pVirtAddr==NULL) || MemNotAlign(pMemVirt->pVirtAddr,VPU_ENC_MEM_ALIGN)
-		||(pMemVirt->nSize!=sizeof(VpuEncHandleInternal)))
+	        ||(pMemVirt->nSize!=sizeof(VpuEncHandleInternal)))
 	{
-		VPU_ENC_ERROR("%s: failure: invalid parameter ! \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: invalid parameter ! \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_PARAM;
 	}
 
 	if ((pMemPhy->pVirtAddr==NULL) || MemNotAlign(pMemPhy->pVirtAddr,VPU_ENC_MEM_ALIGN)
-		||(pMemPhy->pPhyAddr==NULL) || MemNotAlign(pMemPhy->pPhyAddr,VPU_ENC_MEM_ALIGN)
-		||(pMemPhy->nSize<VPU_ENC_BITS_BUF_SIZE))
+	        ||(pMemPhy->pPhyAddr==NULL) || MemNotAlign(pMemPhy->pPhyAddr,VPU_ENC_MEM_ALIGN)
+	        ||(pMemPhy->nSize<VPU_ENC_BITS_BUF_SIZE))
 	{
-		VPU_ENC_ERROR("%s: failure: invalid parameter !! \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: invalid parameter !! \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_PARAM;
 	}
 
@@ -6652,26 +6669,26 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 	//clear 0 firstly
 	vpu_memset(&sEncOpenParam, 0, sizeof(EncOpenParam));
 	vpu_memset(pObj, 0, sizeof(VpuEncObj));
-	
+
 	//set parameters
 	sEncOpenParam.bitstreamBuffer =  (PhysicalAddress)pMemPhy->pPhyAddr;
 	sEncOpenParam.bitstreamBufferSize = VPU_ENC_BITS_BUF_SIZE;
 
-	if (CPU_IS_MX6X()) 
+	if (CPU_IS_MX6X())
 	{
 		ASSERT(pMemPhy->nSize>=VPU_ENC_BITS_BUF_SIZE+VPU_ENC_MPEG4_SCRATCH_SIZE);
 		pObj->pPhyBitstream=pMemPhy->pPhyAddr;
 		pObj->pVirtBitstream=pMemPhy->pVirtAddr;
 		pObj->nBitstreamSize=VPU_ENC_BITS_BUF_SIZE;
 		pObj->pPhyScratch=pMemPhy->pPhyAddr+VPU_ENC_BITS_BUF_SIZE; //make sure it is aligned
-		pObj->pVirtScratch=pMemPhy->pVirtAddr+VPU_ENC_BITS_BUF_SIZE; //make sure it is aligned	
+		pObj->pVirtScratch=pMemPhy->pVirtAddr+VPU_ENC_BITS_BUF_SIZE; //make sure it is aligned
 		pObj->nScratchSize=VPU_ENC_MPEG4_SCRATCH_SIZE;
 		VPU_ENC_LOG("bitstream: phy: 0x%X, virt: 0x%X, size: %d \r\n",pObj->pPhyBitstream,pObj->pVirtBitstream,pObj->nBitstreamSize);
 	}
 	else
 	{
-		pObj->pPhyMjpgTable=pMemPhy->pPhyAddr+VPU_ENC_BITS_BUF_SIZE; 
-		pObj->pVirtMjpgTable=pMemPhy->pVirtAddr+VPU_ENC_BITS_BUF_SIZE; 
+		pObj->pPhyMjpgTable=pMemPhy->pPhyAddr+VPU_ENC_BITS_BUF_SIZE;
+		pObj->pVirtMjpgTable=pMemPhy->pVirtAddr+VPU_ENC_BITS_BUF_SIZE;
 	}
 
 #if 0 //1 eagle debug
@@ -6711,107 +6728,107 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 	sEncOpenParam.ringBufferEnable = 0;
 	sEncOpenParam.dynamicAllocEnable = 1;	//1  using dynamic method
 	pObj->nDynamicEnabled=1;
-	if (CPU_IS_MX6X()) 
+	if (CPU_IS_MX6X())
 	{
 		sEncOpenParam.dynamicAllocEnable = 0;	//dynamic is not supported on iMX6
-		pObj->nDynamicEnabled=0;	
+		pObj->nDynamicEnabled=0;
 	}
 	sEncOpenParam.chromaInterleave = pInParam->nChromaInterleave;
 
 	switch(pInParam->eFormat)
 	{
-		case VPU_V_MPEG4:
-			sEncOpenParam.EncStdParam.mp4Param.mp4_dataPartitionEnable = pInParam->VpuEncStdParam.mp4Param.mp4_dataPartitionEnable;
-			sEncOpenParam.EncStdParam.mp4Param.mp4_reversibleVlcEnable = pInParam->VpuEncStdParam.mp4Param.mp4_reversibleVlcEnable;
-			sEncOpenParam.EncStdParam.mp4Param.mp4_intraDcVlcThr = pInParam->VpuEncStdParam.mp4Param.mp4_intraDcVlcThr;
-			sEncOpenParam.EncStdParam.mp4Param.mp4_hecEnable = pInParam->VpuEncStdParam.mp4Param.mp4_hecEnable;
-			sEncOpenParam.EncStdParam.mp4Param.mp4_verid = pInParam->VpuEncStdParam.mp4Param.mp4_verid;
-			sEncOpenParam.bitstreamFormat = STD_MPEG4;
-			break;
-		case VPU_V_H263:
-			if (CPU_IS_MX6X()) 
+	case VPU_V_MPEG4:
+		sEncOpenParam.EncStdParam.mp4Param.mp4_dataPartitionEnable = pInParam->VpuEncStdParam.mp4Param.mp4_dataPartitionEnable;
+		sEncOpenParam.EncStdParam.mp4Param.mp4_reversibleVlcEnable = pInParam->VpuEncStdParam.mp4Param.mp4_reversibleVlcEnable;
+		sEncOpenParam.EncStdParam.mp4Param.mp4_intraDcVlcThr = pInParam->VpuEncStdParam.mp4Param.mp4_intraDcVlcThr;
+		sEncOpenParam.EncStdParam.mp4Param.mp4_hecEnable = pInParam->VpuEncStdParam.mp4Param.mp4_hecEnable;
+		sEncOpenParam.EncStdParam.mp4Param.mp4_verid = pInParam->VpuEncStdParam.mp4Param.mp4_verid;
+		sEncOpenParam.bitstreamFormat = STD_MPEG4;
+		break;
+	case VPU_V_H263:
+		if (CPU_IS_MX6X())
+		{
+			sEncOpenParam.EncStdParam.h263Param.h263_annexIEnable = pInParam->VpuEncStdParam.h263Param.h263_annexIEnable;
+		}
+		sEncOpenParam.EncStdParam.h263Param.h263_annexJEnable = pInParam->VpuEncStdParam.h263Param.h263_annexJEnable;
+		sEncOpenParam.EncStdParam.h263Param.h263_annexKEnable = pInParam->VpuEncStdParam.h263Param.h263_annexKEnable;
+		sEncOpenParam.EncStdParam.h263Param.h263_annexTEnable = pInParam->VpuEncStdParam.h263Param.h263_annexTEnable;
+		sEncOpenParam.bitstreamFormat = STD_H263;
+		break;
+	case VPU_V_AVC:
+		sEncOpenParam.EncStdParam.avcParam.avc_constrainedIntraPredFlag = pInParam->VpuEncStdParam.avcParam.avc_constrainedIntraPredFlag;
+		sEncOpenParam.EncStdParam.avcParam.avc_disableDeblk = pInParam->VpuEncStdParam.avcParam.avc_disableDeblk;
+		sEncOpenParam.EncStdParam.avcParam.avc_deblkFilterOffsetAlpha = pInParam->VpuEncStdParam.avcParam.avc_deblkFilterOffsetAlpha;
+		sEncOpenParam.EncStdParam.avcParam.avc_deblkFilterOffsetBeta = pInParam->VpuEncStdParam.avcParam.avc_deblkFilterOffsetBeta;
+		sEncOpenParam.EncStdParam.avcParam.avc_chromaQpOffset = pInParam->VpuEncStdParam.avcParam.avc_chromaQpOffset;
+		sEncOpenParam.EncStdParam.avcParam.avc_audEnable = pInParam->VpuEncStdParam.avcParam.avc_audEnable;
+		if (CPU_IS_MX6X())
+		{
+			sEncOpenParam.EncStdParam.avcParam.avc_frameCroppingFlag = 0;
+			sEncOpenParam.EncStdParam.avcParam.avc_frameCropLeft = 0;
+			sEncOpenParam.EncStdParam.avcParam.avc_frameCropRight = 0;
+			sEncOpenParam.EncStdParam.avcParam.avc_frameCropTop = 0;
+			sEncOpenParam.EncStdParam.avcParam.avc_frameCropBottom = 0;
+			if (pInParam->nRotAngle != 90 && pInParam->nRotAngle != 270 && sEncOpenParam.picHeight == 1080)
 			{
-				sEncOpenParam.EncStdParam.h263Param.h263_annexIEnable = pInParam->VpuEncStdParam.h263Param.h263_annexIEnable;
+				//only for 1080 ?
+				sEncOpenParam.EncStdParam.avcParam.avc_frameCroppingFlag = 1;
+				sEncOpenParam.EncStdParam.avcParam.avc_frameCropBottom = 8;
 			}
-			sEncOpenParam.EncStdParam.h263Param.h263_annexJEnable = pInParam->VpuEncStdParam.h263Param.h263_annexJEnable;
-			sEncOpenParam.EncStdParam.h263Param.h263_annexKEnable = pInParam->VpuEncStdParam.h263Param.h263_annexKEnable;
-			sEncOpenParam.EncStdParam.h263Param.h263_annexTEnable = pInParam->VpuEncStdParam.h263Param.h263_annexTEnable;
-			sEncOpenParam.bitstreamFormat = STD_H263;
-			break;
-		case VPU_V_AVC:
-			sEncOpenParam.EncStdParam.avcParam.avc_constrainedIntraPredFlag = pInParam->VpuEncStdParam.avcParam.avc_constrainedIntraPredFlag;
-			sEncOpenParam.EncStdParam.avcParam.avc_disableDeblk = pInParam->VpuEncStdParam.avcParam.avc_disableDeblk;
-			sEncOpenParam.EncStdParam.avcParam.avc_deblkFilterOffsetAlpha = pInParam->VpuEncStdParam.avcParam.avc_deblkFilterOffsetAlpha;
-			sEncOpenParam.EncStdParam.avcParam.avc_deblkFilterOffsetBeta = pInParam->VpuEncStdParam.avcParam.avc_deblkFilterOffsetBeta;
-			sEncOpenParam.EncStdParam.avcParam.avc_chromaQpOffset = pInParam->VpuEncStdParam.avcParam.avc_chromaQpOffset;
-			sEncOpenParam.EncStdParam.avcParam.avc_audEnable = pInParam->VpuEncStdParam.avcParam.avc_audEnable;
-			if (CPU_IS_MX6X()) 
-			{
-				sEncOpenParam.EncStdParam.avcParam.avc_frameCroppingFlag = 0;
-				sEncOpenParam.EncStdParam.avcParam.avc_frameCropLeft = 0;
-				sEncOpenParam.EncStdParam.avcParam.avc_frameCropRight = 0;
-				sEncOpenParam.EncStdParam.avcParam.avc_frameCropTop = 0;
-				sEncOpenParam.EncStdParam.avcParam.avc_frameCropBottom = 0;
-				if (pInParam->nRotAngle != 90 && pInParam->nRotAngle != 270 && sEncOpenParam.picHeight == 1080)
-				{
-					//only for 1080 ?
-					sEncOpenParam.EncStdParam.avcParam.avc_frameCroppingFlag = 1;
-					sEncOpenParam.EncStdParam.avcParam.avc_frameCropBottom = 8;
-				}
-				/* will be supported on imx6 in future ?
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoEnable = pInParam->VpuEncStdParam.avcParam.avc_fmoEnable;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoType = pInParam->VpuEncStdParam.avcParam.avc_fmoType;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceNum = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceNum;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceSaveBufSize = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize;			
-				*/
-#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))	
-				if(CPU_IS_MX6X()) 
-				{
-					sEncOpenParam.EncStdParam.avcParam.mvc_extension=0;
-					sEncOpenParam.EncStdParam.avcParam.interview_en=0;
-					sEncOpenParam.EncStdParam.avcParam.paraset_refresh_en=0;
-					sEncOpenParam.EncStdParam.avcParam.prefix_nal_en=0;
-				}
-#endif
-			}
-			else
-			{
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoEnable = pInParam->VpuEncStdParam.avcParam.avc_fmoEnable;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoType = pInParam->VpuEncStdParam.avcParam.avc_fmoType;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceNum = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceNum;
-				sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceSaveBufSize = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize;
-			}
-			sEncOpenParam.bitstreamFormat = STD_AVC;
-			break;
-		case VPU_V_MJPG:
-			ASSERT(0==pInParam->nMapType);	//MJPEG don't support tile
-			sEncOpenParam.EncStdParam.mjpgParam.mjpg_sourceFormat = pInParam->eColorFormat;
-			sEncOpenParam.EncStdParam.mjpgParam.mjpg_restartInterval = 60;
-			sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailEnable = 0;
-			sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailWidth = 0;
-			sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailHeight = 0;
+			/* will be supported on imx6 in future ?
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoEnable = pInParam->VpuEncStdParam.avcParam.avc_fmoEnable;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoType = pInParam->VpuEncStdParam.avcParam.avc_fmoType;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceNum = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceNum;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceSaveBufSize = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize;
+			*/
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
 			if(CPU_IS_MX6X())
 			{
-				VpuMJPGSetMX6Tables(&sEncOpenParam.EncStdParam.mjpgParam);
+				sEncOpenParam.EncStdParam.avcParam.mvc_extension=0;
+				sEncOpenParam.EncStdParam.avcParam.interview_en=0;
+				sEncOpenParam.EncStdParam.avcParam.paraset_refresh_en=0;
+				sEncOpenParam.EncStdParam.avcParam.prefix_nal_en=0;
 			}
-			else
-			{
-				unsigned char* pHuff;
-				unsigned char* pMat;
-				VpuMJPGSetMX5Tables(pObj->pVirtMjpgTable, &pHuff, &pMat);
-				sEncOpenParam.EncStdParam.mjpgParam.mjpg_hufTable = pHuff;
-				sEncOpenParam.EncStdParam.mjpgParam.mjpg_qMatTable = pMat;
-			}
-			sEncOpenParam.bitstreamFormat = STD_MJPG;
-			pObj->eColor=pInParam->eColorFormat;
-			break;
-		default:
-			//unknow format ?
-			//return VPU_ENC_RET_INVALID_PARAM;
-			break;
+#endif
+		}
+		else
+		{
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoEnable = pInParam->VpuEncStdParam.avcParam.avc_fmoEnable;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoType = pInParam->VpuEncStdParam.avcParam.avc_fmoType;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceNum = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceNum;
+			sEncOpenParam.EncStdParam.avcParam.avc_fmoSliceSaveBufSize = pInParam->VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize;
+		}
+		sEncOpenParam.bitstreamFormat = STD_AVC;
+		break;
+	case VPU_V_MJPG:
+		ASSERT(0==pInParam->nMapType);	//MJPEG don't support tile
+		sEncOpenParam.EncStdParam.mjpgParam.mjpg_sourceFormat = pInParam->eColorFormat;
+		sEncOpenParam.EncStdParam.mjpgParam.mjpg_restartInterval = 60;
+		sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailEnable = 0;
+		sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailWidth = 0;
+		sEncOpenParam.EncStdParam.mjpgParam.mjpg_thumbNailHeight = 0;
+		if(CPU_IS_MX6X())
+		{
+			VpuMJPGSetMX6Tables(&sEncOpenParam.EncStdParam.mjpgParam);
+		}
+		else
+		{
+			unsigned char* pHuff;
+			unsigned char* pMat;
+			VpuMJPGSetMX5Tables(pObj->pVirtMjpgTable, &pHuff, &pMat);
+			sEncOpenParam.EncStdParam.mjpgParam.mjpg_hufTable = pHuff;
+			sEncOpenParam.EncStdParam.mjpgParam.mjpg_qMatTable = pMat;
+		}
+		sEncOpenParam.bitstreamFormat = STD_MJPG;
+		pObj->eColor=pInParam->eColorFormat;
+		break;
+	default:
+		//unknow format ?
+		//return VPU_ENC_RET_INVALID_PARAM;
+		break;
 	}
 
-	if (CPU_IS_MX6X()) 
+	if (CPU_IS_MX6X())
 	{
 		sEncOpenParam.MESearchRange=pInParam->nMESearchRange;
 		sEncOpenParam.MEUseZeroPmv=pInParam->nMEUseZeroPmv;
@@ -6820,10 +6837,10 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 		{
 			sEncOpenParam.MESearchRange=3; // must set 3 for H.263
 		}
-#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))	
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
 		ASSERT(0==LINEAR_FRAME_MAP);
 		ASSERT(1==TILED_FRAME_MB_RASTER_MAP);
-		ASSERT(2==TILED_FIELD_MB_RASTER_MAP);		
+		ASSERT(2==TILED_FIELD_MB_RASTER_MAP);
 		sEncOpenParam.mapType=pInParam->nMapType;
 		sEncOpenParam.linear2TiledEnable=pInParam->nLinear2TiledEnable;
 
@@ -6846,7 +6863,7 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 	}
 
 	//give commands for rotation
-	if (0!=pInParam->nRotAngle) 
+	if (0!=pInParam->nRotAngle)
 	{
 		VPU_ENC_API("calling vpu_EncGiveCommand(ENABLE_ROTATION) \r\n");
 		vpu_EncGiveCommand(pVpuObj->handle, ENABLE_ROTATION, 0);
@@ -6859,13 +6876,13 @@ VpuEncRetCode VPU_EncOpen(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,VpuEn
 	}
 
 	pObj->nHeaderNeeded=1;
-	
+
 #ifdef VPU_ENC_SEQ_DATA_SEPERATE
 	pObj->nJustOutputOneHeader=0;
 	pObj->nOutputHeaderCnt=0;
 #endif
 
-	*pOutHandle=(VpuEncHandle)pVpuObj;	
+	*pOutHandle=(VpuEncHandle)pVpuObj;
 
 	return VPU_ENC_RET_SUCCESS;
 }
@@ -6885,13 +6902,13 @@ VpuEncRetCode VPU_EncOpenSimp(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,V
 	sEncOpenParamMore.nBitRate= pInParam->nBitRate;
 	sEncOpenParamMore.nGOPSize= pInParam->nGOPSize;
 
-	sEncOpenParamMore.nChromaInterleave= pInParam->nChromaInterleave;	
-	sEncOpenParamMore.sMirror= pInParam->sMirror;	
+	sEncOpenParamMore.nChromaInterleave= pInParam->nChromaInterleave;
+	sEncOpenParamMore.sMirror= pInParam->sMirror;
 
 	sEncOpenParamMore.nMapType= pInParam->nMapType;
 	sEncOpenParamMore.nLinear2TiledEnable= pInParam->nLinear2TiledEnable;
 	sEncOpenParamMore.eColorFormat= pInParam->eColorFormat;
-	
+
 	sEncOpenParamMore.sliceMode.sliceMode = 0;	/* 0: 1 slice per picture; 1: Multiple slices per picture */
 	sEncOpenParamMore.sliceMode.sliceSizeMode = 0; /* 0: silceSize defined by bits; 1: sliceSize defined by MB number*/
 	sEncOpenParamMore.sliceMode.sliceSize = 4000;  /* Size of a slice in bits or MB numbers */
@@ -6916,39 +6933,39 @@ VpuEncRetCode VPU_EncOpenSimp(VpuEncHandle *pOutHandle, VpuMemInfo* pInMemInfo,V
 	//set some default value structure 'VpuEncOpenParamMore'
 	switch(pInParam->eFormat)
 	{
-		case VPU_V_MPEG4:
-			sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_dataPartitionEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_reversibleVlcEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_intraDcVlcThr = 0;
-			sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_hecEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_verid = 2;
-			break;
-		case VPU_V_H263:
-			if (CPU_IS_MX6X())
-			{
-				sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexIEnable = 0;
-			}
-			sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexJEnable = 1;
-			sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexKEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexTEnable = 0;
-			break;
-		case VPU_V_AVC:
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_constrainedIntraPredFlag = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_disableDeblk = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_deblkFilterOffsetAlpha = 6;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_deblkFilterOffsetBeta = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_chromaQpOffset = 10;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_audEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoEnable = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoType = 0;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoSliceNum = 1;
-			sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize = 32; /* FMO_SLICE_SAVE_BUF_SIZE */			
-			break;
+	case VPU_V_MPEG4:
+		sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_dataPartitionEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_reversibleVlcEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_intraDcVlcThr = 0;
+		sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_hecEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.mp4Param.mp4_verid = 2;
+		break;
+	case VPU_V_H263:
+		if (CPU_IS_MX6X())
+		{
+			sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexIEnable = 0;
+		}
+		sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexJEnable = 1;
+		sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexKEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.h263Param.h263_annexTEnable = 0;
+		break;
+	case VPU_V_AVC:
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_constrainedIntraPredFlag = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_disableDeblk = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_deblkFilterOffsetAlpha = 6;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_deblkFilterOffsetBeta = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_chromaQpOffset = 10;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_audEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoEnable = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoType = 0;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoSliceNum = 1;
+		sEncOpenParamMore.VpuEncStdParam.avcParam.avc_fmoSliceSaveBufSize = 32; /* FMO_SLICE_SAVE_BUF_SIZE */
+		break;
 		//case VPU_V_MJPG:
-		default:
-			//unknow format ?
-			//return VPU_ENC_RET_INVALID_PARAM;
-			break;
+	default:
+		//unknow format ?
+		//return VPU_ENC_RET_INVALID_PARAM;
+		break;
 	}
 
 	if (CPU_IS_MX6X())
@@ -6966,16 +6983,16 @@ VpuEncRetCode VPU_EncClose(VpuEncHandle InHandle)
 {
 	VpuEncHandleInternal * pVpuObj;
 	RetCode ret;
-	
-	if(InHandle==NULL) 
+
+	if(InHandle==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_HANDLE;
 	}
 
 	pVpuObj=(VpuEncHandleInternal *)InHandle;
 
-	//add robust : if busy(fix some timeout issue) , reset it 
+	//add robust : if busy(fix some timeout issue) , reset it
 	VPU_ENC_API("calling vpu_IsBusy() \r\n");
 	if(vpu_IsBusy())
 	{
@@ -6985,8 +7002,8 @@ VpuEncRetCode VPU_EncClose(VpuEncHandle InHandle)
 		{
 			VPU_ENC_ERROR("%s: vpu reset failure, ret=%d \r\n",__FUNCTION__,ret);
 			//return VPU_ENC_RET_FAILURE;
-		}	
-	}	
+		}
+	}
 
 	//normal close
 	VPU_ENC_API("calling vpu_EncClose() \r\n");
@@ -6995,8 +7012,8 @@ VpuEncRetCode VPU_EncClose(VpuEncHandle InHandle)
 	{
 		VPU_ENC_ERROR("%s: vpu close failure, ret=%d \r\n",__FUNCTION__,ret);
 		return VPU_ENC_RET_FAILURE;
-	}	
-	
+	}
+
 	return VPU_ENC_RET_SUCCESS;
 }
 
@@ -7006,9 +7023,9 @@ VpuEncRetCode VPU_EncGetInitialInfo(VpuEncHandle InHandle, VpuEncInitInfo * pOut
 	VpuEncHandleInternal * pVpuObj;
 	EncInitialInfo sInitInfo;
 
-	if(InHandle==NULL) 
+	if(InHandle==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_HANDLE;
 	}
 
@@ -7034,13 +7051,13 @@ VpuEncRetCode VPU_EncGetInitialInfo(VpuEncHandle InHandle, VpuEncInitInfo * pOut
 
 #if 1	//FIXME: we can uncoment this if user can set valid stride to VPU_EncRegisterFrameBuffer() when num==0
 	if(0==pOutInitInfo->nMinFrameBufferCount)
-	{	
+	{
 		//for iMX5 MJPG, min cnt may be 0
 		//in this case, we need to let user appoint one valid stride(related with rotation) before calling VPU_EncRegisterFrameBuffer()
-		pOutInitInfo->nMinFrameBufferCount=1;  
-	}	
+		pOutInitInfo->nMinFrameBufferCount=1;
+	}
 #endif
-	
+
 	if(pVpuObj->obj.nMapType!=0)
 	{
 		//alignment for Y,Cb,Cr pointer
@@ -7056,7 +7073,7 @@ VpuEncRetCode VPU_EncGetVersionInfo(VpuVersionInfo * pOutVerInfo)
 
 	if(pOutVerInfo==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_PARAM;
 	}
 	VPU_ENC_API("calling vpu_GetVersionInfo() \r\n");
@@ -7073,7 +7090,7 @@ VpuEncRetCode VPU_EncGetVersionInfo(VpuVersionInfo * pOutVerInfo)
 	pOutVerInfo->nLibMajor=ver.lib_major;
 	pOutVerInfo->nLibMinor=ver.lib_minor;
 	pOutVerInfo->nLibRelease=ver.lib_release;
-#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))	
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
 	pOutVerInfo->nFwCode=ver.fw_code;
 #else
 	pOutVerInfo->nFwCode=0;
@@ -7091,12 +7108,12 @@ VpuDecRetCode VPU_EncGetWrapperVersionInfo(VpuWrapperVersionInfo * pOutVerInfo)
 	pOutVerInfo->nMinor= (VPU_WRAPPER_VERSION_CODE >> (8)) & 0xff;
 	pOutVerInfo->nRelease= (VPU_WRAPPER_VERSION_CODE) & 0xff;
 #ifdef USER_SPECIFY_BINARY_VER
-printf("user specify version \r\n");
+	printf("user specify version \r\n");
 	pOutVerInfo->pBinary=(char*)STR_USER_SPECIFY_BINARY_VER;
 #else
 	pOutVerInfo->pBinary=(char*)VPUWRAPPER_BINARY_VERSION_STR;
-#endif	
-	return VPU_DEC_RET_SUCCESS;	
+#endif
+	return VPU_DEC_RET_SUCCESS;
 }
 
 VpuEncRetCode VPU_EncRegisterFrameBuffer(VpuEncHandle InHandle,VpuFrameBuffer *pInFrameBufArray, int nNum,int nSrcStride)
@@ -7109,11 +7126,11 @@ VpuEncRetCode VPU_EncRegisterFrameBuffer(VpuEncHandle InHandle,VpuFrameBuffer *p
 	int i;
 	ExtBufCfg sScratch;
 	vpu_memset(&sScratch, 0, sizeof(ExtBufCfg));
-    
-	
-	if(InHandle==NULL) 
+
+
+	if(InHandle==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);	
+		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_HANDLE;
 	}
 
@@ -7121,11 +7138,11 @@ VpuEncRetCode VPU_EncRegisterFrameBuffer(VpuEncHandle InHandle,VpuFrameBuffer *p
 
 	if(nNum>VPU_ENC_MAX_FRAME_INDEX)
 	{
-		VPU_ENC_ERROR("%s: failure: register frame number is too big(%d) \r\n",__FUNCTION__,nNum);		
+		VPU_ENC_ERROR("%s: failure: register frame number is too big(%d) \r\n",__FUNCTION__,nNum);
 		return VPU_ENC_RET_INVALID_PARAM;
 	}
 
-	for(i=0;i<nNum;i++)
+	for(i=0; i<nNum; i++)
 	{
 		//record frame buf info
 		//pVpuObj->obj.frameBuf[i]=*pInFrameBufArray;
@@ -7145,7 +7162,7 @@ VpuEncRetCode VPU_EncRegisterFrameBuffer(VpuEncHandle InHandle,VpuFrameBuffer *p
 
 		VPU_ENC_LOG("register frame %d: (phy)	Y:0x%X, U:0x%X, V:0x%X \r\n",(UINT32)i,(UINT32)framebuf[i].bufY,(UINT32)framebuf[i].bufCb,(UINT32)framebuf[i].bufCr);
 		VPU_ENC_LOG("register frame %d: (virt)	Y:0x%X, U:0x%X, V:0x%X \r\n",(UINT32)i,(UINT32)pInFrameBufArray->pbufVirtY,(UINT32)pInFrameBufArray->pbufVirtCb,(UINT32)pInFrameBufArray->pbufVirtCr);
-		VPU_ENC_LOG("register mv    %d: (phy)	0x%X,    (virt)    0x%X \r\n",(UINT32)i,(UINT32)framebuf[i].bufMvCol,(UINT32)pInFrameBufArray->pbufVirtMvCol);		
+		VPU_ENC_LOG("register mv    %d: (phy)	0x%X,    (virt)    0x%X \r\n",(UINT32)i,(UINT32)framebuf[i].bufMvCol,(UINT32)pInFrameBufArray->pbufVirtMvCol);
 
 		yBot[i]=(PhysicalAddress)pInFrameBufArray->pbufY_tilebot;
 		cbBot[i]=(PhysicalAddress)pInFrameBufArray->pbufCb_tilebot;
@@ -7165,47 +7182,47 @@ VpuEncRetCode VPU_EncRegisterFrameBuffer(VpuEncHandle InHandle,VpuFrameBuffer *p
 	//need to remap Y/Cb/Cr for tile format frame buffer: (not include subsample A,B)
 	if(pVpuObj->obj.nMapType!=0)
 	{
-		for(i=0;i<nNum;i++)
+		for(i=0; i<nNum; i++)
 		{
-			VpuTiledAddressMapping(pVpuObj->obj.nMapType, 
-				(unsigned int)framebuf[i].bufY, yBot[i], (unsigned int)framebuf[i].bufCb, cbBot[i], 
-				(unsigned int*)(&framebuf[i].bufY), (unsigned int*)(&framebuf[i].bufCb), (unsigned int*)(&framebuf[i].bufCr));
+			VpuTiledAddressMapping(pVpuObj->obj.nMapType,
+			                       (unsigned int)framebuf[i].bufY, yBot[i], (unsigned int)framebuf[i].bufCb, cbBot[i],
+			                       (unsigned int*)(&framebuf[i].bufY), (unsigned int*)(&framebuf[i].bufCb), (unsigned int*)(&framebuf[i].bufCr));
 		}
 	}
 
 	VPU_ENC_API("calling vpu_EncRegisterFrameBuffer() \r\n");
 	//here, we expect the source stride == enc stride
 #ifdef USE_NEW_VPU_API
-	#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
-		VPU_ENC_LOG("register: num: %d, subsamp A: 0x%X, subsamp B: 0x%X, scratch: 0x%X(size: %d) \r\n",nNum,framebuf[nNum].bufY,framebuf[nNum+1].bufY,sScratch.bufferBase,sScratch.bufferSize);
-		if (CPU_IS_MX6X())
-		{
-			EncExtBufInfo extbufinfo;
-			vpu_memset(&extbufinfo, 0, sizeof(EncExtBufInfo));
-			extbufinfo.scratchBuf = sScratch;
-			ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,framebuf[nNum].bufY,framebuf[nNum+1].bufY,&extbufinfo);
-		}
-		else
-		{
-			ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0,0);
-		}
-	#elif (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,3))
-		VPU_ENC_LOG("register: num: %d, subsamp A: 0x%X, subsamp B: 0x%X, scratch: 0x%X(size: %d) \r\n",nNum,framebuf[nNum].bufY,framebuf[nNum+1].bufY,sScratch.bufferBase,sScratch.bufferSize);
-		if (CPU_IS_MX6X())
-		{
-			ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,framebuf[nNum].bufY,framebuf[nNum+1].bufY,&sScratch);
-		}
-		else
-		{
-			ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0,0);
-		}
-	#else
-		ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0);
-	#endif
+#if (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,7))
+	VPU_ENC_LOG("register: num: %d, subsamp A: 0x%X, subsamp B: 0x%X, scratch: 0x%X(size: %d) \r\n",nNum,framebuf[nNum].bufY,framebuf[nNum+1].bufY,sScratch.bufferBase,sScratch.bufferSize);
+	if (CPU_IS_MX6X())
+	{
+		EncExtBufInfo extbufinfo;
+		vpu_memset(&extbufinfo, 0, sizeof(EncExtBufInfo));
+		extbufinfo.scratchBuf = sScratch;
+		ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,framebuf[nNum].bufY,framebuf[nNum+1].bufY,&extbufinfo);
+	}
+	else
+	{
+		ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0,0);
+	}
+#elif (VPU_LIB_VERSION_CODE >=VPU_LIB_VERSION(5,3,3))
+	VPU_ENC_LOG("register: num: %d, subsamp A: 0x%X, subsamp B: 0x%X, scratch: 0x%X(size: %d) \r\n",nNum,framebuf[nNum].bufY,framebuf[nNum+1].bufY,sScratch.bufferBase,sScratch.bufferSize);
+	if (CPU_IS_MX6X())
+	{
+		ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,framebuf[nNum].bufY,framebuf[nNum+1].bufY,&sScratch);
+	}
+	else
+	{
+		ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0,0);
+	}
+#else
+	ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride,0,0);
+#endif
 #else
 	ret = vpu_EncRegisterFrameBuffer(pVpuObj->handle,framebuf,nNum, framebuf[0].strideY, /*framebuf[0].strideY*/nSrcStride);
 #endif
-	if (ret != RETCODE_SUCCESS) 
+	if (ret != RETCODE_SUCCESS)
 	{
 		VPU_ENC_ERROR("%s: Register frame buffer failed \r\n",__FUNCTION__);
 		return VPU_ENC_RET_FAILURE;
@@ -7217,11 +7234,11 @@ VpuEncRetCode VPU_EncQueryMem(VpuMemInfo* pOutMemInfo)
 {
 	VpuMemSubBlockInfo * pMem;
 	int nMjpgTableSize;
-	
+
 	if(pOutMemInfo==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);	
-		return VPU_ENC_RET_INVALID_PARAM;	
+		VPU_ENC_ERROR("%s: failure: invalid parameterl \r\n",__FUNCTION__);
+		return VPU_ENC_RET_INVALID_PARAM;
 	}
 	pMem=&pOutMemInfo->MemSubBlock[ENC_VIRT_INDEX];
 	pMem->MemType=VPU_MEM_VIRT;
@@ -7250,7 +7267,7 @@ VpuEncRetCode VPU_EncQueryMem(VpuMemInfo* pOutMemInfo)
 	pMem->pPhyAddr=NULL;
 
 	pOutMemInfo->nSubBlockNum=2;
-	
+
 	return VPU_ENC_RET_SUCCESS;
 }
 
@@ -7294,15 +7311,15 @@ VpuEncRetCode VPU_EncFreeMem(VpuMemDesc* pInMem)
 	{
 		VPU_ENC_ERROR("%s: free virtual memory failure: size=%d, ret=%d \r\n",__FUNCTION__,buff.size,(UINT32)ret);
 		return VPU_ENC_RET_FAILURE;
-	}	
+	}
 	ret=IOFreePhyMem(&buff);
 	if(ret!=RETCODE_SUCCESS)
 	{
 		VPU_ENC_ERROR("%s: free phy memory failure: size=%d, ret=%d \r\n",__FUNCTION__,buff.size,(UINT32)ret);
 		return VPU_ENC_RET_FAILURE;
-	}	
+	}
 
-	return VPU_ENC_RET_SUCCESS;	
+	return VPU_ENC_RET_SUCCESS;
 }
 
 VpuEncRetCode VPU_EncConfig(VpuEncHandle InHandle, VpuEncConfig InEncConf, void* pInParam)
@@ -7311,24 +7328,24 @@ VpuEncRetCode VPU_EncConfig(VpuEncHandle InHandle, VpuEncConfig InEncConf, void*
 	VpuEncObj* pObj;
 	if(InHandle==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);		
+		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_HANDLE;
 	}
-	
+
 	pVpuObj=(VpuEncHandleInternal *)InHandle;
 	pObj=&pVpuObj->obj;
-	
+
 	switch(InEncConf)
 	{
 		//case VPU_DEC_CONF_SKIPNONE:
 		//	break;
-		case VPU_ENC_CONF_NONE:
-			break;
-		default:
-			VPU_ENC_ERROR("%s: failure: invalid setting \r\n",__FUNCTION__);	
-			return VPU_ENC_RET_INVALID_PARAM;
+	case VPU_ENC_CONF_NONE:
+		break;
+	default:
+		VPU_ENC_ERROR("%s: failure: invalid setting \r\n",__FUNCTION__);
+		return VPU_ENC_RET_INVALID_PARAM;
 	}
-	
+
 	return VPU_ENC_RET_SUCCESS;
 }
 
@@ -7345,11 +7362,11 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 #ifdef VPU_WRAPPER_DUMP
 	static FILE* fpYUV=NULL;	//input
 	int nPhy_virt_offset=0;
-	static FILE* fpBitstream=NULL;	//output 
+	static FILE* fpBitstream=NULL;	//output
 #endif
 	if(InHandle==NULL)
 	{
-		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);		
+		VPU_ENC_ERROR("%s: failure: handle is null \r\n",__FUNCTION__);
 		return VPU_ENC_RET_INVALID_HANDLE;
 	}
 
@@ -7358,7 +7375,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 	//For H.264, we will insert sps/pps before every IDR frame
 	if((1==pVpuObj->obj.nHeaderNeeded)||((VPU_V_AVC==pInOutParam->eFormat)&&(0!=pInOutParam->nForceIPicture)))
 	{
-#ifdef VPU_ENC_SEQ_DATA_SEPERATE	
+#ifdef VPU_ENC_SEQ_DATA_SEPERATE
 		if(1==pVpuObj->obj.nJustOutputOneHeader)
 		{
 			//avoid dead loop in filling header
@@ -7368,12 +7385,12 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 		{
 			unsigned char* pHeaderBufPhy;
 			unsigned char* pHeaderBufVirt;
-			int mode=0;	
+			int mode=0;
 			/*
 			mode 0: dynamic 1: needn't pad zero
 			mode 1: dynamic 1: need pad zero
 			mode 2: non-dynamic, non-ringbuf(or ringbuf ?)
-			*/ 
+			*/
 			if(pVpuObj->obj.nDynamicEnabled)
 			{
 				pHeaderBufPhy=(unsigned char*)pInOutParam->nInPhyOutput;
@@ -7384,12 +7401,12 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 			}
 			else
 			{
-				pHeaderBufPhy=(unsigned char*)pInOutParam->nInPhyOutput;	
+				pHeaderBufPhy=(unsigned char*)pInOutParam->nInPhyOutput;
 				pHeaderBufVirt=(unsigned char*)pInOutParam->nInVirtOutput;
 				mode=2;
 			}
 			//In fact, we need not send pHeaderBufVirt, but vpu has some limitation about address aligment.
-			//As result we need to fill some zero bytes in header 
+			//As result we need to fill some zero bytes in header
 			if(-1==VpuEncFillHeader(pVpuObj->handle,pInOutParam,pHeaderBufPhy,&nHeaderLen,&nPadLen,pHeaderBufVirt,mode,pVpuObj->obj.pPhyBitstream,pVpuObj->obj.pVirtBitstream))
 			{
 				return VPU_ENC_RET_FAILURE;
@@ -7406,7 +7423,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 			}
 			ASSERT(nHeaderLen<=(int)pInOutParam->nInOutputBufLen);
 		}
-	}	
+	}
 
 #ifdef VPU_ENC_SEQ_DATA_SEPERATE
 	//if(nHeaderLen>0)
@@ -7416,7 +7433,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 		//output sequence header firstly
 		ASSERT(nHeaderLen-nPadLen>0);
 		pInOutParam->nOutOutputSize=nHeaderLen-nPadLen;	//needn't align boundary again if we only output header
-		pInOutParam->eOutRetCode=(VpuEncBufRetCode)(VPU_ENC_INPUT_NOT_USED|VPU_ENC_OUTPUT_SEQHEADER);	
+		pInOutParam->eOutRetCode=(VpuEncBufRetCode)(VPU_ENC_INPUT_NOT_USED|VPU_ENC_OUTPUT_SEQHEADER);
 		pVpuObj->obj.nJustOutputOneHeader=1;	//output header
 		pVpuObj->obj.nOutputHeaderCnt++;
 	}
@@ -7437,7 +7454,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 		sEncParam.sourceFrame=&sFramBuf;
 		if(pInOutParam->pInFrame!=NULL)
 		{
-			//user assigned the address to implement crop 
+			//user assigned the address to implement crop
 			sFramBuf.bufY= (PhysicalAddress)pInOutParam->pInFrame->pbufY;
 			nbufYBot=(PhysicalAddress)pInOutParam->pInFrame->pbufY_tilebot;
 			sFramBuf.bufCb = (PhysicalAddress)pInOutParam->pInFrame->pbufCb;
@@ -7461,7 +7478,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 
 		if(pVpuObj->obj.nDynamicEnabled)
 		{
-			//set output for dynmaic method	
+			//set output for dynmaic method
 			sEncParam.picStreamBufferAddr=(PhysicalAddress)(pInOutParam->nInPhyOutput+nHeaderLen);
 			//sEncParam.picStreamBufferSize=pInOutParam->nInOutputBufLen;
 		}
@@ -7479,7 +7496,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 			//}
 			nPhy_virt_offset=pInOutParam->nInVirtInput-pInOutParam->nInPhyInput;
 			WrapperFileDumpYUV(&fpYUV, (unsigned char*)sEncParam.sourceFrame->bufY+nPhy_virt_offset, (unsigned char*)sEncParam.sourceFrame->bufCb+nPhy_virt_offset, (unsigned char*)sEncParam.sourceFrame->bufCr+nPhy_virt_offset, sEncParam.sourceFrame->strideY*pInOutParam->nPicHeight, sEncParam.sourceFrame->strideC*pInOutParam->nPicHeight/2,colorformat);
-		}	
+		}
 #endif
 
 		if(pVpuObj->obj.nMapType!=0)
@@ -7487,16 +7504,16 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 			if(0==pVpuObj->obj.nLinear2TiledEnable)
 			{
 				VPU_ENC_LOG("tile(maptype: %d) input: usr set addr: Y: 0x%X, Cb: 0x%X \r\n",pVpuObj->obj.nMapType,sEncParam.sourceFrame->bufY,sEncParam.sourceFrame->bufCb);
-				VpuTiledAddressMapping(pVpuObj->obj.nMapType, 
-					(unsigned int)sEncParam.sourceFrame->bufY, nbufYBot, (unsigned int)sEncParam.sourceFrame->bufCb, nbufCbBot, 
-					(unsigned int*)(&sEncParam.sourceFrame->bufY), (unsigned int*)(&sEncParam.sourceFrame->bufCb), (unsigned int*)(&sEncParam.sourceFrame->bufCr));
+				VpuTiledAddressMapping(pVpuObj->obj.nMapType,
+				                       (unsigned int)sEncParam.sourceFrame->bufY, nbufYBot, (unsigned int)sEncParam.sourceFrame->bufCb, nbufCbBot,
+				                       (unsigned int*)(&sEncParam.sourceFrame->bufY), (unsigned int*)(&sEncParam.sourceFrame->bufCb), (unsigned int*)(&sEncParam.sourceFrame->bufCr));
 				VPU_ENC_LOG("tile(maptype: %d) input: remapped addr: Y: 0x%X, Cb: 0x%X , Cr: 0x%X \r\n",pVpuObj->obj.nMapType,sEncParam.sourceFrame->bufY,sEncParam.sourceFrame->bufCb,sEncParam.sourceFrame->bufCr);
 			}
 		}
 
 		VPU_ENC_LOG("sourceframe: y: 0x%X, u: 0x%X, v: 0x%X, ystride: %d, uvstride: %d, size: %d \r\n",
-			(UINT32)sEncParam.sourceFrame->bufY,(UINT32)sEncParam.sourceFrame->bufCb,(UINT32)sEncParam.sourceFrame->bufCr,
-			(UINT32)sEncParam.sourceFrame->strideY,(UINT32)sEncParam.sourceFrame->strideC,(UINT32)pInOutParam->nInInputSize);
+		            (UINT32)sEncParam.sourceFrame->bufY,(UINT32)sEncParam.sourceFrame->bufCb,(UINT32)sEncParam.sourceFrame->bufCr,
+		            (UINT32)sEncParam.sourceFrame->strideY,(UINT32)sEncParam.sourceFrame->strideC,(UINT32)pInOutParam->nInInputSize);
 		VPU_ENC_API("calling vpu_EncStartOneFrame(): dynamic buff: 0x%X , size: %d \r\n",(UINT32)sEncParam.picStreamBufferAddr,sEncParam.picStreamBufferSize);
 		ret = vpu_EncStartOneFrame(pVpuObj->handle, &sEncParam);
 		if (ret != RETCODE_SUCCESS)
@@ -7515,7 +7532,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 
 		VPU_ENC_API("calling vpu_EncGetOutputInfo() \r\n");
 		ret = vpu_EncGetOutputInfo(pVpuObj->handle, &sEncOutInfo);
-		if (ret != RETCODE_SUCCESS) 
+		if (ret != RETCODE_SUCCESS)
 		{
 			VPU_ENC_ERROR("vpu_EncGetOutputInfo failed Err code: %d \r\n",ret);
 			return VPU_ENC_RET_FAILURE;
@@ -7535,7 +7552,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 			{
 				unsigned char* pVirt=(unsigned char*)((int)pVpuObj->obj.pVirtBitstream+(int)sEncOutInfo.bitstreamBuffer-(int)pVpuObj->obj.pPhyBitstream);
 				ASSERT(pVirt==pVpuObj->obj.pVirtBitstream);
-				VPU_ENC_LOG("frame memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pInOutParam->nInVirtOutput+nHeaderLen),pVirt,sEncOutInfo.bitstreamSize);	
+				VPU_ENC_LOG("frame memcpy: dst: 0x%X, src: 0x%X, size: %d \r\n",(pInOutParam->nInVirtOutput+nHeaderLen),pVirt,sEncOutInfo.bitstreamSize);
 				vpu_memcpy((void*)(pInOutParam->nInVirtOutput+nHeaderLen),(void*)pVirt,sEncOutInfo.bitstreamSize);
 			}
 		}
@@ -7546,7 +7563,7 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 
 		pInOutParam->nOutOutputSize=sEncOutInfo.bitstreamSize+nHeaderLen;
 		pInOutParam->eOutRetCode=bufRet;
-#ifdef VPU_ENC_SEQ_DATA_SEPERATE		
+#ifdef VPU_ENC_SEQ_DATA_SEPERATE
 		pVpuObj->obj.nJustOutputOneHeader=0;	//output data
 #endif
 	}
@@ -7562,4 +7579,4 @@ VpuEncRetCode VPU_EncEncodeFrame(VpuEncHandle InHandle, VpuEncEncParam* pInOutPa
 
 
 
- 
+

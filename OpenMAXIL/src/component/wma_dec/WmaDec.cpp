@@ -29,54 +29,56 @@
 
 WmaDec::WmaDec()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.wma.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_decoder.wma";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.wma.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_decoder.wma";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = WMA10D_MAXDATAREQUESTED;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE WmaDec::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
-    hLib = NULL;
-    pWmaDecConfig = NULL;
-    libMgr = NULL;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	hLib = NULL;
+	pWmaDecConfig = NULL;
+	libMgr = NULL;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingWMA;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingWMA;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = WMA10D_OUTBUFF_SIZE;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = WMA10D_OUTBUFF_SIZE;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -104,7 +106,7 @@ OMX_ERRORTYPE WmaDec::InitComponent()
 	PcmMode.eEndian = OMX_EndianLittle;
 	PcmMode.eChannelMapping[0] = OMX_AUDIO_ChannelNone;
 
-	dwChannelMask = 0;    
+	dwChannelMask = 0;
 	nAdvancedEncodeOpt = 0;
 	nAdvancedEncodeOpt2 = 0;
 
@@ -113,7 +115,8 @@ OMX_ERRORTYPE WmaDec::InitComponent()
 		return OMX_ErrorInsufficientResources;
 
 	hLib = libMgr->load((OMX_STRING)"lib_wma10_dec_v2_arm12_elinux.so");
-	if(hLib == NULL) {
+	if(hLib == NULL)
+	{
 		LOG_WARNING("Can't load library lib_wma10_dec_v2_arm12_elinux.\n");
 		FSL_DELETE(libMgr);
 		return OMX_ErrorComponentNotFound;
@@ -122,11 +125,12 @@ OMX_ERRORTYPE WmaDec::InitComponent()
 	pWMADQueryMem = (tWMAFileStatus (*)( WMADDecoderConfig *))libMgr->getSymbol(hLib, (OMX_STRING)"eWMADQueryMem");
 	pInitWMADecoder = (tWMAFileStatus (*)(WMADDecoderConfig *, WMADDecoderParams *, WMAD_UINT8 *, WMAD_INT32 ))libMgr->getSymbol(hLib, (OMX_STRING)"eInitWMADecoder");
 	pWMADecodeFrame = (tWMAFileStatus (*)(WMADDecoderConfig *,
-						WMADDecoderParams *,
-						WMAD_INT16 *,
-						WMAD_INT32))libMgr->getSymbol(hLib,(OMX_STRING)"eWMADecodeFrame");
+	                                      WMADDecoderParams *,
+	                                      WMAD_INT16 *,
+	                                      WMAD_INT32))libMgr->getSymbol(hLib,(OMX_STRING)"eWMADecodeFrame");
 
-	if(pWMADQueryMem == NULL || pInitWMADecoder == NULL || pWMADecodeFrame == NULL) {
+	if(pWMADQueryMem == NULL || pInitWMADecoder == NULL || pWMADecodeFrame == NULL)
+	{
 		libMgr->unload(hLib);
 		FSL_DELETE(libMgr);
 		return OMX_ErrorComponentNotFound;
@@ -137,18 +141,19 @@ OMX_ERRORTYPE WmaDec::InitComponent()
 
 OMX_ERRORTYPE WmaDec::DeInitComponent()
 {
-    if (libMgr) {
-        if (hLib)
-            libMgr->unload(hLib);
-        FSL_DELETE(libMgr);
-    }
+	if (libMgr)
+	{
+		if (hLib)
+			libMgr->unload(hLib);
+		FSL_DELETE(libMgr);
+	}
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE WmaDec::AudioFilterInstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	pWmaDecConfig = (WMADDecoderConfig *)FSL_MALLOC(sizeof(WMADDecoderConfig));
 	if (pWmaDecConfig == NULL)
 	{
@@ -168,13 +173,13 @@ OMX_ERRORTYPE WmaDec::AudioFilterInstanceInit()
 	if (nPushModeInputLen < WmaType.nBlockAlign * 2)
 		nPushModeInputLen = WmaType.nBlockAlign * 2;
 
-    return ret;
+	return ret;
 }
 
 tWMAFileStatus WMA10FileCBGetNewPayload(OMX_PTR *state, OMX_U64 offset, OMX_U32 *pnum_bytes, \
-			     OMX_U8 **ppData, OMX_PTR pAppContext, OMX_U32 *pbIsCompressedPayload)
+                                        OMX_U8 **ppData, OMX_PTR pAppContext, OMX_U32 *pbIsCompressedPayload)
 {
-    tWMAFileStatus ret = cWMA_NoErr;
+	tWMAFileStatus ret = cWMA_NoErr;
 	WmaDec *pWmaDec = (WmaDec *)pAppContext;
 	RingBuffer *pAudioRingBuffer = (RingBuffer *)&(pWmaDec->AudioRingBuffer);
 	*ppData = NULL;
@@ -210,7 +215,7 @@ tWMAFileStatus WMA10FileCBGetNewPayload(OMX_PTR *state, OMX_U64 offset, OMX_U32 
 
 OMX_ERRORTYPE WmaDec::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	tWMAFileStatus WmaRet;
 
 	pWmaDecConfig->psWMADecodeInfoStructPtr = NULL;
@@ -252,7 +257,7 @@ OMX_ERRORTYPE WmaDec::AudioFilterCodecInit()
 	pWmaDecConfig->pContext = (OMX_PTR)(this);
 	pWmaDecConfig->sDecodeParams = pWmaDecParams;
 	fsl_osal_memset(&sWfx,0,sizeof(WAVEFORMATEXTENSIBLE));
-    pWmaDecParams->pWfx = &sWfx;
+	pWmaDecParams->pWfx = &sWfx;
 
 	OMX_S32 MemoryCnt = pWmaDecConfig->sWMADMemInfo.s32NumReqs;
 	for (OMX_S32 i = 0; i < MemoryCnt; i ++)
@@ -300,117 +305,120 @@ OMX_ERRORTYPE WmaDec::AudioFilterCodecInit()
 
 OMX_ERRORTYPE WmaDec::AudioFilterInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    if(pWmaDecConfig){
-	OMX_S32 MemoryCnt = pWmaDecConfig->sWMADMemInfo.s32NumReqs;
-	for (OMX_S32 i = 0; i < MemoryCnt; i ++)
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	if(pWmaDecConfig)
 	{
-		FSL_FREE(pWmaDecConfig->sWMADMemInfo.sMemInfoSub[i].app_base_ptr);
+		OMX_S32 MemoryCnt = pWmaDecConfig->sWMADMemInfo.s32NumReqs;
+		for (OMX_S32 i = 0; i < MemoryCnt; i ++)
+		{
+			FSL_FREE(pWmaDecConfig->sWMADMemInfo.sMemInfoSub[i].app_base_ptr);
+		}
+
+		FSL_FREE(pWmaDecConfig);
+		FSL_FREE(pWmaDecParams);
 	}
 
-	FSL_FREE(pWmaDecConfig);
-	FSL_FREE(pWmaDecParams);
-    }
-
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE WmaDec::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioWma:
-            {
-                OMX_AUDIO_PARAM_WMATYPE *pWmaType;
-                pWmaType = (OMX_AUDIO_PARAM_WMATYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pWmaType, OMX_AUDIO_PARAM_WMATYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pWmaType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pWmaType, &WmaType,	sizeof(OMX_AUDIO_PARAM_WMATYPE));
-            }
-			return ret;
-        case OMX_IndexParamAudioWmaExt:
-            {
-                OMX_AUDIO_PARAM_WMATYPE_EXT *pWmaTypeExt;
-                pWmaTypeExt = (OMX_AUDIO_PARAM_WMATYPE_EXT*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pWmaTypeExt, OMX_AUDIO_PARAM_WMATYPE_EXT, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pWmaTypeExt->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pWmaTypeExt, &WmaTypeExt,	sizeof(OMX_AUDIO_PARAM_WMATYPE_EXT));
-            }
-			return ret;
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioWma:
+	{
+		OMX_AUDIO_PARAM_WMATYPE *pWmaType;
+		pWmaType = (OMX_AUDIO_PARAM_WMATYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pWmaType, OMX_AUDIO_PARAM_WMATYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pWmaType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pWmaType, &WmaType,	sizeof(OMX_AUDIO_PARAM_WMATYPE));
+	}
+	return ret;
+	case OMX_IndexParamAudioWmaExt:
+	{
+		OMX_AUDIO_PARAM_WMATYPE_EXT *pWmaTypeExt;
+		pWmaTypeExt = (OMX_AUDIO_PARAM_WMATYPE_EXT*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pWmaTypeExt, OMX_AUDIO_PARAM_WMATYPE_EXT, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pWmaTypeExt->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pWmaTypeExt, &WmaTypeExt,	sizeof(OMX_AUDIO_PARAM_WMATYPE_EXT));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE WmaDec::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioWma:
-            {
-                OMX_AUDIO_PARAM_WMATYPE *pWmaType;
-                pWmaType = (OMX_AUDIO_PARAM_WMATYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pWmaType, OMX_AUDIO_PARAM_WMATYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pWmaType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(&WmaType, pWmaType, sizeof(OMX_AUDIO_PARAM_WMATYPE));
-			}
-			return ret;
-        case OMX_IndexParamAudioWmaExt:
-            {
-                OMX_AUDIO_PARAM_WMATYPE_EXT *pWmaTypeExt;
-                pWmaTypeExt = (OMX_AUDIO_PARAM_WMATYPE_EXT*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pWmaTypeExt, OMX_AUDIO_PARAM_WMATYPE_EXT, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pWmaTypeExt->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(&WmaTypeExt, pWmaTypeExt, sizeof(OMX_AUDIO_PARAM_WMATYPE_EXT));
-			}
-			return ret;
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioWma:
+	{
+		OMX_AUDIO_PARAM_WMATYPE *pWmaType;
+		pWmaType = (OMX_AUDIO_PARAM_WMATYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pWmaType, OMX_AUDIO_PARAM_WMATYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pWmaType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(&WmaType, pWmaType, sizeof(OMX_AUDIO_PARAM_WMATYPE));
+	}
+	return ret;
+	case OMX_IndexParamAudioWmaExt:
+	{
+		OMX_AUDIO_PARAM_WMATYPE_EXT *pWmaTypeExt;
+		pWmaTypeExt = (OMX_AUDIO_PARAM_WMATYPE_EXT*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pWmaTypeExt, OMX_AUDIO_PARAM_WMATYPE_EXT, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pWmaTypeExt->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(&WmaTypeExt, pWmaTypeExt, sizeof(OMX_AUDIO_PARAM_WMATYPE_EXT));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
- 
+
 AUDIO_FILTERRETURNTYPE WmaDec::AudioFilterFrame()
 {
-    AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
+	AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
 	tWMAFileStatus WmaRet;
 	WmaRet = pWMADecodeFrame(pWmaDecConfig, pWmaDecParams, (WMAD_INT16 *)(pOutBufferHdr->pBuffer), pWmaDecParams->us32OutputBufSize);
-	
+
 	LOG_LOG("WmaRet = %d\n", WmaRet);
 	if (WmaRet == cWMA_NoErr)
 	{
@@ -418,8 +426,8 @@ AUDIO_FILTERRETURNTYPE WmaDec::AudioFilterFrame()
 
 		LOG_DEBUG("Wma channels: %d sample rate: %d bispersample: %d\n", sWfx.Format.nChannels, sWfx.Format.nSamplesPerSec, sWfx.Format.wBitsPerSample);
 		if (sWfx.Format.nChannels != PcmMode.nChannels
-				|| sWfx.Format.nSamplesPerSec != PcmMode.nSamplingRate
-				|| sWfx.Format.wBitsPerSample != PcmMode.nBitPerSample)
+		        || sWfx.Format.nSamplesPerSec != PcmMode.nSamplingRate
+		        || sWfx.Format.wBitsPerSample != PcmMode.nBitPerSample)
 		{
 			PcmMode.nChannels = sWfx.Format.nChannels;
 			PcmMode.nSamplingRate = sWfx.Format.nSamplesPerSec;
@@ -429,13 +437,13 @@ AUDIO_FILTERRETURNTYPE WmaDec::AudioFilterFrame()
 
 		pOutBufferHdr->nOffset = 0;
 		pOutBufferHdr->nFilledLen = pWmaDecParams->us16NumSamples * \
-									sWfx.Format.nChannels * sWfx.Format.wBitsPerSample/8;
+		                            sWfx.Format.nChannels * sWfx.Format.wBitsPerSample/8;
 
 		TS_PerFrame = (OMX_U64)pWmaDecParams->us16NumSamples*OMX_TICKS_PER_SECOND/sWfx.Format.nSamplesPerSec;
 		LOG_LOG("Decoder output sample: %d\t Sample Rate = %d\t TS per Frame = %lld\n", \
-				pWmaDecParams->us16NumSamples, sWfx.Format.nSamplesPerSec, TS_PerFrame);
+		        pWmaDecParams->us16NumSamples, sWfx.Format.nSamplesPerSec, TS_PerFrame);
 
-		AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+		AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 	}
 	else if (WmaRet == cWMA_NoMoreFrames)
 	{
@@ -451,7 +459,7 @@ AUDIO_FILTERRETURNTYPE WmaDec::AudioFilterFrame()
 
 	LOG_LOG("Decoder nTimeStamp = %lld\n", pOutBufferHdr->nTimeStamp);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE WmaDec::AudioFilterReset()
@@ -470,29 +478,29 @@ OMX_ERRORTYPE WmaDec::AudioFilterCheckCodecConfig()
 		LOG_DEBUG("Wma codec config len: %d\n", pInBufferHdr->nFilledLen);
 		switch (WmaType.eFormat)
 		{
-			case OMX_AUDIO_WMAFormat7:        
-				LOG_DEBUG("WMA1 audio\n");            
-				if (pInBufferHdr->nFilledLen >= 4)
-					WmaType.nEncodeOptions = *(OMX_U16*)(pInBufferHdr->pBuffer + 2);
-				break;
-			case OMX_AUDIO_WMAFormat8:        
-				LOG_DEBUG("WMA2 audio\n");            
-				if (pInBufferHdr->nFilledLen >= 6)
-					WmaType.nEncodeOptions = *(OMX_U16*)(pInBufferHdr->pBuffer + 4);
-				break;
-			case OMX_AUDIO_WMAFormat9:        
-				LOG_DEBUG("WMA3 audio\n");            
-				if (pInBufferHdr->nFilledLen >= 18)
-				{
-					WmaType.eProfile = OMX_AUDIO_WMAProfileL1;
-					dwChannelMask = *(OMX_U32*)(pInBufferHdr->pBuffer + 2);
-					nAdvancedEncodeOpt2 = *(OMX_U16 *)(pInBufferHdr->pBuffer + 10);
-					WmaType.nEncodeOptions = *(OMX_U16 *)(pInBufferHdr->pBuffer + 14);
-					nAdvancedEncodeOpt = *(OMX_U16 *)(pInBufferHdr->pBuffer + 16);
-				}
-				break;
-                      default:
-                            break;
+		case OMX_AUDIO_WMAFormat7:
+			LOG_DEBUG("WMA1 audio\n");
+			if (pInBufferHdr->nFilledLen >= 4)
+				WmaType.nEncodeOptions = *(OMX_U16*)(pInBufferHdr->pBuffer + 2);
+			break;
+		case OMX_AUDIO_WMAFormat8:
+			LOG_DEBUG("WMA2 audio\n");
+			if (pInBufferHdr->nFilledLen >= 6)
+				WmaType.nEncodeOptions = *(OMX_U16*)(pInBufferHdr->pBuffer + 4);
+			break;
+		case OMX_AUDIO_WMAFormat9:
+			LOG_DEBUG("WMA3 audio\n");
+			if (pInBufferHdr->nFilledLen >= 18)
+			{
+				WmaType.eProfile = OMX_AUDIO_WMAProfileL1;
+				dwChannelMask = *(OMX_U32*)(pInBufferHdr->pBuffer + 2);
+				nAdvancedEncodeOpt2 = *(OMX_U16 *)(pInBufferHdr->pBuffer + 10);
+				WmaType.nEncodeOptions = *(OMX_U16 *)(pInBufferHdr->pBuffer + 14);
+				nAdvancedEncodeOpt = *(OMX_U16 *)(pInBufferHdr->pBuffer + 16);
+			}
+			break;
+		default:
+			break;
 		}
 
 		pInBufferHdr->nFilledLen = 0;
@@ -504,29 +512,29 @@ OMX_ERRORTYPE WmaDec::AudioFilterCheckCodecConfig()
 
 	pInBufferHdr->nFilledLen = 0;
 
-    return ret;
+	return ret;
 }
- 
+
 
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE WmaDecInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        WmaDec *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE WmaDecInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		WmaDec *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(WmaDec, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(WmaDec, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

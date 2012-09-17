@@ -19,24 +19,25 @@
 #include "AudioFilter.h"
 #include "mp3_dec_interface.h"
 
-class Mp3Dec : public AudioFilter {
-    public:
-        Mp3Dec();
-    private:
-        OMX_ERRORTYPE InitComponent();
-        OMX_ERRORTYPE DeInitComponent();
-        OMX_ERRORTYPE AudioFilterInstanceInit();
-        OMX_ERRORTYPE AudioFilterCodecInit();
-        OMX_ERRORTYPE AudioFilterInstanceDeInit();
-        OMX_ERRORTYPE AudioFilterGetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
-        OMX_ERRORTYPE AudioFilterSetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
-		AUDIO_FILTERRETURNTYPE AudioFilterFrame();
-		OMX_ERRORTYPE AudioFilterReset();
-		OMX_ERRORTYPE AudioFilterCheckFrameHeader();
-              OMX_BOOL IsValidFrameHeader(OMX_U8 * pHeader);
-        OMX_AUDIO_PARAM_MP3TYPE Mp3Type;
-		MP3D_Decode_Config *pMp3DecConfig;
-		MP3D_Decode_Params *pMp3DecParams;
+class Mp3Dec : public AudioFilter
+{
+public:
+	Mp3Dec();
+private:
+	OMX_ERRORTYPE InitComponent();
+	OMX_ERRORTYPE DeInitComponent();
+	OMX_ERRORTYPE AudioFilterInstanceInit();
+	OMX_ERRORTYPE AudioFilterCodecInit();
+	OMX_ERRORTYPE AudioFilterInstanceDeInit();
+	OMX_ERRORTYPE AudioFilterGetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
+	OMX_ERRORTYPE AudioFilterSetParameter(OMX_INDEXTYPE nParamIndex, OMX_PTR pComponentParameterStructure);
+	AUDIO_FILTERRETURNTYPE AudioFilterFrame();
+	OMX_ERRORTYPE AudioFilterReset();
+	OMX_ERRORTYPE AudioFilterCheckFrameHeader();
+	OMX_BOOL IsValidFrameHeader(OMX_U8 * pHeader);
+	OMX_AUDIO_PARAM_MP3TYPE Mp3Type;
+	MP3D_Decode_Config *pMp3DecConfig;
+	MP3D_Decode_Params *pMp3DecParams;
 };
 
 #endif

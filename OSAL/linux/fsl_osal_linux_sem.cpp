@@ -15,9 +15,9 @@
  * @ingroup osal
  */
 
- #include <fsl_osal.h>
- #include <semaphore.h>
- #include "Log.h"
+#include <fsl_osal.h>
+#include <semaphore.h>
+#include "Log.h"
 
 /*! Allocates and Initilizes the semaphore object.
  *
@@ -35,19 +35,19 @@
  *		E_FSL_OSAL_FAILURE if semaphore initialisation is unsuccessful
  */
 efsl_osal_return_type_t fsl_osal_sem_init(fsl_osal_sem *sem_obj,
-										  fsl_osal_s32 pshared,
-										  fsl_osal_u32 value)
+        fsl_osal_s32 pshared,
+        fsl_osal_u32 value)
 {
- 	*sem_obj = (sem_t *)fsl_osal_malloc_new(sizeof(sem_t));
- 	if(*sem_obj == NULL)
- 	{
- 		LOG_ERROR("\n Creation of semaphore failed.");
- 		return E_FSL_OSAL_UNAVAILABLE;
- 	}
- 	if(sem_init((sem_t *)(*sem_obj), pshared, value) != 0)
- 		return E_FSL_OSAL_FAILURE;
+	*sem_obj = (sem_t *)fsl_osal_malloc_new(sizeof(sem_t));
+	if(*sem_obj == NULL)
+	{
+		LOG_ERROR("\n Creation of semaphore failed.");
+		return E_FSL_OSAL_UNAVAILABLE;
+	}
+	if(sem_init((sem_t *)(*sem_obj), pshared, value) != 0)
+		return E_FSL_OSAL_FAILURE;
 
- 	return E_FSL_OSAL_SUCCESS;
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! The fsl_osal_sem_destroy method destroys the semaphore object,
@@ -63,18 +63,18 @@ efsl_osal_return_type_t fsl_osal_sem_init(fsl_osal_sem *sem_obj,
 efsl_osal_return_type_t fsl_osal_sem_destroy(fsl_osal_sem sem_obj)
 {
 #ifdef ANDROID_BUILD
-        /* workaround for android semaphore usage */
-        fsl_osal_sem_post(sem_obj);
+	/* workaround for android semaphore usage */
+	fsl_osal_sem_post(sem_obj);
 #endif
 
- 	if (sem_destroy((sem_t *)sem_obj) != 0)
- 	{
- 		LOG_ERROR("\n Error in destroying semaphore.");
- 		return E_FSL_OSAL_INVALIDPARAM ;
- 	}
+	if (sem_destroy((sem_t *)sem_obj) != 0)
+	{
+		LOG_ERROR("\n Error in destroying semaphore.");
+		return E_FSL_OSAL_INVALIDPARAM ;
+	}
 
- 	fsl_osal_dealloc(sem_obj);
- 	return E_FSL_OSAL_SUCCESS;
+	fsl_osal_dealloc(sem_obj);
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! This call suspends the calling thread until the
@@ -87,8 +87,8 @@ efsl_osal_return_type_t fsl_osal_sem_destroy(fsl_osal_sem sem_obj)
  */
 efsl_osal_return_type_t fsl_osal_sem_wait(fsl_osal_sem sem_obj)
 {
- 	sem_wait((sem_t *)sem_obj);
- 	return E_FSL_OSAL_SUCCESS;
+	sem_wait((sem_t *)sem_obj);
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! The fsl_osal_sem_trywait call is a non-blocking variant of fsl_osal_sem_wait.
@@ -104,10 +104,10 @@ efsl_osal_return_type_t fsl_osal_sem_wait(fsl_osal_sem sem_obj)
  */
 efsl_osal_return_type_t fsl_osal_sem_trywait(fsl_osal_sem sem_obj)
 {
- 	if ( (sem_trywait((sem_t *)sem_obj)) != 0)
- 		return E_FSL_OSAL_FAILURE ;
+	if ( (sem_trywait((sem_t *)sem_obj)) != 0)
+		return E_FSL_OSAL_FAILURE ;
 
- 	return E_FSL_OSAL_SUCCESS;
+	return E_FSL_OSAL_SUCCESS;
 }
 
 /*! The fsl_osal_sem_post method atomically increases the count of the
@@ -120,14 +120,14 @@ efsl_osal_return_type_t fsl_osal_sem_trywait(fsl_osal_sem sem_obj)
  *		E_FSL_OSAL_INVALIDPARAM
  */
 efsl_osal_return_type_t fsl_osal_sem_post(fsl_osal_sem sem_obj)
- {
- 	if ( (sem_post((sem_t *)sem_obj)) != 0)
- 	{
- 		LOG_ERROR("\n Error while signalling to the semaphore.");
- 		return E_FSL_OSAL_INVALIDPARAM ;
- 	}
- 	return E_FSL_OSAL_SUCCESS;
- }
+{
+	if ( (sem_post((sem_t *)sem_obj)) != 0)
+	{
+		LOG_ERROR("\n Error while signalling to the semaphore.");
+		return E_FSL_OSAL_INVALIDPARAM ;
+	}
+	return E_FSL_OSAL_SUCCESS;
+}
 
 /*! The fsl_osal_sem_getvalue call stores  in  the  location
  *	pointed to by sval the current count of the semaphore pointed to by sem_obj.
@@ -139,10 +139,10 @@ efsl_osal_return_type_t fsl_osal_sem_post(fsl_osal_sem sem_obj)
  *		E_FSL_OSAL_FAILURE
  */
 efsl_osal_return_type_t fsl_osal_sem_getvalue(fsl_osal_sem sem_obj,
-											  fsl_osal_s32 *sval)
+        fsl_osal_s32 *sval)
 {
- 	*sval = sem_getvalue((sem_t *)sem_obj, (int *)sval);
- 	return E_FSL_OSAL_SUCCESS;
+	*sval = sem_getvalue((sem_t *)sem_obj, (int *)sval);
+	return E_FSL_OSAL_SUCCESS;
 }
 
 

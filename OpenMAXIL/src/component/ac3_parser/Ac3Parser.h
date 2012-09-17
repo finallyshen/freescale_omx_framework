@@ -19,12 +19,13 @@
 #include "AudioParserBase.h"
 #include "ac3_parser/Ac3CoreParser.h"
 
-class Ac3Parser : public AudioParserBase {
-    public:
-        Ac3Parser();
-    private:
-		OMX_ERRORTYPE GetCoreParser();
-		OMX_AUDIO_CODINGTYPE GetAudioCodingType();
+class Ac3Parser : public AudioParserBase
+{
+public:
+	Ac3Parser();
+private:
+	OMX_ERRORTYPE GetCoreParser();
+	OMX_AUDIO_CODINGTYPE GetAudioCodingType();
 };
 
 #endif

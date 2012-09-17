@@ -40,19 +40,20 @@ void ff_dct_unquantize_h263_intra_neon(MpegEncContext *s, DCTELEM *block,
 
 void MPV_common_init_arm(MpegEncContext *s)
 {
-    /* IWMMXT support is a superset of armv5te, so
-     * allow optimized functions for armv5te unless
-     * a better iwmmxt function exists
-     */
+	/* IWMMXT support is a superset of armv5te, so
+	 * allow optimized functions for armv5te unless
+	 * a better iwmmxt function exists
+	 */
 #if HAVE_ARMV5TE
-    MPV_common_init_armv5te(s);
+	MPV_common_init_armv5te(s);
 #endif
 #if HAVE_IWMMXT
-    MPV_common_init_iwmmxt(s);
+	MPV_common_init_iwmmxt(s);
 #endif
 
-    if (HAVE_NEON) {
-        s->dct_unquantize_h263_intra = ff_dct_unquantize_h263_intra_neon;
-        s->dct_unquantize_h263_inter = ff_dct_unquantize_h263_inter_neon;
-    }
+	if (HAVE_NEON)
+	{
+		s->dct_unquantize_h263_intra = ff_dct_unquantize_h263_intra_neon;
+		s->dct_unquantize_h263_inter = ff_dct_unquantize_h263_inter_neon;
+	}
 }

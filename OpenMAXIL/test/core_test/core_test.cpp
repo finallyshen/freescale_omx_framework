@@ -15,13 +15,13 @@
 
 int main(int argc, char *argv[])
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    if(argc < 2)
+	if(argc < 2)
 	{
-        printf("Usage: ./bin <in_file>\n");
-        return 0;
-    }
+		printf("Usage: ./bin <in_file>\n");
+		return 0;
+	}
 
 	ret = OMX_Init();
 	if (ret != OMX_ErrorNone)
@@ -43,14 +43,14 @@ int main(int argc, char *argv[])
 	}
 
 	CP_PIPETYPE *hPipe;
-    ret =  OMX_GetContentPipe((void **)&hPipe, "LOCAL_FILE_PIPE_NEW");
+	ret =  OMX_GetContentPipe((void **)&hPipe, "LOCAL_FILE_PIPE_NEW");
 	if (ret != OMX_ErrorNone)
 	{
 		printf("OMX get content pipe error.\n");
 		return 0;
 	}
 
-    return 1;
+	return 1;
 }
 
 /* File EOF */

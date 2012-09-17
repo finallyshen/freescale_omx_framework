@@ -26,29 +26,30 @@
 
 static int dnxhd_probe(AVProbeData *p)
 {
-    static const uint8_t header[] = {0x00,0x00,0x02,0x80,0x01};
-    int w, h, compression_id;
-    if (p->buf_size < 0x2c)
-        return 0;
-    if (memcmp(p->buf, header, 5))
-        return 0;
-    h = AV_RB16(p->buf + 0x18);
-    w = AV_RB16(p->buf + 0x1a);
-    if (!w || !h)
-        return 0;
-    compression_id = AV_RB32(p->buf + 0x28);
-    if (compression_id < 1237 || compression_id > 1253)
-        return 0;
-    return AVPROBE_SCORE_MAX;
+	static const uint8_t header[] = {0x00,0x00,0x02,0x80,0x01};
+	int w, h, compression_id;
+	if (p->buf_size < 0x2c)
+		return 0;
+	if (memcmp(p->buf, header, 5))
+		return 0;
+	h = AV_RB16(p->buf + 0x18);
+	w = AV_RB16(p->buf + 0x1a);
+	if (!w || !h)
+		return 0;
+	compression_id = AV_RB32(p->buf + 0x28);
+	if (compression_id < 1237 || compression_id > 1253)
+		return 0;
+	return AVPROBE_SCORE_MAX;
 }
 
-AVInputFormat ff_dnxhd_demuxer = {
-    "dnxhd",
-    NULL_IF_CONFIG_SMALL("raw DNxHD (SMPTE VC-3)"),
-    0,
-    dnxhd_probe,
-    ff_raw_video_read_header,
-    ff_raw_read_partial_packet,
-    .flags= AVFMT_GENERIC_INDEX,
-    .value = CODEC_ID_DNXHD,
+AVInputFormat ff_dnxhd_demuxer =
+{
+	"dnxhd",
+	NULL_IF_CONFIG_SMALL("raw DNxHD (SMPTE VC-3)"),
+	0,
+	dnxhd_probe,
+	ff_raw_video_read_header,
+	ff_raw_read_partial_packet,
+	.flags= AVFMT_GENERIC_INDEX,
+	.value = CODEC_ID_DNXHD,
 };

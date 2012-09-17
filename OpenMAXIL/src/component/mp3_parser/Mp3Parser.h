@@ -19,17 +19,18 @@
 #include "AudioParserBase.h"
 #include "mp3_parser_v2/Mp3CoreParser.h"
 
-class Mp3Parser : public AudioParserBase {
-	public:
-		Mp3Parser();
-		OMX_ERRORTYPE SetSource(OMX_PARAM_CONTENTURITYPE *Content, OMX_PARAM_CONTENTPIPETYPE *Pipe);
-		OMX_ERRORTYPE UnloadParserMetadata();
-		OMX_U32 GetMetadataNum();
-		OMX_U32 GetMetadataSize(OMX_U32 index);
-		OMX_ERRORTYPE GetMetadata(OMX_CONFIG_METADATAITEMTYPE *pMatadataItem);
-	private:
-		OMX_ERRORTYPE GetCoreParser();
-		OMX_AUDIO_CODINGTYPE GetAudioCodingType();
+class Mp3Parser : public AudioParserBase
+{
+public:
+	Mp3Parser();
+	OMX_ERRORTYPE SetSource(OMX_PARAM_CONTENTURITYPE *Content, OMX_PARAM_CONTENTPIPETYPE *Pipe);
+	OMX_ERRORTYPE UnloadParserMetadata();
+	OMX_U32 GetMetadataNum();
+	OMX_U32 GetMetadataSize(OMX_U32 index);
+	OMX_ERRORTYPE GetMetadata(OMX_CONFIG_METADATAITEMTYPE *pMatadataItem);
+private:
+	OMX_ERRORTYPE GetCoreParser();
+	OMX_AUDIO_CODINGTYPE GetAudioCodingType();
 };
 
 #endif

@@ -15,9 +15,9 @@
  * @ingroup osal
  */
 
- #include <string.h>
- #include <fsl_osal.h>
- #include <malloc.h>
+#include <string.h>
+#include <fsl_osal.h>
+#include <malloc.h>
 
 /*! Allocates the requested memory.
  *
@@ -29,12 +29,12 @@
  *		E_FSL_OSAL_SUCCESS if success otherwise E_FSL_OSAL_UNAVAILABLE
  */
 
- fsl_osal_ptr fsl_osal_malloc_new(fsl_osal_u32 size)
- {
-    fsl_osal_ptr ptr;
+fsl_osal_ptr fsl_osal_malloc_new(fsl_osal_u32 size)
+{
+	fsl_osal_ptr ptr;
 	ptr = (void *)malloc(size);
- 	return ptr;
- }
+	return ptr;
+}
 
 /*! ReAllocates the requested memory.
  *
@@ -45,12 +45,12 @@
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success otherwise E_FSL_OSAL_UNAVAILABLE
  */
-fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size) 
+fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
 {
-    fsl_osal_ptr ptr2;
-    ptr2 = (void *)realloc(ptr, size);
+	fsl_osal_ptr ptr2;
+	ptr2 = (void *)realloc(ptr, size);
 
-    return ptr2;
+	return ptr2;
 }
 
 /*! Releases the requested memory
@@ -60,9 +60,9 @@ fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success
  */
- efsl_osal_return_type_t fsl_osal_dealloc(fsl_osal_ptr ptr)
+efsl_osal_return_type_t fsl_osal_dealloc(fsl_osal_ptr ptr)
 {
-    free(ptr);
+	free(ptr);
 	return E_FSL_OSAL_SUCCESS;
 }
 
@@ -78,9 +78,9 @@ fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success
  */
- efsl_osal_return_type_t fsl_osal_memset(fsl_osal_ptr ptr,
- 										 fsl_osal_char ch,
- 										 fsl_osal_u32 size)
+efsl_osal_return_type_t fsl_osal_memset(fsl_osal_ptr ptr,
+                                        fsl_osal_char ch,
+                                        fsl_osal_u32 size)
 {
 	memset(ptr, ch, size);
 	return E_FSL_OSAL_SUCCESS;
@@ -98,9 +98,9 @@ fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success
  */
- efsl_osal_return_type_t fsl_osal_memcpy(fsl_osal_ptr dest,
- 										 fsl_osal_ptr src,
- 										 fsl_osal_u32 size)
+efsl_osal_return_type_t fsl_osal_memcpy(fsl_osal_ptr dest,
+                                        fsl_osal_ptr src,
+                                        fsl_osal_u32 size)
 {
 	if( (dest == NULL) || (src == NULL) )
 	{
@@ -123,9 +123,9 @@ fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success
  */
- efsl_osal_return_type_t fsl_osal_memmove(fsl_osal_ptr dest,
- 										 fsl_osal_ptr src,
- 										 fsl_osal_u32 size)
+efsl_osal_return_type_t fsl_osal_memmove(fsl_osal_ptr dest,
+        fsl_osal_ptr src,
+        fsl_osal_u32 size)
 {
 	if( (dest == NULL) || (src == NULL) )
 	{
@@ -146,9 +146,9 @@ fsl_osal_ptr fsl_osal_realloc_new(fsl_osal_ptr ptr, fsl_osal_u32 size)
  *	@return efsl_osal_return_type_t
  *		E_FSL_OSAL_SUCCESS if success
  */
- fsl_osal_s32 fsl_osal_memcmp(const fsl_osal_ptr ptr1,
- 										 const fsl_osal_ptr ptr2,
- 										 fsl_osal_u32 size)
+fsl_osal_s32 fsl_osal_memcmp(const fsl_osal_ptr ptr1,
+                             const fsl_osal_ptr ptr2,
+                             fsl_osal_u32 size)
 {
 	if( (ptr1 == NULL) || (ptr2 == NULL) )
 	{

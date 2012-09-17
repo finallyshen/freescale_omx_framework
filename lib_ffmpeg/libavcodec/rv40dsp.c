@@ -99,7 +99,7 @@ static void OPNAME ## rv40_qpel16_h_lowpass(uint8_t *dst, uint8_t *src, int dstS
     OPNAME ## rv40_qpel8_h_lowpass(dst+8, src+8, dstStride, srcStride, h-8, C1, C2, SHIFT);\
 }\
 \
-
+ 
 #define RV40_MC(OPNAME, SIZE) \
 static void OPNAME ## rv40_qpel ## SIZE ## _mc10_c(uint8_t *dst, uint8_t *src, int stride){\
     OPNAME ## rv40_qpel ## SIZE ## _h_lowpass(dst, src, stride, stride, SIZE, 52, 20, 6);\
@@ -181,7 +181,7 @@ static void OPNAME ## rv40_qpel ## SIZE ## _mc23_c(uint8_t *dst, uint8_t *src, i
     OPNAME ## rv40_qpel ## SIZE ## _v_lowpass(dst, full_mid, stride, SIZE, SIZE, 20, 52, 6);\
 }\
 \
-
+ 
 #define op_avg(a, b)  a = (((a)+cm[b]+1)>>1)
 #define op_put(a, b)  a = cm[b]
 
@@ -196,11 +196,12 @@ RV40_MC(put_, 16)
 RV40_MC(avg_, 8)
 RV40_MC(avg_, 16)
 
-static const int rv40_bias[4][4] = {
-    {  0, 16, 32, 16 },
-    { 32, 28, 32, 28 },
-    {  0, 32, 16, 32 },
-    { 32, 28, 32, 28 }
+static const int rv40_bias[4][4] =
+{
+	{  0, 16, 32, 16 },
+	{ 32, 28, 32, 28 },
+	{  0, 32, 16, 32 },
+	{ 32, 28, 32, 28 }
 };
 
 #define RV40_CHROMA_MC(OPNAME, OP)\
@@ -284,70 +285,71 @@ static void OPNAME ## rv40_chroma_mc8_c(uint8_t *dst/*align 8*/, uint8_t *src/*a
 RV40_CHROMA_MC(put_, op_put)
 RV40_CHROMA_MC(avg_, op_avg)
 
-void ff_rv40dsp_init(DSPContext* c, AVCodecContext *avctx) {
-    c->put_rv40_qpel_pixels_tab[0][ 0] = c->put_h264_qpel_pixels_tab[0][0];
-    c->put_rv40_qpel_pixels_tab[0][ 1] = put_rv40_qpel16_mc10_c;
-    c->put_rv40_qpel_pixels_tab[0][ 2] = put_rv40_qpel16_mc20_c;
-    c->put_rv40_qpel_pixels_tab[0][ 3] = put_rv40_qpel16_mc30_c;
-    c->put_rv40_qpel_pixels_tab[0][ 4] = put_rv40_qpel16_mc01_c;
-    c->put_rv40_qpel_pixels_tab[0][ 5] = put_rv40_qpel16_mc11_c;
-    c->put_rv40_qpel_pixels_tab[0][ 6] = put_rv40_qpel16_mc21_c;
-    c->put_rv40_qpel_pixels_tab[0][ 7] = put_rv40_qpel16_mc31_c;
-    c->put_rv40_qpel_pixels_tab[0][ 8] = put_rv40_qpel16_mc02_c;
-    c->put_rv40_qpel_pixels_tab[0][ 9] = put_rv40_qpel16_mc12_c;
-    c->put_rv40_qpel_pixels_tab[0][10] = put_rv40_qpel16_mc22_c;
-    c->put_rv40_qpel_pixels_tab[0][11] = put_rv40_qpel16_mc32_c;
-    c->put_rv40_qpel_pixels_tab[0][12] = put_rv40_qpel16_mc03_c;
-    c->put_rv40_qpel_pixels_tab[0][13] = put_rv40_qpel16_mc13_c;
-    c->put_rv40_qpel_pixels_tab[0][14] = put_rv40_qpel16_mc23_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 0] = c->avg_h264_qpel_pixels_tab[0][0];
-    c->avg_rv40_qpel_pixels_tab[0][ 1] = avg_rv40_qpel16_mc10_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 2] = avg_rv40_qpel16_mc20_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 3] = avg_rv40_qpel16_mc30_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 4] = avg_rv40_qpel16_mc01_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 5] = avg_rv40_qpel16_mc11_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 6] = avg_rv40_qpel16_mc21_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 7] = avg_rv40_qpel16_mc31_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 8] = avg_rv40_qpel16_mc02_c;
-    c->avg_rv40_qpel_pixels_tab[0][ 9] = avg_rv40_qpel16_mc12_c;
-    c->avg_rv40_qpel_pixels_tab[0][10] = avg_rv40_qpel16_mc22_c;
-    c->avg_rv40_qpel_pixels_tab[0][11] = avg_rv40_qpel16_mc32_c;
-    c->avg_rv40_qpel_pixels_tab[0][12] = avg_rv40_qpel16_mc03_c;
-    c->avg_rv40_qpel_pixels_tab[0][13] = avg_rv40_qpel16_mc13_c;
-    c->avg_rv40_qpel_pixels_tab[0][14] = avg_rv40_qpel16_mc23_c;
-    c->put_rv40_qpel_pixels_tab[1][ 0] = c->put_h264_qpel_pixels_tab[1][0];
-    c->put_rv40_qpel_pixels_tab[1][ 1] = put_rv40_qpel8_mc10_c;
-    c->put_rv40_qpel_pixels_tab[1][ 2] = put_rv40_qpel8_mc20_c;
-    c->put_rv40_qpel_pixels_tab[1][ 3] = put_rv40_qpel8_mc30_c;
-    c->put_rv40_qpel_pixels_tab[1][ 4] = put_rv40_qpel8_mc01_c;
-    c->put_rv40_qpel_pixels_tab[1][ 5] = put_rv40_qpel8_mc11_c;
-    c->put_rv40_qpel_pixels_tab[1][ 6] = put_rv40_qpel8_mc21_c;
-    c->put_rv40_qpel_pixels_tab[1][ 7] = put_rv40_qpel8_mc31_c;
-    c->put_rv40_qpel_pixels_tab[1][ 8] = put_rv40_qpel8_mc02_c;
-    c->put_rv40_qpel_pixels_tab[1][ 9] = put_rv40_qpel8_mc12_c;
-    c->put_rv40_qpel_pixels_tab[1][10] = put_rv40_qpel8_mc22_c;
-    c->put_rv40_qpel_pixels_tab[1][11] = put_rv40_qpel8_mc32_c;
-    c->put_rv40_qpel_pixels_tab[1][12] = put_rv40_qpel8_mc03_c;
-    c->put_rv40_qpel_pixels_tab[1][13] = put_rv40_qpel8_mc13_c;
-    c->put_rv40_qpel_pixels_tab[1][14] = put_rv40_qpel8_mc23_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 0] = c->avg_h264_qpel_pixels_tab[1][0];
-    c->avg_rv40_qpel_pixels_tab[1][ 1] = avg_rv40_qpel8_mc10_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 2] = avg_rv40_qpel8_mc20_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 3] = avg_rv40_qpel8_mc30_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 4] = avg_rv40_qpel8_mc01_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 5] = avg_rv40_qpel8_mc11_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 6] = avg_rv40_qpel8_mc21_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 7] = avg_rv40_qpel8_mc31_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 8] = avg_rv40_qpel8_mc02_c;
-    c->avg_rv40_qpel_pixels_tab[1][ 9] = avg_rv40_qpel8_mc12_c;
-    c->avg_rv40_qpel_pixels_tab[1][10] = avg_rv40_qpel8_mc22_c;
-    c->avg_rv40_qpel_pixels_tab[1][11] = avg_rv40_qpel8_mc32_c;
-    c->avg_rv40_qpel_pixels_tab[1][12] = avg_rv40_qpel8_mc03_c;
-    c->avg_rv40_qpel_pixels_tab[1][13] = avg_rv40_qpel8_mc13_c;
-    c->avg_rv40_qpel_pixels_tab[1][14] = avg_rv40_qpel8_mc23_c;
+void ff_rv40dsp_init(DSPContext* c, AVCodecContext *avctx)
+{
+	c->put_rv40_qpel_pixels_tab[0][ 0] = c->put_h264_qpel_pixels_tab[0][0];
+	c->put_rv40_qpel_pixels_tab[0][ 1] = put_rv40_qpel16_mc10_c;
+	c->put_rv40_qpel_pixels_tab[0][ 2] = put_rv40_qpel16_mc20_c;
+	c->put_rv40_qpel_pixels_tab[0][ 3] = put_rv40_qpel16_mc30_c;
+	c->put_rv40_qpel_pixels_tab[0][ 4] = put_rv40_qpel16_mc01_c;
+	c->put_rv40_qpel_pixels_tab[0][ 5] = put_rv40_qpel16_mc11_c;
+	c->put_rv40_qpel_pixels_tab[0][ 6] = put_rv40_qpel16_mc21_c;
+	c->put_rv40_qpel_pixels_tab[0][ 7] = put_rv40_qpel16_mc31_c;
+	c->put_rv40_qpel_pixels_tab[0][ 8] = put_rv40_qpel16_mc02_c;
+	c->put_rv40_qpel_pixels_tab[0][ 9] = put_rv40_qpel16_mc12_c;
+	c->put_rv40_qpel_pixels_tab[0][10] = put_rv40_qpel16_mc22_c;
+	c->put_rv40_qpel_pixels_tab[0][11] = put_rv40_qpel16_mc32_c;
+	c->put_rv40_qpel_pixels_tab[0][12] = put_rv40_qpel16_mc03_c;
+	c->put_rv40_qpel_pixels_tab[0][13] = put_rv40_qpel16_mc13_c;
+	c->put_rv40_qpel_pixels_tab[0][14] = put_rv40_qpel16_mc23_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 0] = c->avg_h264_qpel_pixels_tab[0][0];
+	c->avg_rv40_qpel_pixels_tab[0][ 1] = avg_rv40_qpel16_mc10_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 2] = avg_rv40_qpel16_mc20_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 3] = avg_rv40_qpel16_mc30_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 4] = avg_rv40_qpel16_mc01_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 5] = avg_rv40_qpel16_mc11_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 6] = avg_rv40_qpel16_mc21_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 7] = avg_rv40_qpel16_mc31_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 8] = avg_rv40_qpel16_mc02_c;
+	c->avg_rv40_qpel_pixels_tab[0][ 9] = avg_rv40_qpel16_mc12_c;
+	c->avg_rv40_qpel_pixels_tab[0][10] = avg_rv40_qpel16_mc22_c;
+	c->avg_rv40_qpel_pixels_tab[0][11] = avg_rv40_qpel16_mc32_c;
+	c->avg_rv40_qpel_pixels_tab[0][12] = avg_rv40_qpel16_mc03_c;
+	c->avg_rv40_qpel_pixels_tab[0][13] = avg_rv40_qpel16_mc13_c;
+	c->avg_rv40_qpel_pixels_tab[0][14] = avg_rv40_qpel16_mc23_c;
+	c->put_rv40_qpel_pixels_tab[1][ 0] = c->put_h264_qpel_pixels_tab[1][0];
+	c->put_rv40_qpel_pixels_tab[1][ 1] = put_rv40_qpel8_mc10_c;
+	c->put_rv40_qpel_pixels_tab[1][ 2] = put_rv40_qpel8_mc20_c;
+	c->put_rv40_qpel_pixels_tab[1][ 3] = put_rv40_qpel8_mc30_c;
+	c->put_rv40_qpel_pixels_tab[1][ 4] = put_rv40_qpel8_mc01_c;
+	c->put_rv40_qpel_pixels_tab[1][ 5] = put_rv40_qpel8_mc11_c;
+	c->put_rv40_qpel_pixels_tab[1][ 6] = put_rv40_qpel8_mc21_c;
+	c->put_rv40_qpel_pixels_tab[1][ 7] = put_rv40_qpel8_mc31_c;
+	c->put_rv40_qpel_pixels_tab[1][ 8] = put_rv40_qpel8_mc02_c;
+	c->put_rv40_qpel_pixels_tab[1][ 9] = put_rv40_qpel8_mc12_c;
+	c->put_rv40_qpel_pixels_tab[1][10] = put_rv40_qpel8_mc22_c;
+	c->put_rv40_qpel_pixels_tab[1][11] = put_rv40_qpel8_mc32_c;
+	c->put_rv40_qpel_pixels_tab[1][12] = put_rv40_qpel8_mc03_c;
+	c->put_rv40_qpel_pixels_tab[1][13] = put_rv40_qpel8_mc13_c;
+	c->put_rv40_qpel_pixels_tab[1][14] = put_rv40_qpel8_mc23_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 0] = c->avg_h264_qpel_pixels_tab[1][0];
+	c->avg_rv40_qpel_pixels_tab[1][ 1] = avg_rv40_qpel8_mc10_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 2] = avg_rv40_qpel8_mc20_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 3] = avg_rv40_qpel8_mc30_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 4] = avg_rv40_qpel8_mc01_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 5] = avg_rv40_qpel8_mc11_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 6] = avg_rv40_qpel8_mc21_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 7] = avg_rv40_qpel8_mc31_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 8] = avg_rv40_qpel8_mc02_c;
+	c->avg_rv40_qpel_pixels_tab[1][ 9] = avg_rv40_qpel8_mc12_c;
+	c->avg_rv40_qpel_pixels_tab[1][10] = avg_rv40_qpel8_mc22_c;
+	c->avg_rv40_qpel_pixels_tab[1][11] = avg_rv40_qpel8_mc32_c;
+	c->avg_rv40_qpel_pixels_tab[1][12] = avg_rv40_qpel8_mc03_c;
+	c->avg_rv40_qpel_pixels_tab[1][13] = avg_rv40_qpel8_mc13_c;
+	c->avg_rv40_qpel_pixels_tab[1][14] = avg_rv40_qpel8_mc23_c;
 
-    c->put_rv40_chroma_pixels_tab[0]= put_rv40_chroma_mc8_c;
-    c->put_rv40_chroma_pixels_tab[1]= put_rv40_chroma_mc4_c;
-    c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_c;
-    c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_c;
+	c->put_rv40_chroma_pixels_tab[0]= put_rv40_chroma_mc8_c;
+	c->put_rv40_chroma_pixels_tab[1]= put_rv40_chroma_mc4_c;
+	c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_c;
+	c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_c;
 }

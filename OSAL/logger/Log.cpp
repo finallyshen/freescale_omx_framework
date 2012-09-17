@@ -132,16 +132,16 @@ fsl_osal_void LogDeInit()
 
 fsl_osal_void LogOutput(const fsl_osal_char *fmt, ...)
 {
-    va_list ap;
-    fsl_osal_char buf[LOG_BUF_SIZE];
+	va_list ap;
+	fsl_osal_char buf[LOG_BUF_SIZE];
 
-    va_start(ap, fmt);
-    vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
-    va_end(ap);
+	va_start(ap, fmt);
+	vsnprintf(buf, LOG_BUF_SIZE, fmt, ap);
+	va_end(ap);
 
-    __android_log_write(ANDROID_LOG_INFO, "OMXPlayer", buf);
+	__android_log_write(ANDROID_LOG_INFO, "OMXPlayer", buf);
 
-    return;
+	return;
 }
 
 #endif

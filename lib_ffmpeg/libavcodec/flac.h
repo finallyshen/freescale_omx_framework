@@ -36,34 +36,37 @@
 #define FLAC_MAX_BLOCKSIZE  65535
 #define FLAC_MIN_FRAME_SIZE    11
 
-enum {
-    FLAC_CHMODE_INDEPENDENT =  0,
-    FLAC_CHMODE_LEFT_SIDE   =  8,
-    FLAC_CHMODE_RIGHT_SIDE  =  9,
-    FLAC_CHMODE_MID_SIDE    = 10,
+enum
+{
+	FLAC_CHMODE_INDEPENDENT =  0,
+	FLAC_CHMODE_LEFT_SIDE   =  8,
+	FLAC_CHMODE_RIGHT_SIDE  =  9,
+	FLAC_CHMODE_MID_SIDE    = 10,
 };
 
-enum {
-    FLAC_METADATA_TYPE_STREAMINFO = 0,
-    FLAC_METADATA_TYPE_PADDING,
-    FLAC_METADATA_TYPE_APPLICATION,
-    FLAC_METADATA_TYPE_SEEKTABLE,
-    FLAC_METADATA_TYPE_VORBIS_COMMENT,
-    FLAC_METADATA_TYPE_CUESHEET,
-    FLAC_METADATA_TYPE_PICTURE,
-    FLAC_METADATA_TYPE_INVALID = 127
+enum
+{
+	FLAC_METADATA_TYPE_STREAMINFO = 0,
+	FLAC_METADATA_TYPE_PADDING,
+	FLAC_METADATA_TYPE_APPLICATION,
+	FLAC_METADATA_TYPE_SEEKTABLE,
+	FLAC_METADATA_TYPE_VORBIS_COMMENT,
+	FLAC_METADATA_TYPE_CUESHEET,
+	FLAC_METADATA_TYPE_PICTURE,
+	FLAC_METADATA_TYPE_INVALID = 127
 };
 
-enum FLACExtradataFormat {
-    FLAC_EXTRADATA_FORMAT_STREAMINFO  = 0,
-    FLAC_EXTRADATA_FORMAT_FULL_HEADER = 1
+enum FLACExtradataFormat
+{
+	FLAC_EXTRADATA_FORMAT_STREAMINFO  = 0,
+	FLAC_EXTRADATA_FORMAT_FULL_HEADER = 1
 };
 
 #define FLACCOMMONINFO \
     int samplerate;         /**< sample rate                             */\
     int channels;           /**< number of channels                      */\
     int bps;                /**< bits-per-sample                         */\
-
+ 
 /**
  * Data needed from the Streaminfo header for use by the raw FLAC demuxer
  * and/or the FLAC decoder.
@@ -73,17 +76,19 @@ enum FLACExtradataFormat {
     int max_blocksize;      /**< maximum block size, in samples          */\
     int max_framesize;      /**< maximum frame size, in bytes            */\
     int64_t samples;        /**< total number of samples                 */\
-
-typedef struct FLACStreaminfo {
-    FLACSTREAMINFO
+ 
+typedef struct FLACStreaminfo
+{
+	FLACSTREAMINFO
 } FLACStreaminfo;
 
-typedef struct FLACFrameInfo {
-    FLACCOMMONINFO
-    int blocksize;          /**< block size of the frame                 */
-    int ch_mode;            /**< channel decorrelation mode              */
-    int64_t frame_or_sample_num;    /**< frame number or sample number   */
-    int is_var_size;                /**< specifies if the stream uses variable
+typedef struct FLACFrameInfo
+{
+	FLACCOMMONINFO
+	int blocksize;          /**< block size of the frame                 */
+	int ch_mode;            /**< channel decorrelation mode              */
+	int64_t frame_or_sample_num;    /**< frame number or sample number   */
+	int is_var_size;                /**< specifies if the stream uses variable
                                          block sizes or a fixed block size;
                                          also determines the meaning of
                                          frame_or_sample_num             */

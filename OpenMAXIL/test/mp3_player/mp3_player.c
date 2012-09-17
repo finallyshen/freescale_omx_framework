@@ -7,12 +7,12 @@
  *
  */
 
- 
+
 /* Header files */
 
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h> 
+#include <string.h>
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <assert.h>
@@ -32,29 +32,30 @@
 /* Function declarations */
 
 static OMX_ERRORTYPE MP3_EventHandlerCallback(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_EVENTTYPE eEvent,
-        OMX_IN OMX_U32 nData1,
-        OMX_IN OMX_U32 nData2,
-        OMX_IN OMX_PTR pEventData);
+    OMX_IN OMX_HANDLETYPE hComponent,
+    OMX_IN OMX_PTR pAppData,
+    OMX_IN OMX_EVENTTYPE eEvent,
+    OMX_IN OMX_U32 nData1,
+    OMX_IN OMX_U32 nData2,
+    OMX_IN OMX_PTR pEventData);
 
 static OMX_ERRORTYPE MP3_EmptyBufferDoneCallback(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_BUFFERHEADERTYPE* pBuffer);
+    OMX_IN OMX_HANDLETYPE hComponent,
+    OMX_IN OMX_PTR pAppData,
+    OMX_IN OMX_BUFFERHEADERTYPE* pBuffer);
 
 static OMX_ERRORTYPE MP3_FillBufferDoneCallback(
-        OMX_OUT OMX_HANDLETYPE hComponent,
-        OMX_OUT OMX_PTR pAppData,
-        OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
+    OMX_OUT OMX_HANDLETYPE hComponent,
+    OMX_OUT OMX_PTR pAppData,
+    OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer);
 
 /* Global variable definitions */
 
-static OMX_CALLBACKTYPE gMP3Callbacks = {
-    MP3_EventHandlerCallback,
-    MP3_EmptyBufferDoneCallback,
-    MP3_FillBufferDoneCallback
+static OMX_CALLBACKTYPE gMP3Callbacks =
+{
+	MP3_EventHandlerCallback,
+	MP3_EmptyBufferDoneCallback,
+	MP3_FillBufferDoneCallback
 };
 
 static const OMX_STRING MP3_PARSER_NAME = "OMX.Freescale.std.parser.mp3.sw-based";
@@ -85,20 +86,20 @@ static const OMX_STRING AUDIO_RENDER_ROLE = "audio_render.alsa";
 ********************************************************************************/
 OMX_ERRORTYPE MP3_FrameMessage(Message **ppMsg, Message_type type)
 {
-    Message* pMsg = NULL;
-    fsl_osal_ptr pBuffer = NULL;
+	Message* pMsg = NULL;
+	fsl_osal_ptr pBuffer = NULL;
 
-    /*Allocating memory for message*/
-    pBuffer = FSL_MALLOC(sizeof(Message));
-    if(pBuffer == NULL)
-        return OMX_ErrorInsufficientResources;
+	/*Allocating memory for message*/
+	pBuffer = FSL_MALLOC(sizeof(Message));
+	if(pBuffer == NULL)
+		return OMX_ErrorInsufficientResources;
 
-    pMsg = (Message *)pBuffer;
-    fsl_osal_memset((fsl_osal_ptr)pMsg, 0, sizeof(Message));
+	pMsg = (Message *)pBuffer;
+	fsl_osal_memset((fsl_osal_ptr)pMsg, 0, sizeof(Message));
 
-    pMsg->MsgType = type;
-    *ppMsg = pMsg;
-    return OMX_ErrorNone;
+	pMsg->MsgType = type;
+	*ppMsg = pMsg;
+	return OMX_ErrorNone;
 }
 
 
@@ -117,38 +118,38 @@ OMX_ERRORTYPE MP3_FrameMessage(Message **ppMsg, Message_type type)
 ********************************************************************************/
 OMX_ERRORTYPE MP3_PostMessage(AppHandler *pAppHandler, Message *pMsg)
 {
-    QUEUE_ERRORTYPE eRetVal = QUEUE_FAILURE;
+	QUEUE_ERRORTYPE eRetVal = QUEUE_FAILURE;
 
-    switch(pMsg->MsgType)
-    {
-        case DataBuffer:
-        {
-            if(pMsg->data.type == EmptyBuffer)
-            {
-                eRetVal = EnQueue(pAppHandler->EmptyBufQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
-                if(eRetVal != QUEUE_SUCCESS)
-                    return OMX_ErrorUndefined;
-            }
-            else if(pMsg->data.type == FilledBuffer)
-            {
-                eRetVal = EnQueue(pAppHandler->FilledBufQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
-                if(eRetVal != QUEUE_SUCCESS)
-                    return OMX_ErrorUndefined;
-            }
-            break;
-        }
-        case Eventype:
-        {
-            eRetVal = EnQueue(pAppHandler->EventQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
-            if(eRetVal != QUEUE_SUCCESS)
-                return OMX_ErrorUndefined;
-            break;
-        }
-        default:
-        break;
-    }
+	switch(pMsg->MsgType)
+	{
+	case DataBuffer:
+	{
+		if(pMsg->data.type == EmptyBuffer)
+		{
+			eRetVal = EnQueue(pAppHandler->EmptyBufQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
+			if(eRetVal != QUEUE_SUCCESS)
+				return OMX_ErrorUndefined;
+		}
+		else if(pMsg->data.type == FilledBuffer)
+		{
+			eRetVal = EnQueue(pAppHandler->FilledBufQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
+			if(eRetVal != QUEUE_SUCCESS)
+				return OMX_ErrorUndefined;
+		}
+		break;
+	}
+	case Eventype:
+	{
+		eRetVal = EnQueue(pAppHandler->EventQueue, (OMX_PTR)pMsg, E_FSL_OSAL_FALSE);
+		if(eRetVal != QUEUE_SUCCESS)
+			return OMX_ErrorUndefined;
+		break;
+	}
+	default:
+		break;
+	}
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -166,12 +167,12 @@ OMX_ERRORTYPE MP3_PostMessage(AppHandler *pAppHandler, Message *pMsg)
 ********************************************************************************/
 void MP3_ReadEventQueue(AppHandler *pAppHandler, Message *pMsg)
 {
-    assert(pMsg != 0);
+	assert(pMsg != 0);
 
-    fsl_osal_memset((fsl_osal_ptr)pMsg, 0, sizeof(Message));
-    ReadQueue(pAppHandler->EventQueue, pMsg, E_FSL_OSAL_TRUE);
+	fsl_osal_memset((fsl_osal_ptr)pMsg, 0, sizeof(Message));
+	ReadQueue(pAppHandler->EventQueue, pMsg, E_FSL_OSAL_TRUE);
 
-    return ;
+	return ;
 }
 
 
@@ -188,41 +189,41 @@ void MP3_ReadEventQueue(AppHandler *pAppHandler, Message *pMsg)
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_Initialize(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    QUEUE_ERRORTYPE eRetQueue = QUEUE_SUCCESS;
+	QUEUE_ERRORTYPE eRetQueue = QUEUE_SUCCESS;
 
-    pMP3ClientParams->hDecoder = NULL;
-    pMP3ClientParams->hParser = NULL;
-    pMP3ClientParams->hRender = NULL;
-    pMP3ClientParams->hContentPipe = NULL;
+	pMP3ClientParams->hDecoder = NULL;
+	pMP3ClientParams->hParser = NULL;
+	pMP3ClientParams->hRender = NULL;
+	pMP3ClientParams->hContentPipe = NULL;
 
-    pMP3ClientParams->bEOS = OMX_FALSE;
+	pMP3ClientParams->bEOS = OMX_FALSE;
 
-    pMP3ClientParams->nParserAudioPortIdx = 0;
-    pMP3ClientParams->nParserVideoPortIdx = 1;
+	pMP3ClientParams->nParserAudioPortIdx = 0;
+	pMP3ClientParams->nParserVideoPortIdx = 1;
 
-    eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.EventQueue,
-                            MAX_OMXQUEUE_SIZE,
-                            E_FSL_OSAL_TRUE,
-                            sizeof(Message));
+	eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.EventQueue,
+	                        MAX_OMXQUEUE_SIZE,
+	                        E_FSL_OSAL_TRUE,
+	                        sizeof(Message));
 
-    if(eRetQueue != QUEUE_SUCCESS)
-        return OMX_ErrorInsufficientResources;
+	if(eRetQueue != QUEUE_SUCCESS)
+		return OMX_ErrorInsufficientResources;
 
-    eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.EmptyBufQueue,
-                            MAX_OMXQUEUE_SIZE,
-                            E_FSL_OSAL_FALSE,
-                            sizeof(Message));
-    if(eRetQueue != QUEUE_SUCCESS)
-        return OMX_ErrorInsufficientResources;
+	eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.EmptyBufQueue,
+	                        MAX_OMXQUEUE_SIZE,
+	                        E_FSL_OSAL_FALSE,
+	                        sizeof(Message));
+	if(eRetQueue != QUEUE_SUCCESS)
+		return OMX_ErrorInsufficientResources;
 
-    eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.FilledBufQueue,
-                            MAX_OMXQUEUE_SIZE,
-                            E_FSL_OSAL_FALSE,
-                            sizeof(Message));
-    if(eRetQueue != QUEUE_SUCCESS)
-        return OMX_ErrorInsufficientResources;
+	eRetQueue = CreateQueue(&pMP3ClientParams->sAppHandler.FilledBufQueue,
+	                        MAX_OMXQUEUE_SIZE,
+	                        E_FSL_OSAL_FALSE,
+	                        sizeof(Message));
+	if(eRetQueue != QUEUE_SUCCESS)
+		return OMX_ErrorInsufficientResources;
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -241,32 +242,32 @@ static OMX_ERRORTYPE MP3_Initialize(MP3_CLIENT_PARAMS *pMP3ClientParams)
 
 static OMX_ERRORTYPE MP3_DeInitialize(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    QUEUE_ERRORTYPE eRetVal = QUEUE_FAILURE;
-    Message         sMsg;
+	QUEUE_ERRORTYPE eRetVal = QUEUE_FAILURE;
+	Message         sMsg;
 
-    while(GetQueueSize(pMP3ClientParams->sAppHandler.EventQueue) > 0)
-        ReadQueue(pMP3ClientParams->sAppHandler.EventQueue, &sMsg, E_FSL_OSAL_TRUE);
+	while(GetQueueSize(pMP3ClientParams->sAppHandler.EventQueue) > 0)
+		ReadQueue(pMP3ClientParams->sAppHandler.EventQueue, &sMsg, E_FSL_OSAL_TRUE);
 
-    while(GetQueueSize(pMP3ClientParams->sAppHandler.EmptyBufQueue) > 0)
-        ReadQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue, &sMsg, E_FSL_OSAL_TRUE);
+	while(GetQueueSize(pMP3ClientParams->sAppHandler.EmptyBufQueue) > 0)
+		ReadQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue, &sMsg, E_FSL_OSAL_TRUE);
 
-    while(GetQueueSize(pMP3ClientParams->sAppHandler.FilledBufQueue) > 0)
-        ReadQueue(pMP3ClientParams->sAppHandler.FilledBufQueue, &sMsg, E_FSL_OSAL_TRUE);
+	while(GetQueueSize(pMP3ClientParams->sAppHandler.FilledBufQueue) > 0)
+		ReadQueue(pMP3ClientParams->sAppHandler.FilledBufQueue, &sMsg, E_FSL_OSAL_TRUE);
 
-    eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.EventQueue);
-    if(eRetVal != QUEUE_SUCCESS)
-        return OMX_ErrorUndefined;
+	eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.EventQueue);
+	if(eRetVal != QUEUE_SUCCESS)
+		return OMX_ErrorUndefined;
 
-    eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue);
-    if(eRetVal != QUEUE_SUCCESS)
-        return OMX_ErrorUndefined;
+	eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue);
+	if(eRetVal != QUEUE_SUCCESS)
+		return OMX_ErrorUndefined;
 
-    eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.FilledBufQueue);
-    if(eRetVal != QUEUE_SUCCESS)
-        return OMX_ErrorUndefined;
+	eRetVal = DeleteQueue(pMP3ClientParams->sAppHandler.FilledBufQueue);
+	if(eRetVal != QUEUE_SUCCESS)
+		return OMX_ErrorUndefined;
 
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -283,206 +284,216 @@ static OMX_ERRORTYPE MP3_DeInitialize(MP3_CLIENT_PARAMS *pMP3ClientParams)
 
 static OMX_ERRORTYPE MP3_LoadParser(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE           eRetVal = OMX_ErrorNone;
-    OMX_BUFFERHEADERTYPE    *pBufferHdr;
-    OMX_U8                  *ptr = NULL;
-    OMX_S8                  cSourceComponentName[COMP_NAME_LENGTH];
-    CP_PIPETYPE             *hPipe;
-    OMX_PARAM_CONTENTURITYPE *Content;
-    OMX_U8                  len;
+	OMX_ERRORTYPE           eRetVal = OMX_ErrorNone;
+	OMX_BUFFERHEADERTYPE    *pBufferHdr;
+	OMX_U8                  *ptr = NULL;
+	OMX_S8                  cSourceComponentName[COMP_NAME_LENGTH];
+	CP_PIPETYPE             *hPipe;
+	OMX_PARAM_CONTENTURITYPE *Content;
+	OMX_U8                  len;
 
-    /* Load component */
-    
-    fsl_osal_strcpy((fsl_osal_char *)cSourceComponentName,(fsl_osal_char *)MP3_PARSER_NAME); 
-    eRetVal = OMX_GetHandle(&pMP3ClientParams->hParser,
-                            (OMX_STRING)cSourceComponentName,
-                            &pMP3ClientParams->sAppHandler,
-                            &gMP3Callbacks);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	/* Load component */
 
-    /* set Parser role */
+	fsl_osal_strcpy((fsl_osal_char *)cSourceComponentName,(fsl_osal_char *)MP3_PARSER_NAME);
+	eRetVal = OMX_GetHandle(&pMP3ClientParams->hParser,
+	                        (OMX_STRING)cSourceComponentName,
+	                        &pMP3ClientParams->sAppHandler,
+	                        &gMP3Callbacks);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    OMX_STRING role = MP3_PARSER_ROLE;
-    OMX_PARAM_COMPONENTROLETYPE CurRole;
-    OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
-    fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
-    OMX_SetParameter(pMP3ClientParams->hParser, 
-                     OMX_IndexParamStandardComponentRole, 
-                     &CurRole);
+	/* set Parser role */
 
-    DEBUG_PRINT("set parser role ok\n");
+	OMX_STRING role = MP3_PARSER_ROLE;
+	OMX_PARAM_COMPONENTROLETYPE CurRole;
+	OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
+	fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
+	OMX_SetParameter(pMP3ClientParams->hParser,
+	                 OMX_IndexParamStandardComponentRole,
+	                 &CurRole);
 
-    /* set URI */
-    
-    len = fsl_osal_strlen((fsl_osal_char*)pMP3ClientParams->pInfilename) + 1;
-    ptr = (OMX_U8*)FSL_MALLOC(sizeof(OMX_PARAM_CONTENTURITYPE) + len);
-    if(ptr == NULL) {
-        return OMX_ErrorInsufficientResources;
-    }
+	DEBUG_PRINT("set parser role ok\n");
 
-    Content = (OMX_PARAM_CONTENTURITYPE*)ptr;
-    OMX_INIT_STRUCT(Content, OMX_PARAM_CONTENTURITYPE);
-    fsl_osal_strcpy((fsl_osal_char*)(&Content->contentURI), (fsl_osal_char*)pMP3ClientParams->pInfilename);
+	/* set URI */
 
-    DEBUG_PRINT("Loading content: %s\n", pMP3ClientParams->pInfilename);
+	len = fsl_osal_strlen((fsl_osal_char*)pMP3ClientParams->pInfilename) + 1;
+	ptr = (OMX_U8*)FSL_MALLOC(sizeof(OMX_PARAM_CONTENTURITYPE) + len);
+	if(ptr == NULL)
+	{
+		return OMX_ErrorInsufficientResources;
+	}
 
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hParser, 
-                               OMX_IndexParamContentURI, 
-                               Content);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	Content = (OMX_PARAM_CONTENTURITYPE*)ptr;
+	OMX_INIT_STRUCT(Content, OMX_PARAM_CONTENTURITYPE);
+	fsl_osal_strcpy((fsl_osal_char*)(&Content->contentURI), (fsl_osal_char*)pMP3ClientParams->pInfilename);
 
-    /* content pipe */
-    
-    eRetVal = OMX_GetContentPipe((void**)&hPipe, (OMX_STRING)"LOCAL_FILE_PIPE_NEW");
-    if(hPipe == NULL)
-        return OMX_ErrorContentPipeCreationFailed;
+	DEBUG_PRINT("Loading content: %s\n", pMP3ClientParams->pInfilename);
 
-    OMX_PARAM_CONTENTPIPETYPE sPipe;
-    OMX_INIT_STRUCT(&sPipe, OMX_PARAM_CONTENTPIPETYPE);
-    sPipe.hPipe = hPipe;
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hParser, 
-                               OMX_IndexParamCustomContentPipe, 
-                               &sPipe);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hParser,
+	                           OMX_IndexParamContentURI,
+	                           Content);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    DEBUG_PRINT("Parser GetContentPipe ok\n");
+	/* content pipe */
 
-    /* disable video port */
+	eRetVal = OMX_GetContentPipe((void**)&hPipe, (OMX_STRING)"LOCAL_FILE_PIPE_NEW");
+	if(hPipe == NULL)
+		return OMX_ErrorContentPipeCreationFailed;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hParser, 
-                              OMX_CommandPortDisable, 
-                              pMP3ClientParams->nParserVideoPortIdx, 
-                              NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	OMX_PARAM_CONTENTPIPETYPE sPipe;
+	OMX_INIT_STRUCT(&sPipe, OMX_PARAM_CONTENTPIPETYPE);
+	sPipe.hPipe = hPipe;
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hParser,
+	                           OMX_IndexParamCustomContentPipe,
+	                           &sPipe);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    do {
-        fsl_osal_sleep(100000);
-    } while (pMP3ClientParams->sAppHandler.eState != (OMX_STATETYPE)OMX_CommandPortDisable);
+	DEBUG_PRINT("Parser GetContentPipe ok\n");
 
-    /* auto detect audio fmt */
-    OMX_AUDIO_PARAM_PORTFORMATTYPE sAudioPortFmt;
-    OMX_INIT_STRUCT(&sAudioPortFmt, OMX_AUDIO_PARAM_PORTFORMATTYPE);
-    sAudioPortFmt.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
-    
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hParser, 
-                               OMX_IndexParamAudioPortFormat, 
-                               &sAudioPortFmt);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	/* disable video port */
 
-    sAudioPortFmt.eEncoding = OMX_AUDIO_CodingAutoDetect;
-    
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hParser, 
-                               OMX_IndexParamAudioPortFormat, 
-                               &sAudioPortFmt);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-    pMP3ClientParams->AudioFmt = OMX_AUDIO_CodingAutoDetect;
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
+	                          OMX_CommandPortDisable,
+	                          pMP3ClientParams->nParserVideoPortIdx,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    DEBUG_PRINT("Parser set auto detect ok\n");
+	do
+	{
+		fsl_osal_sleep(100000);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != (OMX_STATETYPE)OMX_CommandPortDisable);
 
-    /* set parser to idle */
+	/* auto detect audio fmt */
+	OMX_AUDIO_PARAM_PORTFORMATTYPE sAudioPortFmt;
+	OMX_INIT_STRUCT(&sAudioPortFmt, OMX_AUDIO_PARAM_PORTFORMATTYPE);
+	sAudioPortFmt.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hParser, 
-                          OMX_CommandStateSet, 
-                          OMX_StateIdle, 
-                          NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hParser,
+	                           OMX_IndexParamAudioPortFormat,
+	                           &sAudioPortFmt);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    DEBUG_PRINT("Parser set idle ok\n");
+	sAudioPortFmt.eEncoding = OMX_AUDIO_CodingAutoDetect;
 
-    /* parser allocate buffer */
-    
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef ;
-    OMX_U32 i;
-    
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hParser, 
-                               OMX_IndexParamPortDefinition, 
-                               &sPortDef);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hParser,
+	                           OMX_IndexParamAudioPortFormat,
+	                           &sAudioPortFmt);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+	pMP3ClientParams->AudioFmt = OMX_AUDIO_CodingAutoDetect;
 
-    pMP3ClientParams->nAESBufSize = sPortDef.nBufferSize;
-    pMP3ClientParams->nAESBufCnt  = sPortDef.nBufferCountActual;
-    /*
-    DEBUG_PRINT("Parser Port 1: size %d, Cnt %d, Dir %d, Enabled %d Populated %d\n",
-                    sPortDef.nBufferSize, sPortDef.nBufferCountActual, sPortDef.eDir, sPortDef.bEnabled, sPortDef.bPopulated);
-    */
-    
-    for(i=0; i<pMP3ClientParams->nAESBufCnt; i++) {
-        pBufferHdr = NULL;
-        eRetVal = OMX_AllocateBuffer(pMP3ClientParams->hParser, 
-                                     &pBufferHdr, 
-                                     pMP3ClientParams->nParserAudioPortIdx, 
-                                     NULL, 
-                                     pMP3ClientParams->nAESBufSize);
-        if(eRetVal != OMX_ErrorNone) {
-            INFO_PRINT("%s allocate buffer for port %d failed.\n", "Parser", 1);
-            return eRetVal;
-        }
-        pMP3ClientParams->pParserOutBufHdr[i] = pBufferHdr;
-        /*
-        DEBUG_PRINT("%s allocate buffer %p:%p for port %d\n", "Parser", pBufferHdr, pBufferHdr->pBuffer, 1); 
-        */
-    }
+	DEBUG_PRINT("Parser set auto detect ok\n");
 
+	/* set parser to idle */
 
-    /* parser wait to idle */
-    
-    do {
-        OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
+	                          OMX_CommandStateSet,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+
+	DEBUG_PRINT("Parser set idle ok\n");
+
+	/* parser allocate buffer */
+
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef ;
+	OMX_U32 i;
+
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hParser,
+	                           OMX_IndexParamPortDefinition,
+	                           &sPortDef);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+
+	pMP3ClientParams->nAESBufSize = sPortDef.nBufferSize;
+	pMP3ClientParams->nAESBufCnt  = sPortDef.nBufferCountActual;
+	/*
+	DEBUG_PRINT("Parser Port 1: size %d, Cnt %d, Dir %d, Enabled %d Populated %d\n",
+	                sPortDef.nBufferSize, sPortDef.nBufferCountActual, sPortDef.eDir, sPortDef.bEnabled, sPortDef.bPopulated);
+	*/
+
+	for(i=0; i<pMP3ClientParams->nAESBufCnt; i++)
+	{
+		pBufferHdr = NULL;
+		eRetVal = OMX_AllocateBuffer(pMP3ClientParams->hParser,
+		                             &pBufferHdr,
+		                             pMP3ClientParams->nParserAudioPortIdx,
+		                             NULL,
+		                             pMP3ClientParams->nAESBufSize);
+		if(eRetVal != OMX_ErrorNone)
+		{
+			INFO_PRINT("%s allocate buffer for port %d failed.\n", "Parser", 1);
+			return eRetVal;
+		}
+		pMP3ClientParams->pParserOutBufHdr[i] = pBufferHdr;
+		/*
+		DEBUG_PRINT("%s allocate buffer %p:%p for port %d\n", "Parser", pBufferHdr, pBufferHdr->pBuffer, 1);
+		*/
+	}
 
 
-    /* set parser to exec */
+	/* parser wait to idle */
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hParser, 
-                                OMX_CommandStateSet, 
-                                OMX_StateExecuting, 
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-
-
-    /* parser wait for exec */
-    
-    do {
-        OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
-
-    DEBUG_PRINT("parser wait for exec OK!\n");
-
-    /* parser set stream number */
-
-    OMX_PARAM_U32TYPE u32Type;
-    OMX_INIT_STRUCT(&u32Type, OMX_PARAM_U32TYPE);
-    u32Type.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
-    OMX_GetParameter(pMP3ClientParams->hParser, 
-                     OMX_IndexParamNumAvailableStreams, 
-                     &u32Type);
-    DEBUG_PRINT("Total audio track number: %ld\n", u32Type.nU32);
-
-    if(u32Type.nU32 > 0) {
-        u32Type.nU32 = 0;
-        OMX_SetParameter(pMP3ClientParams->hParser, 
-                         OMX_IndexParamActiveStream, 
-                         &u32Type);
-    }
-
-    
-    /* free resources */
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
 
 
-    FSL_FREE(Content);
+	/* set parser to exec */
 
-    return OMX_ErrorNone;
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
+	                          OMX_CommandStateSet,
+	                          OMX_StateExecuting,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+
+
+	/* parser wait for exec */
+
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
+
+	DEBUG_PRINT("parser wait for exec OK!\n");
+
+	/* parser set stream number */
+
+	OMX_PARAM_U32TYPE u32Type;
+	OMX_INIT_STRUCT(&u32Type, OMX_PARAM_U32TYPE);
+	u32Type.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
+	OMX_GetParameter(pMP3ClientParams->hParser,
+	                 OMX_IndexParamNumAvailableStreams,
+	                 &u32Type);
+	DEBUG_PRINT("Total audio track number: %ld\n", u32Type.nU32);
+
+	if(u32Type.nU32 > 0)
+	{
+		u32Type.nU32 = 0;
+		OMX_SetParameter(pMP3ClientParams->hParser,
+		                 OMX_IndexParamActiveStream,
+		                 &u32Type);
+	}
+
+
+	/* free resources */
+
+
+	FSL_FREE(Content);
+
+	return OMX_ErrorNone;
 }
 
 
@@ -498,50 +509,54 @@ static OMX_ERRORTYPE MP3_LoadParser(MP3_CLIENT_PARAMS *pMP3ClientParams)
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_UnLoadParser(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE       eRetVal = OMX_ErrorNone;
+	OMX_ERRORTYPE       eRetVal = OMX_ErrorNone;
 
-    if(pMP3ClientParams->hParser == NULL)
-        return OMX_ErrorNone;
-    
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
-                                OMX_CommandStateSet,
-                                OMX_StateIdle,
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	if(pMP3ClientParams->hParser == NULL)
+		return OMX_ErrorNone;
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
+	                          OMX_CommandStateSet,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
-                             OMX_CommandStateSet,
-                             OMX_StateLoaded,
-                             NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
 
-    /* Free Buffers for parser */
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hParser,
+	                          OMX_CommandStateSet,
+	                          OMX_StateLoaded,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    OMX_U32 i;
-    for(i=0; i<pMP3ClientParams->nAESBufCnt; i++) {
-        eRetVal = OMX_FreeBuffer(pMP3ClientParams->hParser,
-                                pMP3ClientParams->nParserAudioPortIdx, 
-                                pMP3ClientParams->pParserOutBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone) {
-            INFO_PRINT("%s free buffer for port 1 failed idx %ld retval %x.\n", "Parser", i, eRetVal);
-            return eRetVal;
-        }
-    }
+	/* Free Buffers for parser */
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
+	OMX_U32 i;
+	for(i=0; i<pMP3ClientParams->nAESBufCnt; i++)
+	{
+		eRetVal = OMX_FreeBuffer(pMP3ClientParams->hParser,
+		                         pMP3ClientParams->nParserAudioPortIdx,
+		                         pMP3ClientParams->pParserOutBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+		{
+			INFO_PRINT("%s free buffer for port 1 failed idx %ld retval %x.\n", "Parser", i, eRetVal);
+			return eRetVal;
+		}
+	}
 
-    return OMX_ErrorNone;
-    
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hParser, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
+
+	return OMX_ErrorNone;
+
 }
 
 
@@ -557,190 +572,198 @@ static OMX_ERRORTYPE MP3_UnLoadParser(MP3_CLIENT_PARAMS *pMP3ClientParams)
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_LoadAudioDecoder(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_PARAM_PORTDEFINITIONTYPE    sParamPort;
-    OMX_ERRORTYPE                   eRetVal = OMX_ErrorNone;
-    OMX_U16                         nCounter = 0;
-    OMX_BUFFERHEADERTYPE            *pBufferHdr;
-    /*OMX_PTR                         pBuffer = NULL;*/
-    OMX_S8                          cComponentName[COMP_NAME_LENGTH];
-    OMX_S8                          role[COMP_NAME_LENGTH] ;
-    
-    switch(pMP3ClientParams->AudioFmt)
-    {
-        case OMX_AUDIO_CodingMP3:
-            fsl_osal_strcpy((fsl_osal_char *)cComponentName,(fsl_osal_char *)MP3_DECODER_NAME);
-            fsl_osal_strcpy((fsl_osal_char *)role,(fsl_osal_char *)MP3_DECODER_ROLE);
-            break;
+	OMX_PARAM_PORTDEFINITIONTYPE    sParamPort;
+	OMX_ERRORTYPE                   eRetVal = OMX_ErrorNone;
+	OMX_U16                         nCounter = 0;
+	OMX_BUFFERHEADERTYPE            *pBufferHdr;
+	/*OMX_PTR                         pBuffer = NULL;*/
+	OMX_S8                          cComponentName[COMP_NAME_LENGTH];
+	OMX_S8                          role[COMP_NAME_LENGTH] ;
 
-        default:
-            INFO_PRINT("Unsupported audio format: %d\n", pMP3ClientParams->AudioFmt);
-            return OMX_ErrorBadParameter;
-    }
+	switch(pMP3ClientParams->AudioFmt)
+	{
+	case OMX_AUDIO_CodingMP3:
+		fsl_osal_strcpy((fsl_osal_char *)cComponentName,(fsl_osal_char *)MP3_DECODER_NAME);
+		fsl_osal_strcpy((fsl_osal_char *)role,(fsl_osal_char *)MP3_DECODER_ROLE);
+		break;
 
-    eRetVal = OMX_GetHandle(&pMP3ClientParams->hDecoder,
-                            (OMX_STRING)cComponentName,
-                            &pMP3ClientParams->sAppHandler,
-                            &gMP3Callbacks);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-    
-    OMX_PARAM_COMPONENTROLETYPE CurRole;
-    OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
-    fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
-    OMX_SetParameter(pMP3ClientParams->hDecoder, 
-                     OMX_IndexParamStandardComponentRole, 
-                     &CurRole);
+	default:
+		INFO_PRINT("Unsupported audio format: %d\n", pMP3ClientParams->AudioFmt);
+		return OMX_ErrorBadParameter;
+	}
 
-    /* set audio format */
-    
-    OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
-    sParamPort.nPortIndex = 0;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder, 
-                               OMX_IndexParamPortDefinition, 
-                               &sParamPort);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_GetHandle(&pMP3ClientParams->hDecoder,
+	                        (OMX_STRING)cComponentName,
+	                        &pMP3ClientParams->sAppHandler,
+	                        &gMP3Callbacks);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    sParamPort.format.audio.eEncoding = pMP3ClientParams->AudioFmt;
-    sParamPort.nBufferCountActual = pMP3ClientParams->nAESBufCnt;
-    sParamPort.nBufferSize = pMP3ClientParams->nAESBufSize;
+	OMX_PARAM_COMPONENTROLETYPE CurRole;
+	OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
+	fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
+	OMX_SetParameter(pMP3ClientParams->hDecoder,
+	                 OMX_IndexParamStandardComponentRole,
+	                 &CurRole);
 
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hDecoder, 
-                               OMX_IndexParamPortDefinition, 
-                               &sParamPort);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-    
-    DEBUG_PRINT("set audio format success\n");
+	/* set audio format */
 
-    
-    /* set decoder to idle */
+	OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
+	sParamPort.nPortIndex = 0;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+	                           OMX_IndexParamPortDefinition,
+	                           &sParamPort);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder, 
-                                OMX_CommandStateSet, 
-                                OMX_StateIdle, 
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	sParamPort.format.audio.eEncoding = pMP3ClientParams->AudioFmt;
+	sParamPort.nBufferCountActual = pMP3ClientParams->nAESBufCnt;
+	sParamPort.nBufferSize = pMP3ClientParams->nAESBufSize;
 
-    /* decoder allocate buffer */
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hDecoder,
+	                           OMX_IndexParamPortDefinition,
+	                           &sParamPort);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    OMX_PORT_PARAM_TYPE sAudioPortInfo ;
-
-    OMX_INIT_STRUCT(&sAudioPortInfo, OMX_PORT_PARAM_TYPE);
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder, 
-                               OMX_IndexParamAudioInit, 
-                               &sAudioPortInfo);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-    
-    for(nCounter = sAudioPortInfo.nStartPortNumber;
-        nCounter < (sAudioPortInfo.nStartPortNumber + sAudioPortInfo.nPorts);
-        nCounter++)
-    {
-        sParamPort.nPortIndex = nCounter;
-        eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder, 
-                                   OMX_IndexParamPortDefinition, 
-                                   &sParamPort);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
-
-        if(sParamPort.eDir == OMX_DirInput) {
-            OMX_U32 i = 0;
-            for(i=0; i<pMP3ClientParams->nAESBufCnt; i++)
-            {
-                eRetVal = OMX_UseBuffer(pMP3ClientParams->hDecoder,
-                                        &pBufferHdr,
-                                        sParamPort.nPortIndex,
-                                        NULL,
-                                        pMP3ClientParams->nAESBufSize,
-                                        (OMX_U8 *)pMP3ClientParams->pParserOutBufHdr[i]->pBuffer);
-                if(eRetVal != OMX_ErrorNone)
-                    return eRetVal;
-
-                pMP3ClientParams->pDecoderInBufHdr[i] = pBufferHdr;
-            }
-
-        } 
-        else {
-            pMP3ClientParams->nPCMBufSize = sParamPort.nBufferSize;
-            pMP3ClientParams->nPCMBufCnt = sParamPort.nBufferCountActual;
-
-            for(OMX_U32 i=0; i<pMP3ClientParams->nPCMBufCnt; i++) {
-                pBufferHdr = NULL;
-                eRetVal = OMX_AllocateBuffer(pMP3ClientParams->hDecoder, 
-                                             &pBufferHdr, 
-                                             sParamPort.nPortIndex, 
-                                             NULL, 
-                                             pMP3ClientParams->nPCMBufSize);
-                if(eRetVal != OMX_ErrorNone) {
-                    INFO_PRINT("%s allocate buffer for port %ld failed.\n", "Decoder", sParamPort.nPortIndex);
-                    return eRetVal;
-                }
-                pMP3ClientParams->pDecoderOutBufHdr[i] = pBufferHdr;
-                /*
-                DEBUG_PRINT("%s allocate buffer %p:%p for port %d\n", "Parser", pBufferHdr, pBufferHdr->pBuffer, 1); 
-                */
-            }
-
-        }
-
-    }
-
-    DEBUG_PRINT("allocat audio decoder buffer finished\n");
-
-    /* decoder wait for idle */
-
-    do {
-        OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
-
-    DEBUG_PRINT("wait decoder to idle finished\n");
-
-    /* decoder set to exec */
-
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
-                             OMX_CommandStateSet,
-                             OMX_StateExecuting,
-                             NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	DEBUG_PRINT("set audio format success\n");
 
 
-    /* decoder wait to exec */
+	/* set decoder to idle */
 
-    do {
-        OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
+	                          OMX_CommandStateSet,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    DEBUG_PRINT("wait decoder to exec finished\n");
+	/* decoder allocate buffer */
 
-/*
-    OMX_INIT_STRUCT(&pMP3ClientParams->AudioDecPCMPara, OMX_AUDIO_PARAM_MP3TYPE);
-    pMP3ClientParams->AudioDecPCMPara.nPortIndex = 1;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder, 
-                               OMX_IndexParamAudioPcm, 
-                               &pMP3ClientParams->AudioDecPCMPara);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-*/
+	OMX_PORT_PARAM_TYPE sAudioPortInfo ;
 
-    for(OMX_U32 i = 0; i < pMP3ClientParams->nAESBufCnt; i++)
-    {
-        eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hParser,
-                                     pMP3ClientParams->pParserOutBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
-    }
+	OMX_INIT_STRUCT(&sAudioPortInfo, OMX_PORT_PARAM_TYPE);
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+	                           OMX_IndexParamAudioInit,
+	                           &sAudioPortInfo);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    for(OMX_U32 i = 0; i < pMP3ClientParams->nPCMBufCnt; i++)
-    {
-        eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hDecoder,
-                                     pMP3ClientParams->pDecoderOutBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
-    }
-    return OMX_ErrorNone;
+	for(nCounter = sAudioPortInfo.nStartPortNumber;
+	        nCounter < (sAudioPortInfo.nStartPortNumber + sAudioPortInfo.nPorts);
+	        nCounter++)
+	{
+		sParamPort.nPortIndex = nCounter;
+		eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+		                           OMX_IndexParamPortDefinition,
+		                           &sParamPort);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+
+		if(sParamPort.eDir == OMX_DirInput)
+		{
+			OMX_U32 i = 0;
+			for(i=0; i<pMP3ClientParams->nAESBufCnt; i++)
+			{
+				eRetVal = OMX_UseBuffer(pMP3ClientParams->hDecoder,
+				                        &pBufferHdr,
+				                        sParamPort.nPortIndex,
+				                        NULL,
+				                        pMP3ClientParams->nAESBufSize,
+				                        (OMX_U8 *)pMP3ClientParams->pParserOutBufHdr[i]->pBuffer);
+				if(eRetVal != OMX_ErrorNone)
+					return eRetVal;
+
+				pMP3ClientParams->pDecoderInBufHdr[i] = pBufferHdr;
+			}
+
+		}
+		else
+		{
+			pMP3ClientParams->nPCMBufSize = sParamPort.nBufferSize;
+			pMP3ClientParams->nPCMBufCnt = sParamPort.nBufferCountActual;
+
+			for(OMX_U32 i=0; i<pMP3ClientParams->nPCMBufCnt; i++)
+			{
+				pBufferHdr = NULL;
+				eRetVal = OMX_AllocateBuffer(pMP3ClientParams->hDecoder,
+				                             &pBufferHdr,
+				                             sParamPort.nPortIndex,
+				                             NULL,
+				                             pMP3ClientParams->nPCMBufSize);
+				if(eRetVal != OMX_ErrorNone)
+				{
+					INFO_PRINT("%s allocate buffer for port %ld failed.\n", "Decoder", sParamPort.nPortIndex);
+					return eRetVal;
+				}
+				pMP3ClientParams->pDecoderOutBufHdr[i] = pBufferHdr;
+				/*
+				DEBUG_PRINT("%s allocate buffer %p:%p for port %d\n", "Parser", pBufferHdr, pBufferHdr->pBuffer, 1);
+				*/
+			}
+
+		}
+
+	}
+
+	DEBUG_PRINT("allocat audio decoder buffer finished\n");
+
+	/* decoder wait for idle */
+
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+
+	DEBUG_PRINT("wait decoder to idle finished\n");
+
+	/* decoder set to exec */
+
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
+	                          OMX_CommandStateSet,
+	                          OMX_StateExecuting,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+
+
+	/* decoder wait to exec */
+
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
+
+	DEBUG_PRINT("wait decoder to exec finished\n");
+
+	/*
+	    OMX_INIT_STRUCT(&pMP3ClientParams->AudioDecPCMPara, OMX_AUDIO_PARAM_MP3TYPE);
+	    pMP3ClientParams->AudioDecPCMPara.nPortIndex = 1;
+	    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+	                               OMX_IndexParamAudioPcm,
+	                               &pMP3ClientParams->AudioDecPCMPara);
+	    if(eRetVal != OMX_ErrorNone)
+	        return eRetVal;
+	*/
+
+	for(OMX_U32 i = 0; i < pMP3ClientParams->nAESBufCnt; i++)
+	{
+		eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hParser,
+		                             pMP3ClientParams->pParserOutBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+	}
+
+	for(OMX_U32 i = 0; i < pMP3ClientParams->nPCMBufCnt; i++)
+	{
+		eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hDecoder,
+		                             pMP3ClientParams->pDecoderOutBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+	}
+	return OMX_ErrorNone;
 
 }
 
@@ -758,59 +781,65 @@ static OMX_ERRORTYPE MP3_LoadAudioDecoder(MP3_CLIENT_PARAMS *pMP3ClientParams)
 static OMX_ERRORTYPE MP3_UnLoadAudioDecoder(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
 
-    OMX_ERRORTYPE     eRetVal = OMX_ErrorNone;
+	OMX_ERRORTYPE     eRetVal = OMX_ErrorNone;
 
-    if(pMP3ClientParams->hDecoder== NULL)
-        return OMX_ErrorNone;
+	if(pMP3ClientParams->hDecoder== NULL)
+		return OMX_ErrorNone;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
-                                OMX_CommandStateSet ,
-                                OMX_StateIdle,
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
+	                          OMX_CommandStateSet ,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
-                             OMX_CommandStateSet,
-                             OMX_StateLoaded,
-                             NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hDecoder,
+	                          OMX_CommandStateSet,
+	                          OMX_StateLoaded,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    /* Free Buffers for audio decoder */
+	/* Free Buffers for audio decoder */
 
-    OMX_U32 i;    
-    for(i=0; i<pMP3ClientParams->nAESBufCnt; i++) {
-        eRetVal = OMX_FreeBuffer(pMP3ClientParams->hDecoder,
-                                0, 
-                                pMP3ClientParams->pDecoderInBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone) {
-            INFO_PRINT("%s free buffer for port %d failed.\n", "Decoder", 0);
-            return eRetVal;
-        }
-    }
+	OMX_U32 i;
+	for(i=0; i<pMP3ClientParams->nAESBufCnt; i++)
+	{
+		eRetVal = OMX_FreeBuffer(pMP3ClientParams->hDecoder,
+		                         0,
+		                         pMP3ClientParams->pDecoderInBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+		{
+			INFO_PRINT("%s free buffer for port %d failed.\n", "Decoder", 0);
+			return eRetVal;
+		}
+	}
 
-    for(i=0; i<pMP3ClientParams->nPCMBufCnt; i++) {
-        eRetVal = OMX_FreeBuffer(pMP3ClientParams->hDecoder,
-                                1, 
-                                pMP3ClientParams->pDecoderOutBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone) {
-            INFO_PRINT("%s free buffer for port %d failed.\n", "Decoder", 1);
-            return eRetVal;
-        }
-    }
+	for(i=0; i<pMP3ClientParams->nPCMBufCnt; i++)
+	{
+		eRetVal = OMX_FreeBuffer(pMP3ClientParams->hDecoder,
+		                         1,
+		                         pMP3ClientParams->pDecoderOutBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+		{
+			INFO_PRINT("%s free buffer for port %d failed.\n", "Decoder", 1);
+			return eRetVal;
+		}
+	}
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hDecoder, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -826,136 +855,141 @@ static OMX_ERRORTYPE MP3_UnLoadAudioDecoder(MP3_CLIENT_PARAMS *pMP3ClientParams)
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_LoadAudioRender(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE           eRetVal = OMX_ErrorNone;
-    OMX_S8                  cSinkComponentName[COMP_NAME_LENGTH];
-    OMX_PARAM_PORTDEFINITIONTYPE sParamPort, sDownstreamParamPort;
-    OMX_BUFFERHEADERTYPE    *pBufferHdr;
-    OMX_U32                 nCounter;
+	OMX_ERRORTYPE           eRetVal = OMX_ErrorNone;
+	OMX_S8                  cSinkComponentName[COMP_NAME_LENGTH];
+	OMX_PARAM_PORTDEFINITIONTYPE sParamPort, sDownstreamParamPort;
+	OMX_BUFFERHEADERTYPE    *pBufferHdr;
+	OMX_U32                 nCounter;
 
-    DEBUG_PRINT("load audio render\n");
+	DEBUG_PRINT("load audio render\n");
 
-    fsl_osal_strcpy((fsl_osal_char *)cSinkComponentName,(fsl_osal_char *)AUDIO_RENDER_NAME);
-    eRetVal = OMX_GetHandle(&pMP3ClientParams->hRender,
-                            (OMX_STRING)cSinkComponentName,
-                            &pMP3ClientParams->sAppHandler,
-                            &gMP3Callbacks);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	fsl_osal_strcpy((fsl_osal_char *)cSinkComponentName,(fsl_osal_char *)AUDIO_RENDER_NAME);
+	eRetVal = OMX_GetHandle(&pMP3ClientParams->hRender,
+	                        (OMX_STRING)cSinkComponentName,
+	                        &pMP3ClientParams->sAppHandler,
+	                        &gMP3Callbacks);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    /* set render role */
+	/* set render role */
 
-    OMX_STRING role = AUDIO_RENDER_ROLE;
-    OMX_PARAM_COMPONENTROLETYPE CurRole;
-    OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
-    fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
-    OMX_SetParameter(pMP3ClientParams->hRender, 
-                     OMX_IndexParamStandardComponentRole, 
-                     &CurRole);
+	OMX_STRING role = AUDIO_RENDER_ROLE;
+	OMX_PARAM_COMPONENTROLETYPE CurRole;
+	OMX_INIT_STRUCT(&CurRole, OMX_PARAM_COMPONENTROLETYPE);
+	fsl_osal_memcpy(&CurRole.cRole, role, OMX_MAX_STRINGNAME_SIZE);
+	OMX_SetParameter(pMP3ClientParams->hRender,
+	                 OMX_IndexParamStandardComponentRole,
+	                 &CurRole);
 
-    DEBUG_PRINT("set render role ok\n");
+	DEBUG_PRINT("set render role ok\n");
 
-    /* Get vido decoder outport format */
-    OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
-    sParamPort.nPortIndex = 1;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
-                               OMX_IndexParamPortDefinition,
-                               &sParamPort);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	/* Get vido decoder outport format */
+	OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
+	sParamPort.nPortIndex = 1;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+	                           OMX_IndexParamPortDefinition,
+	                           &sParamPort);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    /* set render inport format */
-    OMX_INIT_STRUCT(&sDownstreamParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
-    sDownstreamParamPort.nPortIndex = 0;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hRender,
-                               OMX_IndexParamPortDefinition,
-                               &sDownstreamParamPort);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-    sDownstreamParamPort.format.audio = sParamPort.format.audio; 
-    sDownstreamParamPort.nBufferSize = sParamPort.nBufferSize; 
-    sDownstreamParamPort.nBufferCountActual = sParamPort.nBufferCountActual; 
-    sDownstreamParamPort.nBufferCountMin = sParamPort.nBufferCountMin; 
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hRender,
-                               OMX_IndexParamPortDefinition,
-                               &sDownstreamParamPort);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	/* set render inport format */
+	OMX_INIT_STRUCT(&sDownstreamParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
+	sDownstreamParamPort.nPortIndex = 0;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hRender,
+	                           OMX_IndexParamPortDefinition,
+	                           &sDownstreamParamPort);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
+	sDownstreamParamPort.format.audio = sParamPort.format.audio;
+	sDownstreamParamPort.nBufferSize = sParamPort.nBufferSize;
+	sDownstreamParamPort.nBufferCountActual = sParamPort.nBufferCountActual;
+	sDownstreamParamPort.nBufferCountMin = sParamPort.nBufferCountMin;
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hRender,
+	                           OMX_IndexParamPortDefinition,
+	                           &sDownstreamParamPort);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    DEBUG_PRINT("set render input format ok\n");
+	DEBUG_PRINT("set render input format ok\n");
 
 
-    /* Set the values for the component extension structure */
-    OMX_AUDIO_PARAM_PCMMODETYPE sFormatPCM;
-    OMX_INIT_STRUCT(&sFormatPCM, OMX_AUDIO_PARAM_PCMMODETYPE);
-    sFormatPCM.nPortIndex = 1;
-    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
-                               OMX_IndexParamAudioPcm,
-                               &sFormatPCM);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	/* Set the values for the component extension structure */
+	OMX_AUDIO_PARAM_PCMMODETYPE sFormatPCM;
+	OMX_INIT_STRUCT(&sFormatPCM, OMX_AUDIO_PARAM_PCMMODETYPE);
+	sFormatPCM.nPortIndex = 1;
+	eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+	                           OMX_IndexParamAudioPcm,
+	                           &sFormatPCM);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    //fsl_osal_memcpy(&pMP3ClientParams->AudioDecPCMPara, &sFormatPCM, sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
+	//fsl_osal_memcpy(&pMP3ClientParams->AudioDecPCMPara, &sFormatPCM, sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
 
-    sFormatPCM.nPortIndex = 0;
-    eRetVal = OMX_SetParameter(pMP3ClientParams->hRender,
-                               OMX_IndexParamAudioPcm,
-                               &sFormatPCM);
+	sFormatPCM.nPortIndex = 0;
+	eRetVal = OMX_SetParameter(pMP3ClientParams->hRender,
+	                           OMX_IndexParamAudioPcm,
+	                           &sFormatPCM);
 
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    
-    /* set render to idle */
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hRender, 
-                                OMX_CommandStateSet, 
-                                OMX_StateIdle, 
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
 
-   
-    /*########################################*/
-    /* allocate buffer for render component */
-    /*########################################*/
-    for(nCounter=0; nCounter<pMP3ClientParams->nPCMBufCnt; nCounter++) {
+	/* set render to idle */
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
+	                          OMX_CommandStateSet,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-        pBufferHdr = NULL;
-        eRetVal = OMX_UseBuffer(pMP3ClientParams->hRender,
-                                &pBufferHdr,
-                                0, 
-                                NULL,
-                                pMP3ClientParams->nPCMBufSize,
-                                (OMX_U8 *)pMP3ClientParams->pDecoderOutBufHdr[nCounter]->pBuffer);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
 
-        /* set the physicall address for buffer header */
-        //pBufferHdr->nOffset = pMP3ClientParams->pRenderInBufHdr[nCounter]->nOffset;
+	/*########################################*/
+	/* allocate buffer for render component */
+	/*########################################*/
+	for(nCounter=0; nCounter<pMP3ClientParams->nPCMBufCnt; nCounter++)
+	{
 
-        pMP3ClientParams->pRenderInBufHdr[nCounter] = pBufferHdr;
-    }
+		pBufferHdr = NULL;
+		eRetVal = OMX_UseBuffer(pMP3ClientParams->hRender,
+		                        &pBufferHdr,
+		                        0,
+		                        NULL,
+		                        pMP3ClientParams->nPCMBufSize,
+		                        (OMX_U8 *)pMP3ClientParams->pDecoderOutBufHdr[nCounter]->pBuffer);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
 
-    do {
-        OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+		/* set the physicall address for buffer header */
+		//pBufferHdr->nOffset = pMP3ClientParams->pRenderInBufHdr[nCounter]->nOffset;
 
-    DEBUG_PRINT("wait render to idle  ok\n");
+		pMP3ClientParams->pRenderInBufHdr[nCounter] = pBufferHdr;
+	}
 
-    /* send command to render change to executing state */
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
-                                OMX_CommandStateSet,
-                                OMX_StateExecuting,
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
 
-    do {
-        OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
-    } while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
+	DEBUG_PRINT("wait render to idle  ok\n");
 
-    DEBUG_PRINT("wait render to exec  ok\n");
+	/* send command to render change to executing state */
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
+	                          OMX_CommandStateSet,
+	                          OMX_StateExecuting,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    return eRetVal;
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateExecuting);
+
+	DEBUG_PRINT("wait render to exec  ok\n");
+
+	return eRetVal;
 }
 
 
@@ -971,51 +1005,55 @@ static OMX_ERRORTYPE MP3_LoadAudioRender(MP3_CLIENT_PARAMS *pMP3ClientParams)
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_UnLoadAudioRender(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE   eRetVal = OMX_ErrorNone;
+	OMX_ERRORTYPE   eRetVal = OMX_ErrorNone;
 
-    if(pMP3ClientParams->hRender== NULL)
-        return OMX_ErrorNone;
+	if(pMP3ClientParams->hRender== NULL)
+		return OMX_ErrorNone;
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
-                                OMX_CommandStateSet,
-                                OMX_StateIdle,
-                                NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
+	                          OMX_CommandStateSet,
+	                          OMX_StateIdle,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateIdle);
 
-    eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
-                             OMX_CommandStateSet,
-                             OMX_StateLoaded,
-                             NULL);
-    if(eRetVal != OMX_ErrorNone)
-        return eRetVal;
-
-    
-    /* Free Buffers for render */
-
-    OMX_U32 i;
-    for(i=0; i<pMP3ClientParams->nPCMBufCnt; i++) {
-        eRetVal = OMX_FreeBuffer(pMP3ClientParams->hRender,
-                                0,
-                                pMP3ClientParams->pRenderInBufHdr[i]);
-        if(eRetVal != OMX_ErrorNone){
-            INFO_PRINT("%s free buffer for port %d failed.\n", "Render", 0);
-            return eRetVal;
-        }
-    }    
+	eRetVal = OMX_SendCommand(pMP3ClientParams->hRender,
+	                          OMX_CommandStateSet,
+	                          OMX_StateLoaded,
+	                          NULL);
+	if(eRetVal != OMX_ErrorNone)
+		return eRetVal;
 
 
-    do
-    {
-        OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
-    }while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
+	/* Free Buffers for render */
 
-    return OMX_ErrorNone;
+	OMX_U32 i;
+	for(i=0; i<pMP3ClientParams->nPCMBufCnt; i++)
+	{
+		eRetVal = OMX_FreeBuffer(pMP3ClientParams->hRender,
+		                         0,
+		                         pMP3ClientParams->pRenderInBufHdr[i]);
+		if(eRetVal != OMX_ErrorNone)
+		{
+			INFO_PRINT("%s free buffer for port %d failed.\n", "Render", 0);
+			return eRetVal;
+		}
+	}
+
+
+	do
+	{
+		OMX_GetState(pMP3ClientParams->hRender, &pMP3ClientParams->sAppHandler.eState);
+	}
+	while (pMP3ClientParams->sAppHandler.eState != OMX_StateLoaded);
+
+	return OMX_ErrorNone;
 }
 
 
@@ -1035,20 +1073,21 @@ static OMX_ERRORTYPE MP3_UnLoadAudioRender(MP3_CLIENT_PARAMS *pMP3ClientParams)
 
 ********************************************************************************/
 static OMX_S8 MP3_FindBufferHeader(
-                    OMX_BUFFERHEADERTYPE **pHeaderList, 
-                    OMX_BUFFERHEADERTYPE *pBufferHdr, 
-                    OMX_S8 num)
+    OMX_BUFFERHEADERTYPE **pHeaderList,
+    OMX_BUFFERHEADERTYPE *pBufferHdr,
+    OMX_S8 num)
 {
-    int count;
+	int count;
 
-    for(count=0; count<num; count++) {
-        if (pHeaderList[count]->pBuffer == pBufferHdr->pBuffer)
-            return count;
-    }
+	for(count=0; count<num; count++)
+	{
+		if (pHeaderList[count]->pBuffer == pBufferHdr->pBuffer)
+			return count;
+	}
 
-    INFO_PRINT("Can't find buffer header.\n");
+	INFO_PRINT("Can't find buffer header.\n");
 
-    return -1;
+	return -1;
 }
 
 
@@ -1066,61 +1105,64 @@ static OMX_S8 MP3_FindBufferHeader(
 
 static OMX_ERRORTYPE MP3_SendEmptyBuffers(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE       eRetVal = OMX_ErrorNone;
-    Message             *pMsg = NULL;
-    Message             sMsg;
-    QUEUE_ERRORTYPE     eRetQueue = QUEUE_SUCCESS;
+	OMX_ERRORTYPE       eRetVal = OMX_ErrorNone;
+	Message             *pMsg = NULL;
+	Message             sMsg;
+	QUEUE_ERRORTYPE     eRetQueue = QUEUE_SUCCESS;
 
-    pMsg = (Message *)&sMsg;
+	pMsg = (Message *)&sMsg;
 
-    eRetQueue = ReadQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue, pMsg, E_FSL_OSAL_TRUE);
-    if(eRetQueue != QUEUE_SUCCESS) {
-        INFO_PRINT("dequeue failed.\n");
-        return OMX_ErrorUndefined;
-    }
+	eRetQueue = ReadQueue(pMP3ClientParams->sAppHandler.EmptyBufQueue, pMsg, E_FSL_OSAL_TRUE);
+	if(eRetQueue != QUEUE_SUCCESS)
+	{
+		INFO_PRINT("dequeue failed.\n");
+		return OMX_ErrorUndefined;
+	}
 
-    /* receive EmptyBufferDone event from videodec */
+	/* receive EmptyBufferDone event from videodec */
 
-    if (pMsg->hComponent == pMP3ClientParams->hDecoder) {
-        
-        DEBUG_PRINT("EmptyBufferDone from decoder\n");
-        
-        int idx;
+	if (pMsg->hComponent == pMP3ClientParams->hDecoder)
+	{
 
-        idx = MP3_FindBufferHeader(pMP3ClientParams->pParserOutBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nAESBufCnt);
-        if(idx < 0)
-            return OMX_ErrorUndefined;
+		DEBUG_PRINT("EmptyBufferDone from decoder\n");
 
-        DEBUG_PRINT("parser fill this buffer\n");
-        eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hParser,
-                                     pMP3ClientParams->pParserOutBufHdr[idx]);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
-    }
+		int idx;
 
-    /* receive EmptyBufferDone event from render */
-    if (pMsg->hComponent == pMP3ClientParams->hRender) {
-        int idx;
+		idx = MP3_FindBufferHeader(pMP3ClientParams->pParserOutBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nAESBufCnt);
+		if(idx < 0)
+			return OMX_ErrorUndefined;
 
-        DEBUG_PRINT("EmptyBufferDone from render\n");
+		DEBUG_PRINT("parser fill this buffer\n");
+		eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hParser,
+		                             pMP3ClientParams->pParserOutBufHdr[idx]);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+	}
 
-        idx = MP3_FindBufferHeader(pMP3ClientParams->pDecoderOutBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nPCMBufCnt);
-        if(idx < 0)
-            return OMX_ErrorUndefined;
+	/* receive EmptyBufferDone event from render */
+	if (pMsg->hComponent == pMP3ClientParams->hRender)
+	{
+		int idx;
 
-        /*
-        DEBUG_PRINT("receive EmptyBufferDone event from render\n");
-        */
-        DEBUG_PRINT("decoder fill this buffer\n");
+		DEBUG_PRINT("EmptyBufferDone from render\n");
 
-        eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hDecoder,
-                                     pMP3ClientParams->pDecoderOutBufHdr[idx]);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
-    }
+		idx = MP3_FindBufferHeader(pMP3ClientParams->pDecoderOutBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nPCMBufCnt);
+		if(idx < 0)
+			return OMX_ErrorUndefined;
+
+		/*
+		DEBUG_PRINT("receive EmptyBufferDone event from render\n");
+		*/
+		DEBUG_PRINT("decoder fill this buffer\n");
+
+		eRetVal = OMX_FillThisBuffer(pMP3ClientParams->hDecoder,
+		                             pMP3ClientParams->pDecoderOutBufHdr[idx]);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+	}
 
 
-    return eRetVal;
+	return eRetVal;
 }
 
 
@@ -1138,91 +1180,96 @@ static OMX_ERRORTYPE MP3_SendEmptyBuffers(MP3_CLIENT_PARAMS *pMP3ClientParams)
 
 static OMX_ERRORTYPE MP3_SendFilledBuffers(MP3_CLIENT_PARAMS *pMP3ClientParams)
 {
-    OMX_ERRORTYPE eRetVal = OMX_ErrorNone;
-    Message       *pMsg = NULL;
-    Message       sMsg;
-    QUEUE_ERRORTYPE eRetQueue;
+	OMX_ERRORTYPE eRetVal = OMX_ErrorNone;
+	Message       *pMsg = NULL;
+	Message       sMsg;
+	QUEUE_ERRORTYPE eRetQueue;
 
-    pMsg = (Message *)&sMsg;
-    eRetQueue = ReadQueue(pMP3ClientParams->sAppHandler.FilledBufQueue, pMsg, E_FSL_OSAL_TRUE);
-    if(eRetQueue != QUEUE_SUCCESS) {
-        INFO_PRINT("dequeue failed.\n");
-        return OMX_ErrorUndefined;
-    }
+	pMsg = (Message *)&sMsg;
+	eRetQueue = ReadQueue(pMP3ClientParams->sAppHandler.FilledBufQueue, pMsg, E_FSL_OSAL_TRUE);
+	if(eRetQueue != QUEUE_SUCCESS)
+	{
+		INFO_PRINT("dequeue failed.\n");
+		return OMX_ErrorUndefined;
+	}
 
-    /* receive FillBufferDone event from parser */
-    
-    if (pMsg->hComponent == pMP3ClientParams->hParser) {
-        
-        DEBUG_PRINT("FillBufferDone from parser\n");
-        
-        if(pMsg->data.pBuffer->nFlags == OMX_BUFFERFLAG_EOS) {
-            INFO_PRINT("Receive EOS...\n");
-            assert(0);
-            pMP3ClientParams->bEOS = OMX_TRUE;
-            return OMX_ErrorNone;
-        }
+	/* receive FillBufferDone event from parser */
 
-        int idx;
+	if (pMsg->hComponent == pMP3ClientParams->hParser)
+	{
 
-        idx = MP3_FindBufferHeader(pMP3ClientParams->pDecoderInBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nAESBufCnt);
-        if(idx < 0)
-            return OMX_ErrorUndefined;
+		DEBUG_PRINT("FillBufferDone from parser\n");
 
-        pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen = pMsg->data.pBuffer->nFilledLen;
-        pMP3ClientParams->pDecoderInBufHdr[idx]->nOffset = pMsg->data.pBuffer->nOffset;
-        pMP3ClientParams->pDecoderInBufHdr[idx]->nFlags =  0;
+		if(pMsg->data.pBuffer->nFlags == OMX_BUFFERFLAG_EOS)
+		{
+			INFO_PRINT("Receive EOS...\n");
+			assert(0);
+			pMP3ClientParams->bEOS = OMX_TRUE;
+			return OMX_ErrorNone;
+		}
 
-        /*
-        DEBUG_PRINT("parser FillBufferDone len %ld flag %lx\n", 
-            pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen,
-            pMP3ClientParams->pDecoderInBufHdr[idx]->nFlags);
-        */
-        assert(pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen > 0);
+		int idx;
 
-        DEBUG_PRINT("decoder empty this buffer \n");
+		idx = MP3_FindBufferHeader(pMP3ClientParams->pDecoderInBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nAESBufCnt);
+		if(idx < 0)
+			return OMX_ErrorUndefined;
 
-        eRetVal = OMX_EmptyThisBuffer(pMP3ClientParams->hDecoder,
-                                      pMP3ClientParams->pDecoderInBufHdr[idx]);
+		pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen = pMsg->data.pBuffer->nFilledLen;
+		pMP3ClientParams->pDecoderInBufHdr[idx]->nOffset = pMsg->data.pBuffer->nOffset;
+		pMP3ClientParams->pDecoderInBufHdr[idx]->nFlags =  0;
 
-        if(eRetVal != OMX_ErrorNone) {
-            DEBUG_PRINT("Decoder empty buffer failed.\n");
-            return eRetVal;
-        }
+		/*
+		DEBUG_PRINT("parser FillBufferDone len %ld flag %lx\n",
+		    pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen,
+		    pMP3ClientParams->pDecoderInBufHdr[idx]->nFlags);
+		*/
+		assert(pMP3ClientParams->pDecoderInBufHdr[idx]->nFilledLen > 0);
 
-    }
+		DEBUG_PRINT("decoder empty this buffer \n");
 
-    /* receive FillBufferDone event from videodec */
-    
-    if (pMsg->hComponent == pMP3ClientParams->hDecoder) {
-        
-        DEBUG_PRINT("FillBufferDone from decoder\n");
-        
-        int idx;
+		eRetVal = OMX_EmptyThisBuffer(pMP3ClientParams->hDecoder,
+		                              pMP3ClientParams->pDecoderInBufHdr[idx]);
 
-        idx = MP3_FindBufferHeader(pMP3ClientParams->pRenderInBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nPCMBufCnt);
-        if(idx < 0)
-            return OMX_ErrorUndefined;
+		if(eRetVal != OMX_ErrorNone)
+		{
+			DEBUG_PRINT("Decoder empty buffer failed.\n");
+			return eRetVal;
+		}
 
-        pMP3ClientParams->pRenderInBufHdr[idx]->nFilledLen = pMsg->data.pBuffer->nFilledLen;
-        pMP3ClientParams->pRenderInBufHdr[idx]->nOffset = pMsg->data.pBuffer->nOffset;
-        pMP3ClientParams->pRenderInBufHdr[idx]->nFlags = pMsg->data.pBuffer->nFlags;
-        /*
-        fsl_osal_sleep(33000);
-        */
+	}
 
-        DEBUG_PRINT("render empty this buffer len %ld flag 0x%lx\n", 
-            pMP3ClientParams->pRenderInBufHdr[idx]->nFilledLen,
-            pMP3ClientParams->pRenderInBufHdr[idx]->nFlags);
+	/* receive FillBufferDone event from videodec */
 
-        eRetVal = OMX_EmptyThisBuffer(pMP3ClientParams->hRender,
-                                      pMP3ClientParams->pRenderInBufHdr[idx]);
-        if(eRetVal != OMX_ErrorNone)
-            return eRetVal;
+	if (pMsg->hComponent == pMP3ClientParams->hDecoder)
+	{
 
-    }
+		DEBUG_PRINT("FillBufferDone from decoder\n");
 
-    return eRetVal;
+		int idx;
+
+		idx = MP3_FindBufferHeader(pMP3ClientParams->pRenderInBufHdr, pMsg->data.pBuffer, pMP3ClientParams->nPCMBufCnt);
+		if(idx < 0)
+			return OMX_ErrorUndefined;
+
+		pMP3ClientParams->pRenderInBufHdr[idx]->nFilledLen = pMsg->data.pBuffer->nFilledLen;
+		pMP3ClientParams->pRenderInBufHdr[idx]->nOffset = pMsg->data.pBuffer->nOffset;
+		pMP3ClientParams->pRenderInBufHdr[idx]->nFlags = pMsg->data.pBuffer->nFlags;
+		/*
+		fsl_osal_sleep(33000);
+		*/
+
+		DEBUG_PRINT("render empty this buffer len %ld flag 0x%lx\n",
+		            pMP3ClientParams->pRenderInBufHdr[idx]->nFilledLen,
+		            pMP3ClientParams->pRenderInBufHdr[idx]->nFlags);
+
+		eRetVal = OMX_EmptyThisBuffer(pMP3ClientParams->hRender,
+		                              pMP3ClientParams->pRenderInBufHdr[idx]);
+		if(eRetVal != OMX_ErrorNone)
+			return eRetVal;
+
+	}
+
+	return eRetVal;
 }
 
 
@@ -1240,117 +1287,123 @@ static OMX_ERRORTYPE MP3_SendFilledBuffers(MP3_CLIENT_PARAMS *pMP3ClientParams)
 static OMX_ERRORTYPE MP3_ProcessEventQueue(MP3_CLIENT_PARAMS *pMP3ClientParams, Message *pMsg)
 {
 
-    OMX_ERRORTYPE eRetVal = OMX_ErrorNone;
+	OMX_ERRORTYPE eRetVal = OMX_ErrorNone;
 
-    //DEBUG_PRINT("MP3_ProcessEventQueue MsgType %d, Eventype %d\n", pMsg->MsgType, pMsg->event);
+	//DEBUG_PRINT("MP3_ProcessEventQueue MsgType %d, Eventype %d\n", pMsg->MsgType, pMsg->event);
 
-    switch(pMsg->MsgType)
-    {
-        case Eventype:
-            if(pMsg->event == EmptyBufferDone)
-            {
-                /*
-                DEBUG_PRINT("Received Emptybuffer done event\n");
-                */
+	switch(pMsg->MsgType)
+	{
+	case Eventype:
+		if(pMsg->event == EmptyBufferDone)
+		{
+			/*
+			DEBUG_PRINT("Received Emptybuffer done event\n");
+			*/
 
-                eRetVal = MP3_SendEmptyBuffers(pMP3ClientParams);
-                if(eRetVal != OMX_ErrorNone)
-                {
-                    DEBUG_PRINT("MP3_SendEmptyBuffers fail!!! %x\n", eRetVal);
-                    return eRetVal;
-                }
-            }
-            else if(pMsg->event == FillBufferDone)
-            {
-                /*
-                DEBUG_PRINT("Received Fillbuffer done event\n");
-                */
+			eRetVal = MP3_SendEmptyBuffers(pMP3ClientParams);
+			if(eRetVal != OMX_ErrorNone)
+			{
+				DEBUG_PRINT("MP3_SendEmptyBuffers fail!!! %x\n", eRetVal);
+				return eRetVal;
+			}
+		}
+		else if(pMsg->event == FillBufferDone)
+		{
+			/*
+			DEBUG_PRINT("Received Fillbuffer done event\n");
+			*/
 
-                eRetVal = MP3_SendFilledBuffers(pMP3ClientParams);
-                if(eRetVal != OMX_ErrorNone)
-                {
-                    DEBUG_PRINT("MP3_SendFilledBuffers fail!!! %x\n", eRetVal);
-                    return eRetVal;
-                }
-            }
-            else if(pMsg->event == PortSettingsChanged) {
-                if(pMsg->hComponent == pMP3ClientParams->hDecoder) {
+			eRetVal = MP3_SendFilledBuffers(pMP3ClientParams);
+			if(eRetVal != OMX_ErrorNone)
+			{
+				DEBUG_PRINT("MP3_SendFilledBuffers fail!!! %x\n", eRetVal);
+				return eRetVal;
+			}
+		}
+		else if(pMsg->event == PortSettingsChanged)
+		{
+			if(pMsg->hComponent == pMP3ClientParams->hDecoder)
+			{
 
-                    DEBUG_PRINT("decoder PortSettingsChanged %ld %ld\n", pMsg->nData1, pMsg->nData2);
+				DEBUG_PRINT("decoder PortSettingsChanged %ld %ld\n", pMsg->nData1, pMsg->nData2);
 
-                
-                    /* Get audio decoder outport format */
 
-                    /*
-                    OMX_PARAM_PORTDEFINITIONTYPE sParamPort;
-                    OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
-                    sParamPort.nPortIndex = 1;
-                    eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
-                                               OMX_IndexParamPortDefinition,
-                                               &sParamPort);
-                    if(eRetVal != OMX_ErrorNone)
-                        return eRetVal;
+				/* Get audio decoder outport format */
 
-                    DEBUG_PRINT("audio eEncoding : %d\n", (unsigned int)sParamPort.format.audio.eEncoding);
+				/*
+				OMX_PARAM_PORTDEFINITIONTYPE sParamPort;
+				OMX_INIT_STRUCT(&sParamPort, OMX_PARAM_PORTDEFINITIONTYPE);
+				sParamPort.nPortIndex = 1;
+				eRetVal = OMX_GetParameter(pMP3ClientParams->hDecoder,
+				                           OMX_IndexParamPortDefinition,
+				                           &sParamPort);
+				if(eRetVal != OMX_ErrorNone)
+				    return eRetVal;
 
-                    */
-                    if(pMP3ClientParams->hRender == NULL){
-                        if((eRetVal = MP3_LoadAudioRender(pMP3ClientParams)) != OMX_ErrorNone)
-                        {
-                            INFO_PRINT("MP3_LoadAudioRender fail %x!!!\n", eRetVal);
-                            break;
-                        }
-                    }
-                    
-                }
-            }
-            else if(pMsg->event == PortDisabled) {
-                    DEBUG_PRINT("Port disabled\n");
-            }
-            else if(pMsg->event == PortEnabled) {
-                    DEBUG_PRINT("Port enabled\n");
-            }
-            else if(pMsg->event == PortFormatDetected) {
-                if(pMsg->hComponent == pMP3ClientParams->hParser)
-                {
+				DEBUG_PRINT("audio eEncoding : %d\n", (unsigned int)sParamPort.format.audio.eEncoding);
 
-                    DEBUG_PRINT("Parser PortFormatDetected\n");
+				*/
+				if(pMP3ClientParams->hRender == NULL)
+				{
+					if((eRetVal = MP3_LoadAudioRender(pMP3ClientParams)) != OMX_ErrorNone)
+					{
+						INFO_PRINT("MP3_LoadAudioRender fail %x!!!\n", eRetVal);
+						break;
+					}
+				}
 
-                    OMX_AUDIO_PARAM_PORTFORMATTYPE sAudioPortFmt;
+			}
+		}
+		else if(pMsg->event == PortDisabled)
+		{
+			DEBUG_PRINT("Port disabled\n");
+		}
+		else if(pMsg->event == PortEnabled)
+		{
+			DEBUG_PRINT("Port enabled\n");
+		}
+		else if(pMsg->event == PortFormatDetected)
+		{
+			if(pMsg->hComponent == pMP3ClientParams->hParser)
+			{
 
-                    OMX_INIT_STRUCT(&sAudioPortFmt, OMX_AUDIO_PARAM_PORTFORMATTYPE);
-                    sAudioPortFmt.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
-                    OMX_GetParameter(pMP3ClientParams->hParser, 
-                                     OMX_IndexParamAudioPortFormat, 
-                                     &sAudioPortFmt);
+				DEBUG_PRINT("Parser PortFormatDetected\n");
 
-                    if(pMP3ClientParams->AudioFmt != sAudioPortFmt.eEncoding)
-                    {
-                        pMP3ClientParams->AudioFmt = sAudioPortFmt.eEncoding;
-                        DEBUG_PRINT("Audio format detected: %x\n", pMP3ClientParams->AudioFmt);
+				OMX_AUDIO_PARAM_PORTFORMATTYPE sAudioPortFmt;
 
-                        if((eRetVal = MP3_LoadAudioDecoder(pMP3ClientParams)) != OMX_ErrorNone)
-                        {
-                            INFO_PRINT("MP3_LoadAudioDecoder fail %x!!!\n", eRetVal);
-                            break;
-                        }
-                        
-                        
-                    }
-                } 
-            }
-            else if(pMsg->event == EndOfStream)
-            {
-                INFO_PRINT("event: EndOfStream...\n");
-                pMP3ClientParams->bEOS = OMX_TRUE;
-            }
-            break;
-            
-        default:
-            break;
-    }
+				OMX_INIT_STRUCT(&sAudioPortFmt, OMX_AUDIO_PARAM_PORTFORMATTYPE);
+				sAudioPortFmt.nPortIndex = pMP3ClientParams->nParserAudioPortIdx;
+				OMX_GetParameter(pMP3ClientParams->hParser,
+				                 OMX_IndexParamAudioPortFormat,
+				                 &sAudioPortFmt);
 
-    return eRetVal;
+				if(pMP3ClientParams->AudioFmt != sAudioPortFmt.eEncoding)
+				{
+					pMP3ClientParams->AudioFmt = sAudioPortFmt.eEncoding;
+					DEBUG_PRINT("Audio format detected: %x\n", pMP3ClientParams->AudioFmt);
+
+					if((eRetVal = MP3_LoadAudioDecoder(pMP3ClientParams)) != OMX_ErrorNone)
+					{
+						INFO_PRINT("MP3_LoadAudioDecoder fail %x!!!\n", eRetVal);
+						break;
+					}
+
+
+				}
+			}
+		}
+		else if(pMsg->event == EndOfStream)
+		{
+			INFO_PRINT("event: EndOfStream...\n");
+			pMP3ClientParams->bEOS = OMX_TRUE;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	return eRetVal;
 }
 
 
@@ -1388,59 +1441,59 @@ static OMX_ERRORTYPE MP3_ProcessEventQueue(MP3_CLIENT_PARAMS *pMP3ClientParams, 
 ********************************************************************************/
 
 static OMX_ERRORTYPE MP3_EventHandlerCallback(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_EVENTTYPE eEvent,
-        OMX_IN OMX_U32 nData1,
-        OMX_IN OMX_U32 nData2,
-        OMX_IN OMX_PTR pEventData)
+    OMX_IN OMX_HANDLETYPE hComponent,
+    OMX_IN OMX_PTR pAppData,
+    OMX_IN OMX_EVENTTYPE eEvent,
+    OMX_IN OMX_U32 nData1,
+    OMX_IN OMX_U32 nData2,
+    OMX_IN OMX_PTR pEventData)
 {
-    AppHandler *pAppHandler = (AppHandler *)pAppData;
-    Message *pMsg = NULL;
+	AppHandler *pAppHandler = (AppHandler *)pAppData;
+	Message *pMsg = NULL;
 
-    /*
-    DEBUG_PRINT("MP3_EventHandlerCallback %lx event type %d, nData1 %ld\n",(unsigned long)hComponent, eEvent, nData1);
-    */
+	/*
+	DEBUG_PRINT("MP3_EventHandlerCallback %lx event type %d, nData1 %ld\n",(unsigned long)hComponent, eEvent, nData1);
+	*/
 
-    MP3_FrameMessage(&pMsg,Eventype);
+	MP3_FrameMessage(&pMsg,Eventype);
 
-    switch(eEvent)
-    {
-        case OMX_EventCmdComplete:
-            pAppHandler->eState = (OMX_STATETYPE)nData1;
-            break;
-        case OMX_EventError:
-            pAppHandler->eError = (OMX_ERRORTYPE)nData1;
-            pMsg->event = Error;
-            break;
-        default:
-            break;
-    }
+	switch(eEvent)
+	{
+	case OMX_EventCmdComplete:
+		pAppHandler->eState = (OMX_STATETYPE)nData1;
+		break;
+	case OMX_EventError:
+		pAppHandler->eError = (OMX_ERRORTYPE)nData1;
+		pMsg->event = Error;
+		break;
+	default:
+		break;
+	}
 
-    if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandPortDisable))
-        pMsg->event = PortDisabled;
-    else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandPortEnable))
-        pMsg->event = PortEnabled;
-    else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandFlush))
-        pMsg->event = PortFlushed;
-    else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandMarkBuffer))
-        pMsg->event = BufferMarked;
-    else if(eEvent == OMX_EventCmdComplete)
-        pMsg->event = Statetransition;
-    else if(eEvent == OMX_EventBufferFlag)
-        pMsg->event = EndOfStream;
-    else if(eEvent == OMX_EventPortSettingsChanged)
-        pMsg->event = PortSettingsChanged;
-    else if(eEvent == OMX_EventPortFormatDetected)
-        pMsg->event = PortFormatDetected;
+	if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandPortDisable))
+		pMsg->event = PortDisabled;
+	else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandPortEnable))
+		pMsg->event = PortEnabled;
+	else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandFlush))
+		pMsg->event = PortFlushed;
+	else if((eEvent == OMX_EventCmdComplete) && (nData1 == OMX_CommandMarkBuffer))
+		pMsg->event = BufferMarked;
+	else if(eEvent == OMX_EventCmdComplete)
+		pMsg->event = Statetransition;
+	else if(eEvent == OMX_EventBufferFlag)
+		pMsg->event = EndOfStream;
+	else if(eEvent == OMX_EventPortSettingsChanged)
+		pMsg->event = PortSettingsChanged;
+	else if(eEvent == OMX_EventPortFormatDetected)
+		pMsg->event = PortFormatDetected;
 
-    pMsg->nData1 = nData1;
-    pMsg->nData2 = nData2;
+	pMsg->nData1 = nData1;
+	pMsg->nData2 = nData2;
 
-    pMsg->hComponent = hComponent;
-    MP3_PostMessage(pAppHandler, pMsg);
-    FSL_FREE(pMsg);
-    return OMX_ErrorNone;
+	pMsg->hComponent = hComponent;
+	MP3_PostMessage(pAppHandler, pMsg);
+	FSL_FREE(pMsg);
+	return OMX_ErrorNone;
 }
 
 
@@ -1468,30 +1521,30 @@ static OMX_ERRORTYPE MP3_EventHandlerCallback(
         or AllocateBuffer indicating the pBuffer that was emptied.
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_EmptyBufferDoneCallback(
-        OMX_IN OMX_HANDLETYPE hComponent,
-        OMX_IN OMX_PTR pAppData,
-        OMX_IN OMX_BUFFERHEADERTYPE* pBuffer)
+    OMX_IN OMX_HANDLETYPE hComponent,
+    OMX_IN OMX_PTR pAppData,
+    OMX_IN OMX_BUFFERHEADERTYPE* pBuffer)
 {
-    AppHandler *pAppHandler = (AppHandler *)pAppData;
-    Message *pMsg = NULL;
+	AppHandler *pAppHandler = (AppHandler *)pAppData;
+	Message *pMsg = NULL;
 
-    /*
-    DEBUG_PRINT("============MP3_EmptyBufferDoneCallback %lx\n",(unsigned long)hComponent);
-    */
-    MP3_FrameMessage(&pMsg,DataBuffer);
-    pMsg->data.type = EmptyBuffer;
-    pMsg->data.pBuffer = pBuffer;
-    pMsg->hComponent = hComponent;
-    MP3_PostMessage(pAppHandler, pMsg);
-    FSL_FREE(pMsg);
+	/*
+	DEBUG_PRINT("============MP3_EmptyBufferDoneCallback %lx\n",(unsigned long)hComponent);
+	*/
+	MP3_FrameMessage(&pMsg,DataBuffer);
+	pMsg->data.type = EmptyBuffer;
+	pMsg->data.pBuffer = pBuffer;
+	pMsg->hComponent = hComponent;
+	MP3_PostMessage(pAppHandler, pMsg);
+	FSL_FREE(pMsg);
 
-    MP3_FrameMessage(&pMsg,Eventype);
-    pMsg->event = EmptyBufferDone;
-    pMsg->hComponent = hComponent;
-    MP3_PostMessage(pAppHandler, pMsg);
-    FSL_FREE(pMsg);
+	MP3_FrameMessage(&pMsg,Eventype);
+	pMsg->event = EmptyBufferDone;
+	pMsg->hComponent = hComponent;
+	MP3_PostMessage(pAppHandler, pMsg);
+	FSL_FREE(pMsg);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
@@ -1520,42 +1573,42 @@ static OMX_ERRORTYPE MP3_EmptyBufferDoneCallback(
         or AllocateBuffer indicating the pBuffer that was filled.
 ********************************************************************************/
 static OMX_ERRORTYPE MP3_FillBufferDoneCallback(
-        OMX_OUT OMX_HANDLETYPE hComponent,
-        OMX_OUT OMX_PTR pAppData,
-        OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
+    OMX_OUT OMX_HANDLETYPE hComponent,
+    OMX_OUT OMX_PTR pAppData,
+    OMX_OUT OMX_BUFFERHEADERTYPE* pBuffer)
 {
-    AppHandler *pAppHandler = (AppHandler *)pAppData;
-    Message *pMsg = NULL;
-    /*
-    DEBUG_PRINT("MP3_FillBufferDoneCallback %lx, %lx, AllocLen %ld, FilledLen %ld Offset %ld OutPortIdx %ld InPortIdx %ld \n", 
-                (unsigned long)hComponent, (unsigned long)pBuffer->pBuffer, pBuffer->nAllocLen, pBuffer->nFilledLen, 
-                pBuffer->nOffset, pBuffer->nOutputPortIndex, pBuffer->nInputPortIndex);
-    */
-    MP3_FrameMessage(&pMsg,DataBuffer);
-    pMsg->data.type = FilledBuffer;
-    pMsg->data.pBuffer = pBuffer;
-    pMsg->hComponent = hComponent;
-    MP3_PostMessage(pAppHandler, pMsg);
-    FSL_FREE(pMsg);
-    MP3_FrameMessage(&pMsg,Eventype);
-    pMsg->event = FillBufferDone;
-    pMsg->hComponent = hComponent;
-    MP3_PostMessage(pAppHandler, pMsg);
-    FSL_FREE(pMsg);
+	AppHandler *pAppHandler = (AppHandler *)pAppData;
+	Message *pMsg = NULL;
+	/*
+	DEBUG_PRINT("MP3_FillBufferDoneCallback %lx, %lx, AllocLen %ld, FilledLen %ld Offset %ld OutPortIdx %ld InPortIdx %ld \n",
+	            (unsigned long)hComponent, (unsigned long)pBuffer->pBuffer, pBuffer->nAllocLen, pBuffer->nFilledLen,
+	            pBuffer->nOffset, pBuffer->nOutputPortIndex, pBuffer->nInputPortIndex);
+	*/
+	MP3_FrameMessage(&pMsg,DataBuffer);
+	pMsg->data.type = FilledBuffer;
+	pMsg->data.pBuffer = pBuffer;
+	pMsg->hComponent = hComponent;
+	MP3_PostMessage(pAppHandler, pMsg);
+	FSL_FREE(pMsg);
+	MP3_FrameMessage(&pMsg,Eventype);
+	pMsg->event = FillBufferDone;
+	pMsg->hComponent = hComponent;
+	MP3_PostMessage(pAppHandler, pMsg);
+	FSL_FREE(pMsg);
 
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 
 static OMX_BOOL MP3_CharTolower(OMX_STRING string)
 {
-    while(*string != '\0')
-    {
-        *string = tolower(*string);
-        string++;
-    }
+	while(*string != '\0')
+	{
+		*string = tolower(*string);
+		string++;
+	}
 
-    return OMX_TRUE;
+	return OMX_TRUE;
 }
 
 
@@ -1564,82 +1617,85 @@ static OMX_BOOL MP3_CharTolower(OMX_STRING string)
  processing from this entry point.
 
  @param [in]    file
-                file name of video stream 
+                file name of video stream
 
  @return        OMX_S32
                 It returns an integer value to the main function.
 ********************************************************************************/
 static OMX_S32 MP3_ILClientMain(void * file)
 {
-    OMX_ERRORTYPE           eRetVal 	= OMX_ErrorNone;
-    MP3_CLIENT_PARAMS       sVDTClientParams;
-    	Message                 *pMsg = NULL;
-   
-    sVDTClientParams.pInfilename = (OMX_U8*)file;
+	OMX_ERRORTYPE           eRetVal 	= OMX_ErrorNone;
+	MP3_CLIENT_PARAMS       sVDTClientParams;
+	Message                 *pMsg = NULL;
 
-    eRetVal = MP3_Initialize(&sVDTClientParams);
-    if(eRetVal != OMX_ErrorNone)
-        return -1;
+	sVDTClientParams.pInfilename = (OMX_U8*)file;
 
-
-    eRetVal = MP3_LoadParser(&sVDTClientParams);
-    if(eRetVal != OMX_ErrorNone) {
-        INFO_PRINT("\n\t\t Error in MP3_LoadParser \n");
-        return -1;
-    }
-
-    /*################################*/
-    /* playback event processing loop */
-    /*################################*/
-
-    pMsg = (Message *)FSL_MALLOC(sizeof(Message));
-    
-    do {
-        MP3_ReadEventQueue(&sVDTClientParams.sAppHandler , pMsg);
-
-        eRetVal = MP3_ProcessEventQueue(&sVDTClientParams, pMsg);
-
-        if(eRetVal != OMX_ErrorNone)
-            break;
-
-        if (sVDTClientParams.bEOS == OMX_TRUE)
-            break;
-
-    } while(1);
-
-    INFO_PRINT("Playback done.\n");
-
-    FSL_FREE(pMsg);
+	eRetVal = MP3_Initialize(&sVDTClientParams);
+	if(eRetVal != OMX_ErrorNone)
+		return -1;
 
 
-    MP3_UnLoadParser(&sVDTClientParams);
+	eRetVal = MP3_LoadParser(&sVDTClientParams);
+	if(eRetVal != OMX_ErrorNone)
+	{
+		INFO_PRINT("\n\t\t Error in MP3_LoadParser \n");
+		return -1;
+	}
 
-    MP3_UnLoadAudioDecoder(&sVDTClientParams);
+	/*################################*/
+	/* playback event processing loop */
+	/*################################*/
 
-    MP3_UnLoadAudioRender(&sVDTClientParams);
+	pMsg = (Message *)FSL_MALLOC(sizeof(Message));
+
+	do
+	{
+		MP3_ReadEventQueue(&sVDTClientParams.sAppHandler , pMsg);
+
+		eRetVal = MP3_ProcessEventQueue(&sVDTClientParams, pMsg);
+
+		if(eRetVal != OMX_ErrorNone)
+			break;
+
+		if (sVDTClientParams.bEOS == OMX_TRUE)
+			break;
+
+	}
+	while(1);
+
+	INFO_PRINT("Playback done.\n");
+
+	FSL_FREE(pMsg);
 
 
-    if(OMX_FreeHandle(sVDTClientParams.hParser) != OMX_ErrorNone)
-        return -1;
-    DEBUG_PRINT("Parser component deinited.\n");
+	MP3_UnLoadParser(&sVDTClientParams);
 
-    if(OMX_FreeHandle(sVDTClientParams.hDecoder) != OMX_ErrorNone)
-        return -1;
-    DEBUG_PRINT("vpu decoder component deinited.\n");
+	MP3_UnLoadAudioDecoder(&sVDTClientParams);
+
+	MP3_UnLoadAudioRender(&sVDTClientParams);
 
 
-    if(OMX_FreeHandle(sVDTClientParams.hRender) != OMX_ErrorNone)
-        return -1;
-    DEBUG_PRINT("video render component deinited.\n");
+	if(OMX_FreeHandle(sVDTClientParams.hParser) != OMX_ErrorNone)
+		return -1;
+	DEBUG_PRINT("Parser component deinited.\n");
 
-    eRetVal = MP3_DeInitialize(&sVDTClientParams);
-    if(eRetVal != OMX_ErrorNone)
-    {
-        return -1;
-    }
+	if(OMX_FreeHandle(sVDTClientParams.hDecoder) != OMX_ErrorNone)
+		return -1;
+	DEBUG_PRINT("vpu decoder component deinited.\n");
 
-    /* Return a success value to the main */
-    return 0;
+
+	if(OMX_FreeHandle(sVDTClientParams.hRender) != OMX_ErrorNone)
+		return -1;
+	DEBUG_PRINT("video render component deinited.\n");
+
+	eRetVal = MP3_DeInitialize(&sVDTClientParams);
+	if(eRetVal != OMX_ErrorNone)
+	{
+		return -1;
+	}
+
+	/* Return a success value to the main */
+	return 0;
 }
 
 
@@ -1658,45 +1714,46 @@ static OMX_S32 MP3_ILClientMain(void * file)
 ********************************************************************************/
 int main(int argc, char **argv)
 {
-    OMX_ERRORTYPE   eRetVal = OMX_ErrorNone;
-    char            *file;
-    OMX_STRING      p = NULL;
-    fsl_osal_char   subfix[16];
+	OMX_ERRORTYPE   eRetVal = OMX_ErrorNone;
+	char            *file;
+	OMX_STRING      p = NULL;
+	fsl_osal_char   subfix[16];
 
-    if(argc < 2) {
-        INFO_PRINT("usage: ./video_decoder_test inputfile \n");
-        return -1;
-    }
-    
-    file = argv[1];
+	if(argc < 2)
+	{
+		INFO_PRINT("usage: ./video_decoder_test inputfile \n");
+		return -1;
+	}
 
-    p = fsl_osal_strrchr((fsl_osal_char*)file, '.');
-    if (p == NULL || fsl_osal_strlen(p)>15)
-    {
-        INFO_PRINT("Unsupported file type [%s]!!!\n", file);
-        return -1;
-    }
-    
-    fsl_osal_strcpy(subfix, p);
-    MP3_CharTolower(subfix);
-    if (fsl_osal_strcmp(subfix, ".mp3")!=0)
-    {
-        INFO_PRINT("Unsupported file type [%s]!!!\n", subfix);
-        return -1;
-    }
-    
+	file = argv[1];
 
-    eRetVal = OMX_Init();
-    if (eRetVal != OMX_ErrorNone)
-        return -1;
+	p = fsl_osal_strrchr((fsl_osal_char*)file, '.');
+	if (p == NULL || fsl_osal_strlen(p)>15)
+	{
+		INFO_PRINT("Unsupported file type [%s]!!!\n", file);
+		return -1;
+	}
 
-    MP3_ILClientMain(file);
+	fsl_osal_strcpy(subfix, p);
+	MP3_CharTolower(subfix);
+	if (fsl_osal_strcmp(subfix, ".mp3")!=0)
+	{
+		INFO_PRINT("Unsupported file type [%s]!!!\n", subfix);
+		return -1;
+	}
 
-    eRetVal = OMX_Deinit();
-    if(eRetVal != OMX_ErrorNone)
-        return -1;
 
-    return 0;
+	eRetVal = OMX_Init();
+	if (eRetVal != OMX_ErrorNone)
+		return -1;
+
+	MP3_ILClientMain(file);
+
+	eRetVal = OMX_Deinit();
+	if(eRetVal != OMX_ErrorNone)
+		return -1;
+
+	return 0;
 }
 
 

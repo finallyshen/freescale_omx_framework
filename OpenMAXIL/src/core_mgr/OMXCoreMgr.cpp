@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2009-2012, Freescale Semiconductor, Inc. 
+ *  Copyright (c) 2009-2012, Freescale Semiconductor, Inc.
  *  All Rights Reserved.
  *
  *  The following programs are the sole property of Freescale Semiconductor Inc.,
@@ -31,12 +31,13 @@
 
 static fsl_osal_mutex_t omx_mutex = FSL_OSAL_MUTEX_INITIALIZER;
 
-OMX_ERRORTYPE OMXCoreMgr::OMX_Init() 
+OMX_ERRORTYPE OMXCoreMgr::OMX_Init()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	lock = NULL;
-	if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal)) {
+	if(E_FSL_OSAL_SUCCESS != fsl_osal_mutex_init(&lock, fsl_osal_mutex_normal))
+	{
 		LOG_ERROR("Create mutex for camera device failed.\n");
 		return OMX_ErrorInsufficientResources;
 	}
@@ -76,7 +77,7 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_Init()
 			LOG_ERROR("OMX initialize fail.\n");
 			return ret;
 		}
-		
+
 		OMX_U32 j;
 		/** Get component count of the core */
 		for (j = 0; ; j ++)
@@ -137,7 +138,7 @@ OMX_ERRORTYPE OMXCoreMgr::CoreRegister()
 
 		pCoreInfo->priority = 3;
 
-		for (EntryIndex=0; ;EntryIndex++)
+		for (EntryIndex=0; ; EntryIndex++)
 		{
 			REG_ENTRY *pRegEntryItem = RegEntry->GetNode(EntryIndex);
 			if (pRegEntryItem == NULL)
@@ -149,16 +150,16 @@ OMX_ERRORTYPE OMXCoreMgr::CoreRegister()
 				if (!fsl_osal_strcmp(pRegEntryItem->name, "core_name"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pCoreInfo->CoreName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "core_library_path"))
 				{
 					fsl_osal_strcpy((fsl_osal_char *)pCoreInfo->LibName, \
-							pRegEntryItem->value);
+					                pRegEntryItem->value);
 				}
 				else if (!fsl_osal_strcmp(pRegEntryItem->name, "core_priority"))
 				{
-						pCoreInfo->priority = fsl_osal_atoi(pRegEntryItem->value);
+					pCoreInfo->priority = fsl_osal_atoi(pRegEntryItem->value);
 				}
 				else
 				{
@@ -169,7 +170,8 @@ OMX_ERRORTYPE OMXCoreMgr::CoreRegister()
 
 		CoreInfoList.Add(pCoreInfo, pCoreInfo->priority);
 
-	}while (1);
+	}
+	while (1);
 
 	ret_reg = RegistryAnalyser.Close();
 	if (ret_reg != REG_SUCCESS)
@@ -181,7 +183,7 @@ OMX_ERRORTYPE OMXCoreMgr::CoreRegister()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCoreMgr::OMX_Deinit() 
+OMX_ERRORTYPE OMXCoreMgr::OMX_Deinit()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -207,7 +209,7 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_Deinit()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCoreMgr::FreeAllCore() 
+OMX_ERRORTYPE OMXCoreMgr::FreeAllCore()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -236,7 +238,7 @@ OMX_ERRORTYPE OMXCoreMgr::FreeAllCore()
 	return ret;
 }
 
-OMX_ERRORTYPE OMXCoreMgr::FreeCoreMgrResource() 
+OMX_ERRORTYPE OMXCoreMgr::FreeCoreMgrResource()
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -262,9 +264,9 @@ OMX_ERRORTYPE OMXCoreMgr::FreeCoreMgrResource()
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_ComponentNameEnum(
-        OMX_STRING cComponentName, 
-        OMX_U32 nNameLength, 
-        OMX_U32 nIndex) 
+    OMX_STRING cComponentName,
+    OMX_U32 nNameLength,
+    OMX_U32 nIndex)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -295,10 +297,10 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_ComponentNameEnum(
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_GetHandle(
-        OMX_HANDLETYPE *pHandle, 
-        OMX_STRING cComponentName,
-        OMX_PTR pAppData, 
-        OMX_CALLBACKTYPE *pCallBacks) 
+    OMX_HANDLETYPE *pHandle,
+    OMX_STRING cComponentName,
+    OMX_PTR pAppData,
+    OMX_CALLBACKTYPE *pCallBacks)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -311,10 +313,10 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetHandle(
 		}
 
 		ret = pCoreInfo->Interface->OMX_GetHandle(
-				pHandle, 
-				cComponentName,
-				pAppData, 
-				pCallBacks);
+		          pHandle,
+		          cComponentName,
+		          pAppData,
+		          pCallBacks);
 		if (ret == OMX_ErrorNone)
 		{
 			HANDLE_INFO *pHandleInfo = FSL_NEW(HANDLE_INFO, ());
@@ -323,7 +325,7 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetHandle(
 				LOG_ERROR("Can't get memory.\n");
 				return OMX_ErrorInsufficientResources;
 			}
-			
+
 			pHandleInfo->pHandle = *pHandle;
 			pHandleInfo->CoreIndex = i;
 
@@ -340,11 +342,11 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetHandle(
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_FreeHandle(
-        OMX_HANDLETYPE hComponent) 
+    OMX_HANDLETYPE hComponent)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    fsl_osal_mutex_lock(lock);
+	fsl_osal_mutex_lock(lock);
 	for (OMX_U32 i = 0; ; i ++)
 	{
 		HANDLE_INFO *pHandleInfo = HandleList.GetNode(i);
@@ -376,15 +378,15 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_FreeHandle(
 		}
 	}
 
-    fsl_osal_mutex_unlock(lock);
+	fsl_osal_mutex_unlock(lock);
 	LOG_ERROR("OMX free handle fail.\n");
 	return ret;
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_GetComponentsOfRole(
-        OMX_STRING role, 
-        OMX_U32 *pNumComps, 
-        OMX_U8 **compNames) 
+    OMX_STRING role,
+    OMX_U32 *pNumComps,
+    OMX_U8 **compNames)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 nCompNum = *pNumComps, nCompTotalNum = 0;
@@ -398,9 +400,9 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetComponentsOfRole(
 		}
 
 		ret = pCoreInfo->Interface->OMX_GetComponentsOfRole(
-				role, 
-				&nCompNum, 
-				compNames);
+		          role,
+		          &nCompNum,
+		          compNames);
 		if (ret != OMX_ErrorNone)
 		{
 			return ret;
@@ -426,9 +428,9 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetComponentsOfRole(
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_GetRolesOfComponent(
-        OMX_STRING compName, 
-        OMX_U32 *pNumRoles, 
-        OMX_U8 **roles) 
+    OMX_STRING compName,
+    OMX_U32 *pNumRoles,
+    OMX_U8 **roles)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	OMX_U32 nRoleNum = *pNumRoles, nRoleTotalNum = 0;
@@ -442,9 +444,9 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetRolesOfComponent(
 		}
 
 		ret = pCoreInfo->Interface->OMX_GetRolesOfComponent(
-				compName, 
-				&nRoleNum, 
-				roles);
+		          compName,
+		          &nRoleNum,
+		          roles);
 		if (ret == OMX_ErrorNone)
 		{
 			return ret;
@@ -473,10 +475,10 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetRolesOfComponent(
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_SetupTunnel(
-        OMX_HANDLETYPE hOutput, 
-        OMX_U32 nPortOutput, 
-        OMX_HANDLETYPE hInput, 
-        OMX_U32 nPortInput) 
+    OMX_HANDLETYPE hOutput,
+    OMX_U32 nPortOutput,
+    OMX_HANDLETYPE hInput,
+    OMX_U32 nPortInput)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -498,10 +500,10 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_SetupTunnel(
 			}
 
 			ret = pCoreInfo->Interface->OMX_SetupTunnel(
-					hOutput, 
-					nPortOutput, 
-					hInput, 
-					nPortInput);
+			          hOutput,
+			          nPortOutput,
+			          hInput,
+			          nPortInput);
 			if (ret == OMX_ErrorNone)
 			{
 				return ret;
@@ -514,8 +516,8 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_SetupTunnel(
 }
 
 OMX_ERRORTYPE OMXCoreMgr::OMX_GetContentPipe(
-        OMX_HANDLETYPE *hPipe, 
-        OMX_STRING szURI) 
+    OMX_HANDLETYPE *hPipe,
+    OMX_STRING szURI)
 {
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
@@ -528,8 +530,8 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetContentPipe(
 		}
 
 		ret = pCoreInfo->Interface->OMX_GetContentPipe(
-				hPipe, 
-				szURI);
+		          hPipe,
+		          szURI);
 		if (ret == OMX_ErrorNone)
 		{
 			return ret;
@@ -541,150 +543,154 @@ OMX_ERRORTYPE OMXCoreMgr::OMX_GetContentPipe(
 }
 
 /**< C style functions to expose entry point for the shared library */
-extern "C" 
+extern "C"
 {
-    /**< OMX core manager handle definition, global variable */
-    OMXCoreMgr *gCoreMgrHandle = NULL;
-    static OMX_S32 refCnt = 0;
+	/**< OMX core manager handle definition, global variable */
+	OMXCoreMgr *gCoreMgrHandle = NULL;
+	static OMX_S32 refCnt = 0;
 
-    OMX_ERRORTYPE OMX_Init() 
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        OMX_CORE_API_LOG("OMX_Init: \r\n");
-        fsl_osal_mutex_lock(&omx_mutex);
+	OMX_ERRORTYPE OMX_Init()
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		OMX_CORE_API_LOG("OMX_Init: \r\n");
+		fsl_osal_mutex_lock(&omx_mutex);
 
-        if(NULL == gCoreMgrHandle) {
+		if(NULL == gCoreMgrHandle)
+		{
 #ifdef OMX_MEM_CHECK
-            init_memmanager(NULL);
+			init_memmanager(NULL);
 #endif
-            gCoreMgrHandle = FSL_NEW(OMXCoreMgr, ());
-            if(NULL == gCoreMgrHandle) {
-                fsl_osal_mutex_unlock(&omx_mutex);
-                return OMX_ErrorInsufficientResources;
-            }
+			gCoreMgrHandle = FSL_NEW(OMXCoreMgr, ());
+			if(NULL == gCoreMgrHandle)
+			{
+				fsl_osal_mutex_unlock(&omx_mutex);
+				return OMX_ErrorInsufficientResources;
+			}
 
-            LogInit(-1, NULL);
+			LogInit(-1, NULL);
 
-            LOG_DEBUG("OMXCoreMgr is Created %p.\n", gCoreMgrHandle);
+			LOG_DEBUG("OMXCoreMgr is Created %p.\n", gCoreMgrHandle);
 
-            ret = gCoreMgrHandle->OMX_Init();
-        }
+			ret = gCoreMgrHandle->OMX_Init();
+		}
 
-        refCnt ++;
+		refCnt ++;
 
-        fsl_osal_mutex_unlock(&omx_mutex);
+		fsl_osal_mutex_unlock(&omx_mutex);
 
-        return ret;
-    }
+		return ret;
+	}
 
-    OMX_ERRORTYPE OMX_Deinit() 
-    {
-        OMX_CORE_API_LOG("OMX_Deinit: \r\n");
-        fsl_osal_mutex_lock(&omx_mutex);
+	OMX_ERRORTYPE OMX_Deinit()
+	{
+		OMX_CORE_API_LOG("OMX_Deinit: \r\n");
+		fsl_osal_mutex_lock(&omx_mutex);
 
-        refCnt --;
-        if(refCnt > 0) {
-            fsl_osal_mutex_unlock(&omx_mutex);
-            return OMX_ErrorNone;
-        }
+		refCnt --;
+		if(refCnt > 0)
+		{
+			fsl_osal_mutex_unlock(&omx_mutex);
+			return OMX_ErrorNone;
+		}
 
-        if(NULL != gCoreMgrHandle) {
-            gCoreMgrHandle->OMX_Deinit();
+		if(NULL != gCoreMgrHandle)
+		{
+			gCoreMgrHandle->OMX_Deinit();
 
-            LOG_DEBUG("OMXCoreMgr is deleted %p.\n", gCoreMgrHandle);
+			LOG_DEBUG("OMXCoreMgr is deleted %p.\n", gCoreMgrHandle);
 
-            FSL_DELETE(gCoreMgrHandle);
-            gCoreMgrHandle = NULL;
-        }
+			FSL_DELETE(gCoreMgrHandle);
+			gCoreMgrHandle = NULL;
+		}
 
-	LogDeInit();
+		LogDeInit();
 
 #ifdef OMX_MEM_CHECK
-        deinit_memmanager();
+		deinit_memmanager();
 #endif
 
-        fsl_osal_mutex_unlock(&omx_mutex);
+		fsl_osal_mutex_unlock(&omx_mutex);
 
-        return OMX_ErrorNone;
-    }
+		return OMX_ErrorNone;
+	}
 
-    OMX_ERRORTYPE OMX_ComponentNameEnum(
-            OMX_STRING cComponentName, 
-            OMX_U32 nNameLength, 
-            OMX_U32 nIndex) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_ComponentNameEnum: Index: 0x%X \r\n",nIndex);
-        return gCoreMgrHandle->OMX_ComponentNameEnum(cComponentName, nNameLength, nIndex);
-    }
+	OMX_ERRORTYPE OMX_ComponentNameEnum(
+	    OMX_STRING cComponentName,
+	    OMX_U32 nNameLength,
+	    OMX_U32 nIndex)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_ComponentNameEnum: Index: 0x%X \r\n",nIndex);
+		return gCoreMgrHandle->OMX_ComponentNameEnum(cComponentName, nNameLength, nIndex);
+	}
 
-    OMX_ERRORTYPE OMX_GetHandle(
-            OMX_HANDLETYPE *pHandle, 
-            OMX_STRING cComponentName,
-            OMX_PTR pAppData, 
-            OMX_CALLBACKTYPE *pCallBacks) 
-    {
-        OMX_ERRORTYPE ret;
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        ret=gCoreMgrHandle->OMX_GetHandle(pHandle, cComponentName, pAppData, pCallBacks);
-        OMX_CORE_API_LOG("OMX_GetHandle: ComponentName: %s, Handle: 0x%X \r\n",cComponentName,*pHandle);
-        return ret;
-    }
+	OMX_ERRORTYPE OMX_GetHandle(
+	    OMX_HANDLETYPE *pHandle,
+	    OMX_STRING cComponentName,
+	    OMX_PTR pAppData,
+	    OMX_CALLBACKTYPE *pCallBacks)
+	{
+		OMX_ERRORTYPE ret;
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		ret=gCoreMgrHandle->OMX_GetHandle(pHandle, cComponentName, pAppData, pCallBacks);
+		OMX_CORE_API_LOG("OMX_GetHandle: ComponentName: %s, Handle: 0x%X \r\n",cComponentName,*pHandle);
+		return ret;
+	}
 
-    OMX_ERRORTYPE OMX_FreeHandle(
-            OMX_HANDLETYPE hComponent) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_FreeHandle: Handle: 0x%X \r\n",hComponent);
-        return gCoreMgrHandle->OMX_FreeHandle(hComponent);
-    }
+	OMX_ERRORTYPE OMX_FreeHandle(
+	    OMX_HANDLETYPE hComponent)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_FreeHandle: Handle: 0x%X \r\n",hComponent);
+		return gCoreMgrHandle->OMX_FreeHandle(hComponent);
+	}
 
-    OMX_ERRORTYPE OMX_GetComponentsOfRole(
-            OMX_STRING role, 
-            OMX_U32 *pNumComps, 
-            OMX_U8 **compNames) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_GetComponentsOfRole: Role: %s \r\n",role);
-        return gCoreMgrHandle->OMX_GetComponentsOfRole(role, pNumComps, compNames);
-    }
+	OMX_ERRORTYPE OMX_GetComponentsOfRole(
+	    OMX_STRING role,
+	    OMX_U32 *pNumComps,
+	    OMX_U8 **compNames)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_GetComponentsOfRole: Role: %s \r\n",role);
+		return gCoreMgrHandle->OMX_GetComponentsOfRole(role, pNumComps, compNames);
+	}
 
-    OMX_ERRORTYPE OMX_GetRolesOfComponent(
-            OMX_STRING compName, 
-            OMX_U32 *pNumRoles, 
-            OMX_U8 **roles) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_GetRolesOfComponent: ComponentName: %s \r\n",compName);
-        return gCoreMgrHandle->OMX_GetRolesOfComponent(compName, pNumRoles, roles);
-    }
+	OMX_ERRORTYPE OMX_GetRolesOfComponent(
+	    OMX_STRING compName,
+	    OMX_U32 *pNumRoles,
+	    OMX_U8 **roles)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_GetRolesOfComponent: ComponentName: %s \r\n",compName);
+		return gCoreMgrHandle->OMX_GetRolesOfComponent(compName, pNumRoles, roles);
+	}
 
-    OMX_ERRORTYPE OMX_SetupTunnel(
-            OMX_HANDLETYPE hOutput, 
-            OMX_U32 nPortOutput, 
-            OMX_HANDLETYPE hInput, 
-            OMX_U32 nPortInput) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_SetupTunnel: OutHandle: 0x%X, OutPort: 0x%X, InHandle: 0x%X, InPort: 0x%X \r\n",hOutput,nPortOutput,hInput,nPortInput);
-        return gCoreMgrHandle->OMX_SetupTunnel(hOutput, nPortOutput, hInput, nPortInput);
-    }
+	OMX_ERRORTYPE OMX_SetupTunnel(
+	    OMX_HANDLETYPE hOutput,
+	    OMX_U32 nPortOutput,
+	    OMX_HANDLETYPE hInput,
+	    OMX_U32 nPortInput)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_SetupTunnel: OutHandle: 0x%X, OutPort: 0x%X, InHandle: 0x%X, InPort: 0x%X \r\n",hOutput,nPortOutput,hInput,nPortInput);
+		return gCoreMgrHandle->OMX_SetupTunnel(hOutput, nPortOutput, hInput, nPortInput);
+	}
 
-    OMX_ERRORTYPE OMX_GetContentPipe(
-            OMX_HANDLETYPE *hPipe, 
-            OMX_STRING szURI) 
-    {
-        if(NULL == gCoreMgrHandle)
-            return OMX_ErrorNotReady;
-        OMX_CORE_API_LOG("OMX_GetContentPipe: URI: %s \r\n",szURI);
-        return gCoreMgrHandle->OMX_GetContentPipe(hPipe, szURI);
-    }
+	OMX_ERRORTYPE OMX_GetContentPipe(
+	    OMX_HANDLETYPE *hPipe,
+	    OMX_STRING szURI)
+	{
+		if(NULL == gCoreMgrHandle)
+			return OMX_ErrorNotReady;
+		OMX_CORE_API_LOG("OMX_GetContentPipe: URI: %s \r\n",szURI);
+		return gCoreMgrHandle->OMX_GetContentPipe(hPipe, szURI);
+	}
 }
 
 /* File EOF */

@@ -39,34 +39,34 @@
 
 void av_register_all(void)
 {
-    static int initialized;
+	static int initialized;
 
-    if (initialized)
-        return;
-    initialized = 1;
+	if (initialized)
+		return;
+	initialized = 1;
 
-    //avcodec_register_all();
+	//avcodec_register_all();
 
-    /* (de)muxers */
-    REGISTER_DEMUXER  (MPEGTS, mpegts);
+	/* (de)muxers */
+	REGISTER_DEMUXER  (MPEGTS, mpegts);
 
-    REGISTER_DEMUXER  (APPLEHTTP, applehttp);
-    REGISTER_MUXDEMUX (RTP, rtp);
-    REGISTER_MUXDEMUX (RTSP, rtsp);
-    REGISTER_MUXDEMUX (SAP, sap);
-    REGISTER_DEMUXER  (SDP, sdp);
+	REGISTER_DEMUXER  (APPLEHTTP, applehttp);
+	REGISTER_MUXDEMUX (RTP, rtp);
+	REGISTER_MUXDEMUX (RTSP, rtsp);
+	REGISTER_MUXDEMUX (SAP, sap);
+	REGISTER_DEMUXER  (SDP, sdp);
 #if CONFIG_RTPDEC
-    av_register_rtp_dynamic_payload_handlers();
-    av_register_rdt_dynamic_payload_handlers();
+	av_register_rtp_dynamic_payload_handlers();
+	av_register_rdt_dynamic_payload_handlers();
 #endif
 
-    /* protocols */
-    REGISTER_PROTOCOL (APPLEHTTP, applehttp);
-    REGISTER_PROTOCOL (HTTP, http);
-    REGISTER_PROTOCOL (MMSH, mmsh);
-    REGISTER_PROTOCOL (MMST, mmst);
-    REGISTER_PROTOCOL (RTMP, rtmp);
-    REGISTER_PROTOCOL (RTP, rtp);
-    REGISTER_PROTOCOL (TCP, tcp);
-    REGISTER_PROTOCOL (UDP, udp);
+	/* protocols */
+	REGISTER_PROTOCOL (APPLEHTTP, applehttp);
+	REGISTER_PROTOCOL (HTTP, http);
+	REGISTER_PROTOCOL (MMSH, mmsh);
+	REGISTER_PROTOCOL (MMST, mmst);
+	REGISTER_PROTOCOL (RTMP, rtmp);
+	REGISTER_PROTOCOL (RTP, rtp);
+	REGISTER_PROTOCOL (TCP, tcp);
+	REGISTER_PROTOCOL (UDP, udp);
 }

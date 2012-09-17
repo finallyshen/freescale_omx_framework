@@ -70,12 +70,21 @@
 
 static void put_pixels4_c(uint8_t *dest,const uint8_t *ref, const int stride,int height)
 {
-        switch((int)ref&3){
-        case 0: OP_C40(); return;
-        case 1: OP_C4(1); return;
-        case 2: OP_C4(2); return;
-        case 3: OP_C4(3); return;
-        }
+	switch((int)ref&3)
+	{
+	case 0:
+		OP_C40();
+		return;
+	case 1:
+		OP_C4(1);
+		return;
+	case 2:
+		OP_C4(2);
+		return;
+	case 3:
+		OP_C4(3);
+		return;
+	}
 }
 
 #undef          OP
@@ -83,12 +92,21 @@ static void put_pixels4_c(uint8_t *dest,const uint8_t *ref, const int stride,int
 
 static void avg_pixels4_c(uint8_t *dest,const uint8_t *ref, const int stride,int height)
 {
-        switch((int)ref&3){
-        case 0: OP_C40(); return;
-        case 1: OP_C4(1); return;
-        case 2: OP_C4(2); return;
-        case 3: OP_C4(3); return;
-        }
+	switch((int)ref&3)
+	{
+	case 0:
+		OP_C40();
+		return;
+	case 1:
+		OP_C4(1);
+		return;
+	case 2:
+		OP_C4(2);
+		return;
+	case 3:
+		OP_C4(3);
+		return;
+	}
 }
 
 #undef          OP
@@ -333,41 +351,41 @@ DEFFUNC(avg,no_rnd,xy,16,OP_XY,PACK)
 
 void dsputil_init_align(DSPContext* c, AVCodecContext *avctx)
 {
-        c->put_pixels_tab[0][0] = put_rnd_pixels16_o;
-        c->put_pixels_tab[0][1] = put_rnd_pixels16_x;
-        c->put_pixels_tab[0][2] = put_rnd_pixels16_y;
-        c->put_pixels_tab[0][3] = put_rnd_pixels16_xy;
-        c->put_pixels_tab[1][0] = put_rnd_pixels8_o;
-        c->put_pixels_tab[1][1] = put_rnd_pixels8_x;
-        c->put_pixels_tab[1][2] = put_rnd_pixels8_y;
-        c->put_pixels_tab[1][3] = put_rnd_pixels8_xy;
+	c->put_pixels_tab[0][0] = put_rnd_pixels16_o;
+	c->put_pixels_tab[0][1] = put_rnd_pixels16_x;
+	c->put_pixels_tab[0][2] = put_rnd_pixels16_y;
+	c->put_pixels_tab[0][3] = put_rnd_pixels16_xy;
+	c->put_pixels_tab[1][0] = put_rnd_pixels8_o;
+	c->put_pixels_tab[1][1] = put_rnd_pixels8_x;
+	c->put_pixels_tab[1][2] = put_rnd_pixels8_y;
+	c->put_pixels_tab[1][3] = put_rnd_pixels8_xy;
 
-        c->put_no_rnd_pixels_tab[0][0] = put_no_rnd_pixels16_o;
-        c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x;
-        c->put_no_rnd_pixels_tab[0][2] = put_no_rnd_pixels16_y;
-        c->put_no_rnd_pixels_tab[0][3] = put_no_rnd_pixels16_xy;
-        c->put_no_rnd_pixels_tab[1][0] = put_no_rnd_pixels8_o;
-        c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x;
-        c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y;
-        c->put_no_rnd_pixels_tab[1][3] = put_no_rnd_pixels8_xy;
+	c->put_no_rnd_pixels_tab[0][0] = put_no_rnd_pixels16_o;
+	c->put_no_rnd_pixels_tab[0][1] = put_no_rnd_pixels16_x;
+	c->put_no_rnd_pixels_tab[0][2] = put_no_rnd_pixels16_y;
+	c->put_no_rnd_pixels_tab[0][3] = put_no_rnd_pixels16_xy;
+	c->put_no_rnd_pixels_tab[1][0] = put_no_rnd_pixels8_o;
+	c->put_no_rnd_pixels_tab[1][1] = put_no_rnd_pixels8_x;
+	c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y;
+	c->put_no_rnd_pixels_tab[1][3] = put_no_rnd_pixels8_xy;
 
-        c->avg_pixels_tab[0][0] = avg_rnd_pixels16_o;
-        c->avg_pixels_tab[0][1] = avg_rnd_pixels16_x;
-        c->avg_pixels_tab[0][2] = avg_rnd_pixels16_y;
-        c->avg_pixels_tab[0][3] = avg_rnd_pixels16_xy;
-        c->avg_pixels_tab[1][0] = avg_rnd_pixels8_o;
-        c->avg_pixels_tab[1][1] = avg_rnd_pixels8_x;
-        c->avg_pixels_tab[1][2] = avg_rnd_pixels8_y;
-        c->avg_pixels_tab[1][3] = avg_rnd_pixels8_xy;
+	c->avg_pixels_tab[0][0] = avg_rnd_pixels16_o;
+	c->avg_pixels_tab[0][1] = avg_rnd_pixels16_x;
+	c->avg_pixels_tab[0][2] = avg_rnd_pixels16_y;
+	c->avg_pixels_tab[0][3] = avg_rnd_pixels16_xy;
+	c->avg_pixels_tab[1][0] = avg_rnd_pixels8_o;
+	c->avg_pixels_tab[1][1] = avg_rnd_pixels8_x;
+	c->avg_pixels_tab[1][2] = avg_rnd_pixels8_y;
+	c->avg_pixels_tab[1][3] = avg_rnd_pixels8_xy;
 
-        c->avg_no_rnd_pixels_tab[0][0] = avg_no_rnd_pixels16_o;
-        c->avg_no_rnd_pixels_tab[0][1] = avg_no_rnd_pixels16_x;
-        c->avg_no_rnd_pixels_tab[0][2] = avg_no_rnd_pixels16_y;
-        c->avg_no_rnd_pixels_tab[0][3] = avg_no_rnd_pixels16_xy;
-        c->avg_no_rnd_pixels_tab[1][0] = avg_no_rnd_pixels8_o;
-        c->avg_no_rnd_pixels_tab[1][1] = avg_no_rnd_pixels8_x;
-        c->avg_no_rnd_pixels_tab[1][2] = avg_no_rnd_pixels8_y;
-        c->avg_no_rnd_pixels_tab[1][3] = avg_no_rnd_pixels8_xy;
+	c->avg_no_rnd_pixels_tab[0][0] = avg_no_rnd_pixels16_o;
+	c->avg_no_rnd_pixels_tab[0][1] = avg_no_rnd_pixels16_x;
+	c->avg_no_rnd_pixels_tab[0][2] = avg_no_rnd_pixels16_y;
+	c->avg_no_rnd_pixels_tab[0][3] = avg_no_rnd_pixels16_xy;
+	c->avg_no_rnd_pixels_tab[1][0] = avg_no_rnd_pixels8_o;
+	c->avg_no_rnd_pixels_tab[1][1] = avg_no_rnd_pixels8_x;
+	c->avg_no_rnd_pixels_tab[1][2] = avg_no_rnd_pixels8_y;
+	c->avg_no_rnd_pixels_tab[1][3] = avg_no_rnd_pixels8_xy;
 
 #ifdef QPEL
 
@@ -389,44 +407,44 @@ void dsputil_init_align(DSPContext* c, AVCodecContext *avctx)
     c->PFX ## _pixels_tab[IDX][14] = PFX ## NUM ## _mc23_sh4; \
     c->PFX ## _pixels_tab[IDX][15] = PFX ## NUM ## _mc33_sh4
 
-    dspfunc(put_qpel, 0, 16);
-    dspfunc(put_no_rnd_qpel, 0, 16);
+	dspfunc(put_qpel, 0, 16);
+	dspfunc(put_no_rnd_qpel, 0, 16);
 
-    dspfunc(avg_qpel, 0, 16);
-    /* dspfunc(avg_no_rnd_qpel, 0, 16); */
+	dspfunc(avg_qpel, 0, 16);
+	/* dspfunc(avg_no_rnd_qpel, 0, 16); */
 
-    dspfunc(put_qpel, 1, 8);
-    dspfunc(put_no_rnd_qpel, 1, 8);
+	dspfunc(put_qpel, 1, 8);
+	dspfunc(put_no_rnd_qpel, 1, 8);
 
-    dspfunc(avg_qpel, 1, 8);
-    /* dspfunc(avg_no_rnd_qpel, 1, 8); */
+	dspfunc(avg_qpel, 1, 8);
+	/* dspfunc(avg_no_rnd_qpel, 1, 8); */
 
-    dspfunc(put_h264_qpel, 0, 16);
-    dspfunc(put_h264_qpel, 1, 8);
-    dspfunc(put_h264_qpel, 2, 4);
-    dspfunc(avg_h264_qpel, 0, 16);
-    dspfunc(avg_h264_qpel, 1, 8);
-    dspfunc(avg_h264_qpel, 2, 4);
+	dspfunc(put_h264_qpel, 0, 16);
+	dspfunc(put_h264_qpel, 1, 8);
+	dspfunc(put_h264_qpel, 2, 4);
+	dspfunc(avg_h264_qpel, 0, 16);
+	dspfunc(avg_h264_qpel, 1, 8);
+	dspfunc(avg_h264_qpel, 2, 4);
 
 #undef dspfunc
-    c->put_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_sh4;
-    c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_sh4;
-    c->put_h264_chroma_pixels_tab[2]= put_h264_chroma_mc2_sh4;
-    c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_sh4;
-    c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_sh4;
-    c->avg_h264_chroma_pixels_tab[2]= avg_h264_chroma_mc2_sh4;
+	c->put_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_sh4;
+	c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_sh4;
+	c->put_h264_chroma_pixels_tab[2]= put_h264_chroma_mc2_sh4;
+	c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_sh4;
+	c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_sh4;
+	c->avg_h264_chroma_pixels_tab[2]= avg_h264_chroma_mc2_sh4;
 
-    c->put_mspel_pixels_tab[0]= put_mspel8_mc00_sh4;
-    c->put_mspel_pixels_tab[1]= put_mspel8_mc10_sh4;
-    c->put_mspel_pixels_tab[2]= put_mspel8_mc20_sh4;
-    c->put_mspel_pixels_tab[3]= put_mspel8_mc30_sh4;
-    c->put_mspel_pixels_tab[4]= put_mspel8_mc02_sh4;
-    c->put_mspel_pixels_tab[5]= put_mspel8_mc12_sh4;
-    c->put_mspel_pixels_tab[6]= put_mspel8_mc22_sh4;
-    c->put_mspel_pixels_tab[7]= put_mspel8_mc32_sh4;
+	c->put_mspel_pixels_tab[0]= put_mspel8_mc00_sh4;
+	c->put_mspel_pixels_tab[1]= put_mspel8_mc10_sh4;
+	c->put_mspel_pixels_tab[2]= put_mspel8_mc20_sh4;
+	c->put_mspel_pixels_tab[3]= put_mspel8_mc30_sh4;
+	c->put_mspel_pixels_tab[4]= put_mspel8_mc02_sh4;
+	c->put_mspel_pixels_tab[5]= put_mspel8_mc12_sh4;
+	c->put_mspel_pixels_tab[6]= put_mspel8_mc22_sh4;
+	c->put_mspel_pixels_tab[7]= put_mspel8_mc32_sh4;
 
-    c->gmc1 = gmc1_c;
-    c->gmc = gmc_c;
+	c->gmc1 = gmc1_c;
+	c->gmc = gmc_c;
 
 #endif
 }

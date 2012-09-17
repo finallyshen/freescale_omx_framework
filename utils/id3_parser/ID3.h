@@ -24,72 +24,76 @@
 
 #include <utils/RefBase.h>
 
-namespace android {
+namespace android
+{
 
 struct String8;
 
-struct ID3 {
-    enum Version {
-        ID3_UNKNOWN,
-        ID3_V1,
-        ID3_V1_1,
-        ID3_V2_2,
-        ID3_V2_3,
-        ID3_V2_4,
-    };
+struct ID3
+{
+	enum Version
+	{
+		ID3_UNKNOWN,
+		ID3_V1,
+		ID3_V1_1,
+		ID3_V2_2,
+		ID3_V2_3,
+		ID3_V2_4,
+	};
 
-    ID3();
-    ~ID3();
+	ID3();
+	~ID3();
 
-    bool parseV1(const char *sourceBuf);
-    bool parseV2(const char *sourceBuf);
+	bool parseV1(const char *sourceBuf);
+	bool parseV2(const char *sourceBuf);
 
-    bool isValid() const;
+	bool isValid() const;
 
-    Version version() const;
+	Version version() const;
 
-    const void *getAlbumArt(size_t *length, String8 *mime) const;
+	const void *getAlbumArt(size_t *length, String8 *mime) const;
 
-    struct Iterator {
-        Iterator(const ID3 &parent, const char *id);
-        ~Iterator();
+	struct Iterator
+	{
+		Iterator(const ID3 &parent, const char *id);
+		~Iterator();
 
-        bool done() const;
-        void getID(String8 *id) const;
-        void getString(String8 *s) const;
-        const uint8_t *getData(size_t *length) const;
-        void next();
+		bool done() const;
+		void getID(String8 *id) const;
+		void getString(String8 *s) const;
+		const uint8_t *getData(size_t *length) const;
+		void next();
 
-    private:
-        const ID3 &mParent;
-        char *mID;
-        size_t mOffset;
+	private:
+		const ID3 &mParent;
+		char *mID;
+		size_t mOffset;
 
-        const uint8_t *mFrameData;
-        size_t mFrameSize;
+		const uint8_t *mFrameData;
+		size_t mFrameSize;
 
-        void findFrame();
+		void findFrame();
 
-        size_t getHeaderLength() const;
+		size_t getHeaderLength() const;
 
-        Iterator(const Iterator &);
-        Iterator &operator=(const Iterator &);
-    };
+		Iterator(const Iterator &);
+		Iterator &operator=(const Iterator &);
+	};
 
 private:
-    bool mIsValid;
-    uint8_t *mData;
-    size_t mSize;
-    size_t mFirstFrameOffset;
-    Version mVersion;
+	bool mIsValid;
+	uint8_t *mData;
+	size_t mSize;
+	size_t mFirstFrameOffset;
+	Version mVersion;
 
-    void removeUnsynchronization();
-    bool removeUnsynchronizationV2_4();
+	void removeUnsynchronization();
+	bool removeUnsynchronizationV2_4();
 
-    static bool ParseSyncsafeInteger(const uint8_t encoded[4], size_t *x);
+	static bool ParseSyncsafeInteger(const uint8_t encoded[4], size_t *x);
 
-    ID3(const ID3 &);
-    ID3 &operator=(const ID3 &);
+	ID3(const ID3 &);
+	ID3 &operator=(const ID3 &);
 };
 
 }  // namespace android

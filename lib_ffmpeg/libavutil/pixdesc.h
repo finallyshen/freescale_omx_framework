@@ -24,23 +24,24 @@
 
 #include <inttypes.h>
 
-typedef struct AVComponentDescriptor{
-    uint16_t plane        :2;            ///< which of the 4 planes contains the component
+typedef struct AVComponentDescriptor
+{
+	uint16_t plane        :2;            ///< which of the 4 planes contains the component
 
-    /**
-     * Number of elements between 2 horizontally consecutive pixels minus 1.
-     * Elements are bits for bitstream formats, bytes otherwise.
-     */
-    uint16_t step_minus1  :3;
+	/**
+	 * Number of elements between 2 horizontally consecutive pixels minus 1.
+	 * Elements are bits for bitstream formats, bytes otherwise.
+	 */
+	uint16_t step_minus1  :3;
 
-    /**
-     * Number of elements before the component of the first pixel plus 1.
-     * Elements are bits for bitstream formats, bytes otherwise.
-     */
-    uint16_t offset_plus1 :3;
-    uint16_t shift        :3;            ///< number of least significant bits that must be shifted away to get the value
-    uint16_t depth_minus1 :4;            ///< number of bits in the component minus 1
-}AVComponentDescriptor;
+	/**
+	 * Number of elements before the component of the first pixel plus 1.
+	 * Elements are bits for bitstream formats, bytes otherwise.
+	 */
+	uint16_t offset_plus1 :3;
+	uint16_t shift        :3;            ///< number of least significant bits that must be shifted away to get the value
+	uint16_t depth_minus1 :4;            ///< number of bits in the component minus 1
+} AVComponentDescriptor;
 
 /**
  * Descriptor that unambiguously describes how the bits of a pixel are
@@ -51,36 +52,37 @@ typedef struct AVComponentDescriptor{
  *       and all the YUV variants) AVPixFmtDescriptor just stores how values
  *       are stored not what these values represent.
  */
-typedef struct AVPixFmtDescriptor{
-    const char *name;
-    uint8_t nb_components;      ///< The number of components each pixel has, (1-4)
+typedef struct AVPixFmtDescriptor
+{
+	const char *name;
+	uint8_t nb_components;      ///< The number of components each pixel has, (1-4)
 
-    /**
-     * Amount to shift the luma width right to find the chroma width.
-     * For YV12 this is 1 for example.
-     * chroma_width = -((-luma_width) >> log2_chroma_w)
-     * The note above is needed to ensure rounding up.
-     * This value only refers to the chroma components.
-     */
-    uint8_t log2_chroma_w;      ///< chroma_width = -((-luma_width )>>log2_chroma_w)
+	/**
+	 * Amount to shift the luma width right to find the chroma width.
+	 * For YV12 this is 1 for example.
+	 * chroma_width = -((-luma_width) >> log2_chroma_w)
+	 * The note above is needed to ensure rounding up.
+	 * This value only refers to the chroma components.
+	 */
+	uint8_t log2_chroma_w;      ///< chroma_width = -((-luma_width )>>log2_chroma_w)
 
-    /**
-     * Amount to shift the luma height right to find the chroma height.
-     * For YV12 this is 1 for example.
-     * chroma_height= -((-luma_height) >> log2_chroma_h)
-     * The note above is needed to ensure rounding up.
-     * This value only refers to the chroma components.
-     */
-    uint8_t log2_chroma_h;
-    uint8_t flags;
+	/**
+	 * Amount to shift the luma height right to find the chroma height.
+	 * For YV12 this is 1 for example.
+	 * chroma_height= -((-luma_height) >> log2_chroma_h)
+	 * The note above is needed to ensure rounding up.
+	 * This value only refers to the chroma components.
+	 */
+	uint8_t log2_chroma_h;
+	uint8_t flags;
 
-    /**
-     * Parameters that describe how pixels are packed. If the format
-     * has chroma components, they must be stored in comp[1] and
-     * comp[2].
-     */
-    AVComponentDescriptor comp[4];
-}AVPixFmtDescriptor;
+	/**
+	 * Parameters that describe how pixels are packed. If the format
+	 * has chroma components, they must be stored in comp[1] and
+	 * comp[2].
+	 */
+	AVComponentDescriptor comp[4];
+} AVPixFmtDescriptor;
 
 #define PIX_FMT_BE        1 ///< Pixel format is big-endian.
 #define PIX_FMT_PAL       2 ///< Pixel format has a palette in data[1], values are indexes in this palette.

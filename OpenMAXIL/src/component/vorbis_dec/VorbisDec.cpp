@@ -19,51 +19,53 @@
 
 VorbisDec::VorbisDec()
 {
-    fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.vorbis.sw-based");
-    ComponentVersion.s.nVersionMajor = 0x1;
-    ComponentVersion.s.nVersionMinor = 0x1;
-    ComponentVersion.s.nRevision = 0x2;
-    ComponentVersion.s.nStep = 0x0;
-    role_cnt = 1;
-    role[0] = (OMX_STRING)"audio_decoder.vorbis";
-    bInContext = OMX_FALSE;
-    nPorts = AUDIO_FILTER_PORT_NUMBER;
+	fsl_osal_strcpy((fsl_osal_char*)name, "OMX.Freescale.std.audio_decoder.vorbis.sw-based");
+	ComponentVersion.s.nVersionMajor = 0x1;
+	ComponentVersion.s.nVersionMinor = 0x1;
+	ComponentVersion.s.nRevision = 0x2;
+	ComponentVersion.s.nStep = 0x0;
+	role_cnt = 1;
+	role[0] = (OMX_STRING)"audio_decoder.vorbis";
+	bInContext = OMX_FALSE;
+	nPorts = AUDIO_FILTER_PORT_NUMBER;
 	nPushModeInputLen = VORBIS10D_MAXDATAREQUESTED;
 	nRingBufferScale = RING_BUFFER_SCALE;
 }
 
 OMX_ERRORTYPE VorbisDec::InitComponent()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
-    OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_PARAM_PORTDEFINITIONTYPE sPortDef;
 
-    OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
-    sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
-    sPortDef.eDir = OMX_DirInput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingVORBIS;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = 1024;
-    ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
-    if(ret != OMX_ErrorNone) {
-        LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
-        return ret;
-    }
+	OMX_INIT_STRUCT(&sPortDef, OMX_PARAM_PORTDEFINITIONTYPE);
+	sPortDef.nPortIndex = AUDIO_FILTER_INPUT_PORT;
+	sPortDef.eDir = OMX_DirInput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingVORBIS;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = 1024;
+	ret = ports[AUDIO_FILTER_INPUT_PORT]->SetPortDefinition(&sPortDef);
+	if(ret != OMX_ErrorNone)
+	{
+		LOG_ERROR("Set port definition for port[%d] failed.\n", AUDIO_FILTER_INPUT_PORT);
+		return ret;
+	}
 
-    sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
-    sPortDef.eDir = OMX_DirOutput;
-    sPortDef.eDomain = OMX_PortDomainAudio;
-    sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
-    sPortDef.bPopulated = OMX_FALSE;
-    sPortDef.bEnabled = OMX_TRUE;
-    sPortDef.nBufferCountMin = 1;
-    sPortDef.nBufferCountActual = 3;
-    sPortDef.nBufferSize = VORBIS10D_OUTBUFF_SIZE;
+	sPortDef.nPortIndex = AUDIO_FILTER_OUTPUT_PORT;
+	sPortDef.eDir = OMX_DirOutput;
+	sPortDef.eDomain = OMX_PortDomainAudio;
+	sPortDef.format.audio.eEncoding = OMX_AUDIO_CodingPCM;
+	sPortDef.bPopulated = OMX_FALSE;
+	sPortDef.bEnabled = OMX_TRUE;
+	sPortDef.nBufferCountMin = 1;
+	sPortDef.nBufferCountActual = 3;
+	sPortDef.nBufferSize = VORBIS10D_OUTBUFF_SIZE;
 	ret = ports[AUDIO_FILTER_OUTPUT_PORT]->SetPortDefinition(&sPortDef);
-	if(ret != OMX_ErrorNone) {
+	if(ret != OMX_ErrorNone)
+	{
 		LOG_ERROR("Set port definition for port[%d] failed.\n", 0);
 		return ret;
 	}
@@ -98,12 +100,12 @@ OMX_ERRORTYPE VorbisDec::InitComponent()
 
 OMX_ERRORTYPE VorbisDec::DeInitComponent()
 {
-    return OMX_ErrorNone;
+	return OMX_ErrorNone;
 }
 
 OMX_ERRORTYPE VorbisDec::AudioFilterInstanceInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	pVorbisDecConfig = (sOggVorbisDecObj *)FSL_MALLOC(sizeof(sOggVorbisDecObj));
 	if (pVorbisDecConfig == NULL)
 	{
@@ -114,12 +116,12 @@ OMX_ERRORTYPE VorbisDec::AudioFilterInstanceInit()
 
 	pCodecConfigData = NULL;
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE VorbisDec::AudioFilterCodecInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 	VORBIS_RETURN VorbisRet;
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
@@ -128,9 +130,9 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCodecInit()
 	pBuffer = pCodecConfigData + nCodecConfigDataOffset;
 	nActuralLen = nCodecConfigDataLen - nCodecConfigDataOffset;
 	nFrameLen = nActuralLen;
- 
-    pVorbisDecConfig->datasource = pBuffer;
-    pVorbisDecConfig->buffer_length = nFrameLen;
+
+	pVorbisDecConfig->datasource = pBuffer;
+	pVorbisDecConfig->buffer_length = nFrameLen;
 
 	FSL_FREE(pVorbisDecConfig->pvOggDecObj);
 	FSL_FREE(pVorbisDecConfig->decoderbuf);
@@ -167,13 +169,13 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCodecInit()
 		return OMX_ErrorUnsupportedSetting;
 	}
 
-    VorbisType.nBitRate = pVorbisDecConfig->ave_bitrate;
-    VorbisType.nMaxBitRate= pVorbisDecConfig->max_bitrate;
-    VorbisType.nMinBitRate= pVorbisDecConfig->min_bitrate;
-    VorbisType.nChannels= pVorbisDecConfig->NoOfChannels;
-    VorbisType.nSampleRate= pVorbisDecConfig->SampleRate;
+	VorbisType.nBitRate = pVorbisDecConfig->ave_bitrate;
+	VorbisType.nMaxBitRate= pVorbisDecConfig->max_bitrate;
+	VorbisType.nMinBitRate= pVorbisDecConfig->min_bitrate;
+	VorbisType.nChannels= pVorbisDecConfig->NoOfChannels;
+	VorbisType.nSampleRate= pVorbisDecConfig->SampleRate;
 	LOG_DEBUG("Vorbis BitRate: %d MaxBitRate: %d MinBitRate: %d Channel: %d SampleRate: %d\n", VorbisType.nBitRate, VorbisType.nMaxBitRate, VorbisType.nMinBitRate, VorbisType.nChannels, VorbisType.nSampleRate);
- 
+
 	AudioRingBuffer.nPrevOffset = 0;
 
 	return ret;
@@ -181,118 +183,127 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCodecInit()
 
 OMX_ERRORTYPE VorbisDec::AudioFilterInstanceDeInit()
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
 	FSL_FREE(pVorbisDecConfig->pvOggDecObj);
 	FSL_FREE(pVorbisDecConfig->decoderbuf);
 	FSL_FREE(pVorbisDecConfig);
 	FSL_FREE(pCodecConfigData);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE VorbisDec::AudioFilterGetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioVorbis:
-            {
-                OMX_AUDIO_PARAM_VORBISTYPE *pVorbisType;
-                pVorbisType = (OMX_AUDIO_PARAM_VORBISTYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pVorbisType, OMX_AUDIO_PARAM_VORBISTYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pVorbisType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(pVorbisType, &VorbisType,	sizeof(OMX_AUDIO_PARAM_VORBISTYPE));
-            }
-			return ret;
-        default:
-            ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioVorbis:
+	{
+		OMX_AUDIO_PARAM_VORBISTYPE *pVorbisType;
+		pVorbisType = (OMX_AUDIO_PARAM_VORBISTYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pVorbisType, OMX_AUDIO_PARAM_VORBISTYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pVorbisType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(pVorbisType, &VorbisType,	sizeof(OMX_AUDIO_PARAM_VORBISTYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE VorbisDec::AudioFilterSetParameter(
-        OMX_INDEXTYPE nParamIndex, 
-        OMX_PTR pComponentParameterStructure)
+    OMX_INDEXTYPE nParamIndex,
+    OMX_PTR pComponentParameterStructure)
 {
-    OMX_ERRORTYPE ret = OMX_ErrorNone;
+	OMX_ERRORTYPE ret = OMX_ErrorNone;
 
-    switch (nParamIndex) {
-        case OMX_IndexParamAudioVorbis:
-            {
-                OMX_AUDIO_PARAM_VORBISTYPE *pVorbisType;
-                pVorbisType = (OMX_AUDIO_PARAM_VORBISTYPE*)pComponentParameterStructure;
-                OMX_CHECK_STRUCT(pVorbisType, OMX_AUDIO_PARAM_VORBISTYPE, ret);
-                if(ret != OMX_ErrorNone)
-                    break;
-				if (pVorbisType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
-				{
-					ret = OMX_ErrorBadPortIndex;
-					break;
-				}
-				fsl_osal_memcpy(&VorbisType, pVorbisType, sizeof(OMX_AUDIO_PARAM_VORBISTYPE));
-			}
-			return ret;
-		default:
-			ret = OMX_ErrorUnsupportedIndex;
-            break;
-    }
+	switch (nParamIndex)
+	{
+	case OMX_IndexParamAudioVorbis:
+	{
+		OMX_AUDIO_PARAM_VORBISTYPE *pVorbisType;
+		pVorbisType = (OMX_AUDIO_PARAM_VORBISTYPE*)pComponentParameterStructure;
+		OMX_CHECK_STRUCT(pVorbisType, OMX_AUDIO_PARAM_VORBISTYPE, ret);
+		if(ret != OMX_ErrorNone)
+			break;
+		if (pVorbisType->nPortIndex != AUDIO_FILTER_INPUT_PORT)
+		{
+			ret = OMX_ErrorBadPortIndex;
+			break;
+		}
+		fsl_osal_memcpy(&VorbisType, pVorbisType, sizeof(OMX_AUDIO_PARAM_VORBISTYPE));
+	}
+	return ret;
+	default:
+		ret = OMX_ErrorUnsupportedIndex;
+		break;
+	}
 
-    return ret;
+	return ret;
 }
- 
+
 AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 {
-    AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
+	AUDIO_FILTERRETURNTYPE ret = AUDIO_FILTER_SUCCESS;
 	VORBIS_RETURN VorbisRet;
 	OMX_U8 *pBuffer;
 	OMX_U32 nActuralLen;
-    OMX_U32 consumelen = 0;
-    OMX_U32 packtype, offset, data_left, i, byte;
-    OMX_U8 buffer[6];
+	OMX_U32 consumelen = 0;
+	OMX_U32 packtype, offset, data_left, i, byte;
+	OMX_U8 buffer[6];
 	OMX_BOOL bUseCodecConfigData = OMX_FALSE;
 
-    if (pVorbisDecConfig->mPacketCount<3){
+	if (pVorbisDecConfig->mPacketCount<3)
+	{
 		bUseCodecConfigData = OMX_TRUE;
 		pBuffer = pCodecConfigData + nCodecConfigDataOffset;
 		nActuralLen = nCodecConfigDataLen - nCodecConfigDataOffset;
-        offset = 0;
-        data_left = nActuralLen;
+		offset = 0;
+		data_left = nActuralLen;
 
-        while(data_left>0){
-            packtype = pBuffer[offset];
+		while(data_left>0)
+		{
+			packtype = pBuffer[offset];
 
 
-            if (packtype == INFORMATION_HEADER ||
-                packtype == COMMENT_HEADER ||
-                packtype == CODEC_SETUP_HEADER){
-                byte = offset+1;
-                for (i=0; i<6; i++)
-                    buffer[i] = pBuffer[byte++];
-                if(fsl_osal_memcmp(buffer,(void *)"vorbis",6)==0){
-                    consumelen += offset;
-                    break;
-                }
-            }
-            offset++;
-            data_left--;
-            if(data_left==0){
-                LOG_DEBUG("decode head packet error!");
+			if (packtype == INFORMATION_HEADER ||
+			        packtype == COMMENT_HEADER ||
+			        packtype == CODEC_SETUP_HEADER)
+			{
+				byte = offset+1;
+				for (i=0; i<6; i++)
+					buffer[i] = pBuffer[byte++];
+				if(fsl_osal_memcmp(buffer,(void *)"vorbis",6)==0)
+				{
+					consumelen += offset;
+					break;
+				}
+			}
+			offset++;
+			data_left--;
+			if(data_left==0)
+			{
+				LOG_DEBUG("decode head packet error!");
 				nCodecConfigDataOffset += consumelen;
 				return AUDIO_FILTER_FAILURE;
-            }
-        }
-    } else {
+			}
+		}
+	}
+	else
+	{
 		AudioRingBuffer.BufferGet(&pBuffer, VORBIS10D_MAXDATAREQUESTED, &nActuralLen);
 		LOG_DEBUG("Vorbis decoder get stream len: %d\n", nActuralLen);
 	}
@@ -303,12 +314,13 @@ AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 	pVorbisDecConfig->output_length = VORBIS10D_OUTBUFF_SIZE;
 
 	VorbisRet = OggVorbisDecode(pVorbisDecConfig);
-	
+
 	if (VorbisRet < VORBIS_ERROR_MIN)
 	{
 		if (bUseCodecConfigData == OMX_TRUE)
-				nCodecConfigDataOffset += pVorbisDecConfig->byteConsumed + consumelen;
-		else {
+			nCodecConfigDataOffset += pVorbisDecConfig->byteConsumed + consumelen;
+		else
+		{
 			AudioRingBuffer.BufferConsumered(pVorbisDecConfig->byteConsumed + consumelen);
 			LOG_DEBUG("Vorbis decoder consumed len: %d\n", pVorbisDecConfig->byteConsumed + consumelen);
 		}
@@ -316,8 +328,9 @@ AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 	else
 	{
 		if (bUseCodecConfigData == OMX_TRUE)
-				nCodecConfigDataOffset += nActuralLen;
-		else {
+			nCodecConfigDataOffset += nActuralLen;
+		else
+		{
 			AudioRingBuffer.BufferConsumered(nActuralLen);
 			LOG_DEBUG("Vorbis decoder consumed len: %d\n", nActuralLen);
 			if (nActuralLen == 0)
@@ -331,7 +344,7 @@ AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 
 		LOG_DEBUG("Vorbis channels: %d sample rate: %d\n", VorbisType.nChannels, VorbisType.nSampleRate);
 		if (VorbisType.nChannels != PcmMode.nChannels
-				|| VorbisType.nSampleRate != PcmMode.nSamplingRate)
+		        || VorbisType.nSampleRate != PcmMode.nSamplingRate)
 		{
 			PcmMode.nChannels = VorbisType.nChannels;
 			PcmMode.nSamplingRate = VorbisType.nSampleRate;
@@ -340,13 +353,13 @@ AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 
 		pOutBufferHdr->nOffset = 0;
 		pOutBufferHdr->nFilledLen = pVorbisDecConfig->outNumSamples * \
-									VorbisType.nChannels * 2;
- 
+		                            VorbisType.nChannels * 2;
+
 		TS_PerFrame = (OMX_U64)pVorbisDecConfig->outNumSamples*OMX_TICKS_PER_SECOND/VorbisType.nSampleRate;
 		LOG_DEBUG("Decoder output sample: %d\t Sample Rate = %d\t TS per Frame = %lld\n", \
-				pVorbisDecConfig->outNumSamples, VorbisType.nSampleRate, TS_PerFrame);
+		          pVorbisDecConfig->outNumSamples, VorbisType.nSampleRate, TS_PerFrame);
 
-		AudioRingBuffer.TS_SetIncrease(TS_PerFrame); 
+		AudioRingBuffer.TS_SetIncrease(TS_PerFrame);
 	}
 	else if (VorbisRet == VORBIS_EOS)
 	{
@@ -362,7 +375,7 @@ AUDIO_FILTERRETURNTYPE VorbisDec::AudioFilterFrame()
 
 	LOG_LOG("Decoder nTimeStamp = %lld\n", pOutBufferHdr->nTimeStamp);
 
-    return ret;
+	return ret;
 }
 
 OMX_ERRORTYPE VorbisDec::AudioFilterReset()
@@ -381,9 +394,10 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCheckCodecConfig()
 	{
 		LOG_DEBUG("Vorbis codec config len: %d\n", pInBufferHdr->nFilledLen);
 
-		if (pCodecConfigData != NULL) {
+		if (pCodecConfigData != NULL)
+		{
 			pCodecConfigData = (OMX_U8 *)FSL_REALLOC(pCodecConfigData, \
-					nCodecConfigDataLen + pInBufferHdr->nFilledLen);
+			                   nCodecConfigDataLen + pInBufferHdr->nFilledLen);
 			if (pCodecConfigData == NULL)
 			{
 				LOG_ERROR("Can't get memory.\n");
@@ -393,7 +407,9 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCheckCodecConfig()
 			nCodecConfigDataOffset = 0;
 			nCodecConfigDataLen += pInBufferHdr->nFilledLen;
 
-		} else {
+		}
+		else
+		{
 			pCodecConfigData = (OMX_U8 *)FSL_MALLOC(pInBufferHdr->nFilledLen);
 			if (pCodecConfigData == NULL)
 			{
@@ -413,29 +429,29 @@ OMX_ERRORTYPE VorbisDec::AudioFilterCheckCodecConfig()
 
 	pInBufferHdr->nFilledLen = 0;
 
-    return ret;
+	return ret;
 }
- 
+
 
 /**< C style functions to expose entry point for the shared library */
 extern "C" {
-    OMX_ERRORTYPE VorbisDecInit(OMX_IN OMX_HANDLETYPE pHandle)
-    {
-        OMX_ERRORTYPE ret = OMX_ErrorNone;
-        VorbisDec *obj = NULL;
-        ComponentBase *base = NULL;
+	OMX_ERRORTYPE VorbisDecInit(OMX_IN OMX_HANDLETYPE pHandle)
+	{
+		OMX_ERRORTYPE ret = OMX_ErrorNone;
+		VorbisDec *obj = NULL;
+		ComponentBase *base = NULL;
 
-        obj = FSL_NEW(VorbisDec, ());
-        if(obj == NULL)
-            return OMX_ErrorInsufficientResources;
+		obj = FSL_NEW(VorbisDec, ());
+		if(obj == NULL)
+			return OMX_ErrorInsufficientResources;
 
-        base = (ComponentBase*)obj;
-        ret = base->ConstructComponent(pHandle);
-        if(ret != OMX_ErrorNone)
-            return ret;
+		base = (ComponentBase*)obj;
+		ret = base->ConstructComponent(pHandle);
+		if(ret != OMX_ErrorNone)
+			return ret;
 
-        return ret;
-    }
+		return ret;
+	}
 }
 
 /* File EOF */

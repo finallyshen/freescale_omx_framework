@@ -20,22 +20,24 @@
 #include "fsl_osal.h"
 #include "List.h"
 
-typedef struct {
-    OMX_PTR pVirtualAddr;
-    OMX_PTR pPhyiscAddr;
-}PLATFORM_DATA;
+typedef struct
+{
+	OMX_PTR pVirtualAddr;
+	OMX_PTR pPhyiscAddr;
+} PLATFORM_DATA;
 
-class PlatformResourceMgr {
-    public:
-        OMX_ERRORTYPE Init();
-        OMX_ERRORTYPE DeInit();
-        OMX_ERRORTYPE AddHwBuffer(OMX_PTR pPhyiscAddr, OMX_PTR pVirtualAddr);
-        OMX_ERRORTYPE RemoveHwBuffer(OMX_PTR pVirtualAddr);
-        OMX_PTR GetHwBuffer(OMX_PTR pVirtualAddr);
-    private:
+class PlatformResourceMgr
+{
+public:
+	OMX_ERRORTYPE Init();
+	OMX_ERRORTYPE DeInit();
+	OMX_ERRORTYPE AddHwBuffer(OMX_PTR pPhyiscAddr, OMX_PTR pVirtualAddr);
+	OMX_ERRORTYPE RemoveHwBuffer(OMX_PTR pVirtualAddr);
+	OMX_PTR GetHwBuffer(OMX_PTR pVirtualAddr);
+private:
 	List<PLATFORM_DATA> *PlatformDataList;
-        fsl_osal_mutex lock;
-        OMX_PTR SearchData(OMX_PTR pVirtualAddr);
+	fsl_osal_mutex lock;
+	OMX_PTR SearchData(OMX_PTR pVirtualAddr);
 };
 
 #endif

@@ -28,11 +28,12 @@
 
 #include "avcodec.h"
 
-typedef struct {
-    uint16_t width;
-    uint16_t height;
-    uint16_t frame_rate_num;
-    uint16_t frame_rate_denom;
+typedef struct
+{
+	uint16_t width;
+	uint16_t height;
+	uint16_t frame_rate_num;
+	uint16_t frame_rate_denom;
 } FfmpegDiracSchroVideoFormatInfo;
 
 /**
@@ -43,41 +44,44 @@ unsigned int ff_dirac_schro_get_video_format_idx(AVCodecContext *avccontext);
 /**
 * contains a single encoded frame returned from Dirac or Schroedinger
 */
-typedef struct FfmpegDiracSchroEncodedFrame {
-    /** encoded frame data */
-    uint8_t *p_encbuf;
+typedef struct FfmpegDiracSchroEncodedFrame
+{
+	/** encoded frame data */
+	uint8_t *p_encbuf;
 
-    /** encoded frame size */
-    uint32_t size;
+	/** encoded frame size */
+	uint32_t size;
 
-    /** encoded frame number. Will be used as pts */
-    uint32_t frame_num;
+	/** encoded frame number. Will be used as pts */
+	uint32_t frame_num;
 
-    /** key frame flag. 1 : is key frame , 0 : in not key frame */
-    uint16_t key_frame;
+	/** key frame flag. 1 : is key frame , 0 : in not key frame */
+	uint16_t key_frame;
 } FfmpegDiracSchroEncodedFrame;
 
 /**
 * queue element
 */
-typedef struct FfmpegDiracSchroQueueElement {
-    /** Data to be stored in queue*/
-    void *data;
-    /** Pointer to next element queue */
-    struct FfmpegDiracSchroQueueElement *next;
+typedef struct FfmpegDiracSchroQueueElement
+{
+	/** Data to be stored in queue*/
+	void *data;
+	/** Pointer to next element queue */
+	struct FfmpegDiracSchroQueueElement *next;
 } FfmpegDiracSchroQueueElement;
 
 
 /**
 * A simple queue implementation used in libdirac and libschroedinger
 */
-typedef struct FfmpegDiracSchroQueue {
-    /** Pointer to head of queue */
-    FfmpegDiracSchroQueueElement *p_head;
-    /** Pointer to tail of queue */
-    FfmpegDiracSchroQueueElement *p_tail;
-    /** Queue size*/
-    int size;
+typedef struct FfmpegDiracSchroQueue
+{
+	/** Pointer to head of queue */
+	FfmpegDiracSchroQueueElement *p_head;
+	/** Pointer to tail of queue */
+	FfmpegDiracSchroQueueElement *p_tail;
+	/** Queue size*/
+	int size;
 } FfmpegDiracSchroQueue;
 
 /**

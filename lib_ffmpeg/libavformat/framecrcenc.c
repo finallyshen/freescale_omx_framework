@@ -24,24 +24,25 @@
 
 static int framecrc_write_packet(struct AVFormatContext *s, AVPacket *pkt)
 {
-    uint32_t crc = av_adler32_update(0, pkt->data, pkt->size);
-    char buf[256];
+	uint32_t crc = av_adler32_update(0, pkt->data, pkt->size);
+	char buf[256];
 
-    snprintf(buf, sizeof(buf), "%d, %"PRId64", %d, 0x%08x\n", pkt->stream_index, pkt->dts, pkt->size, crc);
-    avio_write(s->pb, buf, strlen(buf));
-    avio_flush(s->pb);
-    return 0;
+	snprintf(buf, sizeof(buf), "%d, %"PRId64", %d, 0x%08x\n", pkt->stream_index, pkt->dts, pkt->size, crc);
+	avio_write(s->pb, buf, strlen(buf));
+	avio_flush(s->pb);
+	return 0;
 }
 
-AVOutputFormat ff_framecrc_muxer = {
-    "framecrc",
-    NULL_IF_CONFIG_SMALL("framecrc testing format"),
-    NULL,
-    "",
-    0,
-    CODEC_ID_PCM_S16LE,
-    CODEC_ID_RAWVIDEO,
-    NULL,
-    framecrc_write_packet,
-    NULL,
+AVOutputFormat ff_framecrc_muxer =
+{
+	"framecrc",
+	NULL_IF_CONFIG_SMALL("framecrc testing format"),
+	NULL,
+	"",
+	0,
+	CODEC_ID_PCM_S16LE,
+	CODEC_ID_RAWVIDEO,
+	NULL,
+	framecrc_write_packet,
+	NULL,
 };

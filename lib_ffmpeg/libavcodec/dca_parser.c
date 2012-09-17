@@ -25,12 +25,13 @@
 #include "parser.h"
 #include "dca.h"
 
-typedef struct DCAParseContext {
-    ParseContext pc;
-    uint32_t lastmarker;
-    int size;
-    int framesize;
-    int hd_pos;
+typedef struct DCAParseContext
+{
+	ParseContext pc;
+	uint32_t lastmarker;
+	int size;
+	int framesize;
+	int hd_pos;
 } DCAParseContext;
 
 #define IS_MARKER(state, i, buf, buf_size) \
@@ -45,59 +46,69 @@ typedef struct DCAParseContext {
 static int dca_find_frame_end(DCAParseContext * pc1, const uint8_t * buf,
                               int buf_size)
 {
-    int start_found, i;
-    uint32_t state;
-    ParseContext *pc = &pc1->pc;
+	int start_found, i;
+	uint32_t state;
+	ParseContext *pc = &pc1->pc;
 
-    start_found = pc->frame_start_found;
-    state = pc->state;
+	start_found = pc->frame_start_found;
+	state = pc->state;
 
-    i = 0;
-    if (!start_found) {
-        for (i = 0; i < buf_size; i++) {
-            state = (state << 8) | buf[i];
-            if (IS_MARKER(state, i, buf, buf_size)) {
-                if (pc1->lastmarker && state == pc1->lastmarker) {
-                    start_found = 1;
-                    break;
-                } else if (!pc1->lastmarker) {
-                    start_found = 1;
-                    pc1->lastmarker = state;
-                    break;
-                }
-            }
-        }
-    }
-    if (start_found) {
-        for (; i < buf_size; i++) {
-            pc1->size++;
-            state = (state << 8) | buf[i];
-            if (state == DCA_HD_MARKER && !pc1->hd_pos)
-                pc1->hd_pos = pc1->size;
-            if (state == pc1->lastmarker && IS_MARKER(state, i, buf, buf_size)) {
-                if(pc1->framesize > pc1->size)
-                    continue;
-                if(!pc1->framesize){
-                    pc1->framesize = pc1->hd_pos ? pc1->hd_pos : pc1->size;
-                }
-                pc->frame_start_found = 0;
-                pc->state = -1;
-                pc1->size = 0;
-                return i - 3;
-            }
-        }
-    }
-    pc->frame_start_found = start_found;
-    pc->state = state;
-    return END_NOT_FOUND;
+	i = 0;
+	if (!start_found)
+	{
+		for (i = 0; i < buf_size; i++)
+		{
+			state = (state << 8) | buf[i];
+			if (IS_MARKER(state, i, buf, buf_size))
+			{
+				if (pc1->lastmarker && state == pc1->lastmarker)
+				{
+					start_found = 1;
+					break;
+				}
+				else if (!pc1->lastmarker)
+				{
+					start_found = 1;
+					pc1->lastmarker = state;
+					break;
+				}
+			}
+		}
+	}
+	if (start_found)
+	{
+		for (; i < buf_size; i++)
+		{
+			pc1->size++;
+			state = (state << 8) | buf[i];
+			if (state == DCA_HD_MARKER && !pc1->hd_pos)
+				pc1->hd_pos = pc1->size;
+			if (state == pc1->lastmarker && IS_MARKER(state, i, buf, buf_size))
+			{
+				if(pc1->framesize > pc1->size)
+					continue;
+				if(!pc1->framesize)
+				{
+					pc1->framesize = pc1->hd_pos ? pc1->hd_pos : pc1->size;
+				}
+				pc->frame_start_found = 0;
+				pc->state = -1;
+				pc1->size = 0;
+				return i - 3;
+			}
+		}
+	}
+	pc->frame_start_found = start_found;
+	pc->state = state;
+	return END_NOT_FOUND;
 }
 
 static av_cold int dca_parse_init(AVCodecParserContext * s)
 {
-    DCAParseContext *pc1 = s->priv_data;
+	DCAParseContext *pc1 = s->priv_data;
 
-    pc1->lastmarker = 0;
-    return 0;
+	pc1->lastmarker = 0;
+	return 0;
 }
 
 static int dca_parse(AVCodecParserContext * s,
@@ -105,30 +116,35 @@ static int dca_parse(AVCodecParserContext * s,
                      const uint8_t ** poutbuf, int *poutbuf_size,
                      const uint8_t * buf, int buf_size)
 {
-    DCAParseContext *pc1 = s->priv_data;
-    ParseContext *pc = &pc1->pc;
-    int next;
+	DCAParseContext *pc1 = s->priv_data;
+	ParseContext *pc = &pc1->pc;
+	int next;
 
-    if (s->flags & PARSER_FLAG_COMPLETE_FRAMES) {
-        next = buf_size;
-    } else {
-        next = dca_find_frame_end(pc1, buf, buf_size);
+	if (s->flags & PARSER_FLAG_COMPLETE_FRAMES)
+	{
+		next = buf_size;
+	}
+	else
+	{
+		next = dca_find_frame_end(pc1, buf, buf_size);
 
-        if (ff_combine_frame(pc, next, &buf, &buf_size) < 0) {
-            *poutbuf = NULL;
-            *poutbuf_size = 0;
-            return buf_size;
-        }
-    }
-    *poutbuf = buf;
-    *poutbuf_size = buf_size;
-    return next;
+		if (ff_combine_frame(pc, next, &buf, &buf_size) < 0)
+		{
+			*poutbuf = NULL;
+			*poutbuf_size = 0;
+			return buf_size;
+		}
+	}
+	*poutbuf = buf;
+	*poutbuf_size = buf_size;
+	return next;
 }
 
-AVCodecParser ff_dca_parser = {
-    {CODEC_ID_DTS},
-    sizeof(DCAParseContext),
-    dca_parse_init,
-    dca_parse,
-    ff_parse_close,
+AVCodecParser ff_dca_parser =
+{
+	{CODEC_ID_DTS},
+	sizeof(DCAParseContext),
+	dca_parse_init,
+	dca_parse,
+	ff_parse_close,
 };
