@@ -1,0 +1,12 @@
+SUB_DIRS = ls -1d */
+
+all:
+	for dir in `$(SUB_DIRS)`; do \
+	    $(MAKE) -C $$dir || exit $$? ;\
+	    done
+
+clean:
+	for dir in `$(SUB_DIRS)`; do\
+	    $(MAKE) -C $$dir clean;\
+	    done
+

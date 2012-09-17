@@ -1,0 +1,10 @@
+Package: fsl-omx
+Version: 2.0-5
+Architecture: armel
+Maintainer: Song Bing <b06498@freescale.com>
+Installed-Size: 1216
+Depends: libasound2 (>> 1.0.18), libc6 (>= 2.4), libgcc1 (>= 1:4.4.0), libstdc++6 (>= 4.3.0), libfsl-mm-core1
+Section: unknown
+Priority: extra
+Homepage: http://www.freescale.com
+Description: FreeScale OpenMAX libraries

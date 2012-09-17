@@ -1,0 +1,44 @@
+#####################################################################################
+#
+#   Copyright (c) 2009, Freescale Semiconductors Inc.,
+#   All Rights Reserved.
+# 
+#   The following programs are the sole property of Freescale Semiconductors Inc.,
+#   and contain its proprietary and confidential information.
+# 
+####################################################################################### 
+#
+#   This file include the common defines for OMX component. Such as header file path
+#   and library path.
+#
+######################################################################################
+
+# Set the BUILD information
+include $(OMX_ROOT_DIR)/Makefile.defines
+
+COMMON_LIB_NAME=_omx_common_v2_$(PROCESSOR)_$(OSTYPE)
+COMMON_SO_NAME= lib$(COMMON_LIB_NAME).so
+
+#CODEC_LIB_PATH=$(OMX_ROOT_DIR)/../../../fsl_mad_multimedia_codec/release/lib
+#CODEC_INC_DIR=$(OMX_ROOT_DIR)/../../../fsl_mad_multimedia_codec/ghdr
+CODEC_LIB_PATH=$(OMX_ROOT_DIR)/fsl_mad_multimedia_codec/release/lib
+CODEC_INC_DIR=$(OMX_ROOT_DIR)/fsl_mad_multimedia_codec/ghdr
+#PARSER_LIB_PATH=$(OMX_ROOT_DIR)/../../release/lib
+#PARSER_INC_DIR=$(OMX_ROOT_DIR)/../../ghdr
+#PARSER_INC_COMMON_DIR=$(OMX_ROOT_DIR)/../../ghdr/common
+PARSER_LIB_PATH=$(OMX_ROOT_DIR)/fsl_mad_multimedia_layer/release/lib
+PARSER_INC_DIR=$(OMX_ROOT_DIR)/fsl_mad_multimedia_layer/ghdr
+PARSER_INC_COMMON_DIR=$(OMX_ROOT_DIR)/fsl_mad_multimedia_layer/ghdr/common
+COMPONENT_COMMON_DIR=$(OMX_ROOT_DIR)/OpenMAXIL/src/component/common
+
+COMPONENT_INC_DIRS= -I$(COMPONENT_COMMON_DIR) -I$(CODEC_INC_DIR) -I$(PARSER_INC_DIR) -I$(PARSER_INC_COMMON_DIR)
+
+CXXFLAGS += $(COMPONENT_INC_DIRS)
+
+LFLAGS+= -L$(RELEASE_LIB_DIR) -l$(OSAL_LIB_NAME) -l$(UTILS_LIB_NAME) -l$(RESOURCE_MGR_LIB_NAME) -L$(CODEC_LIB_PATH) -L$(PARSER_LIB_PATH)
+
+
+
+
+
+

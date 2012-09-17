@@ -1,0 +1,402 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 11">
+<meta name=Originator content="Microsoft Word 11">
+<link rel=File-List href="ResolvedDefects_MX51_files/filelist.xml">
+<title>FSL Linux BSP Resolved Defects</title>
+<!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>BestFit</w:Zoom>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+UNKNOWN {
+	
+}
+
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:SimSun;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:#0000EE;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#993399;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";}
+p.style3, li.style3, div.style3
+	{mso-style-name:style3;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:#666666;}
+p.style4, li.style4, div.style4
+	{mso-style-name:style4;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";}
+p.style5, li.style5, div.style5
+	{mso-style-name:style5;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:white;}
+p.style31, li.style31, div.style31
+	{mso-style-name:style31;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:#666666;}
+p.section1, li.section1, div.section1
+	{mso-style-name:section1;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.tableheading, li.tableheading, div.tableheading
+	{mso-style-name:tableheading;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.msonormal0, li.msonormal0, div.msonormal0
+	{mso-style-name:"\0027msonormal\0027";
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.TableCell, li.TableCell, div.TableCell
+	{mso-style-name:"Table Cell";
+	margin-top:3.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:SimSun;
+	mso-bidi-font-family:"Times New Roman";
+	mso-fareast-language:EN-US;}
+span.apple-style-span
+	{mso-style-name:apple-style-span;}
+span.apple-converted-space
+	{mso-style-name:apple-converted-space;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 36.0pt 72.0pt 36.0pt;
+	mso-header-margin:36.0pt;
+	mso-footer-margin:36.0pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+table.MsoTableGrid
+	{mso-style-name:"Table Grid";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	border:solid windowtext 1.0pt;
+	mso-border-alt:solid windowtext .5pt;
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-border-insideh:.5pt solid windowtext;
+	mso-border-insidev:.5pt solid windowtext;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:documentproperties>
+  <o:author>r80086</o:author>
+  <o:lastauthor>Terry Lu</o:lastauthor>
+  <o:revision>82</o:revision>
+  <o:totaltime>250</o:totaltime>
+  <o:lastprinted>2006-10-02T15:33:00Z</o:lastprinted>
+  <o:created>2006-08-07T15:19:00Z</o:created>
+  <o:lastsaved>2008-08-18T13:19:00Z</o:lastsaved>
+  <o:pages>1</o:pages>
+  <o:words>99</o:words>
+  <o:characters>566</o:characters>
+  <o:company>Freescale</o:company>
+  <o:lines>4</o:lines>
+  <o:paragraphs>1</o:paragraphs>
+  <o:characterswithspaces>664</o:characterswithspaces>
+  <o:version>11.6568</o:version>
+ </o:documentproperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:worddocument>
+  <w:zoom>FullPage</w:zoom>
+  <w:grammarstate>Clean</w:grammarstate>
+  <w:validateagainstschemas/>
+  <w:saveifxmlinvalid>false</w:saveifxmlinvalid>
+  <w:ignoremixedcontent>false</w:ignoremixedcontent>
+  <w:alwaysshowplaceholdertext>false</w:alwaysshowplaceholdertext>
+  <w:compatibility>
+   <w:usefelayout/>
+  </w:compatibility>
+  <w:browserlevel>MicrosoftInternetExplorer4</w:browserlevel>
+ </w:worddocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:latentstyles deflockedstate="false" latentstylecount="156">  </w:latentstyles>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="74754"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link="#0000EE" vlink="#993399" style='tab-interval:
+36.0pt' alink="#ee0000">
+
+<div class=Section1>
+
+<table class=MsoNormalTable border=0 cellspacing=3 cellpadding=0 width=667
+ style='width:500.05pt;mso-cellspacing:2.2pt;mso-padding-alt:0cm 0cm 0cm 0cm'>
+ <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>
+  <td width=661 colspan=2 valign=top style='width:495.65pt;padding:0cm 0cm 0cm 0cm'>
+  <div>
+  <p class=MsoNormal style='background:#FFCC00'><a name="Getting_Started"><b>Resolved
+  </b></a><b><span style='mso-fareast-font-family:SimSun'>Defects</span></b><span
+  style='mso-fareast-font-family:SimSun'><o:p></o:p></span></p>
+  <p class=MsoNormal style='background:#FFCC00'><o:p>&nbsp;</o:p></p>
+  </div>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:1;mso-row-margin-right:.25pt'>
+  <td width=658 style='width:493.2pt;padding:0cm 0cm 0cm 0cm'>
+  <p class=MsoNormal><span style='mso-fareast-font-family:SimSun'><o:p>&nbsp;</o:p></span></p>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=588
+   style='width:441.35pt;border-collapse:collapse;mso-padding-alt:0cm 5.4pt 0cm 5.4pt'>
+   <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;page-break-inside:avoid'>
+    <td width=123 valign=top style='width:92.55pt;border-top:solid windowtext 1.5pt;
+    border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+    mso-border-top-alt:solid windowtext 1.5pt;mso-border-bottom-alt:solid windowtext .5pt;
+    background:#F3F3F3;padding:0cm 5.4pt 0cm 5.4pt'>
+    <p class=tableheading style='margin-top:6.0pt;margin-right:0cm;margin-bottom:
+    6.0pt;margin-left:0cm'><strong><span style='font-size:10.0pt;font-family:
+    Arial'>CR ID</span></strong><strong><span style='font-family:Arial'><o:p></o:p></span></strong></p>
+    </td>
+    <td width=465 valign=top style='width:348.8pt;border-top:solid windowtext 1.5pt;
+    border-left:none;border-bottom:solid windowtext 1.0pt;border-right:none;
+    mso-border-top-alt:solid windowtext 1.5pt;mso-border-bottom-alt:solid windowtext .5pt;
+    background:#F3F3F3;padding:0cm 5.4pt 0cm 5.4pt'>
+    <p class=tableheading style='margin-top:6.0pt;margin-right:0cm;margin-bottom:
+    6.0pt;margin-left:0cm'><strong><span style='font-size:10.0pt;font-family:
+    Arial'>Headline</span></strong><strong><span style='font-family:Arial'><o:p></o:p></span></strong></p>
+    </td>
+   </tr>
+   <tr style='mso-yfti-irow:1;page-break-inside:avoid;height:23.05pt'>
+    <td width=123 style='width:92.55pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt'>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    color:black'>ENGR0011</span><span style='font-size:10.0pt;font-family:Arial;
+    mso-fareast-font-family:SimSun;color:black'>9782</span><span
+    style='font-size:10.0pt;font-family:Arial;color:black'>&nbsp;<o:p></o:p></span></p>
+    </td>
+    <td width=465 style='width:348.8pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt' id=c163>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    color:black'>[GST] Add tag list for avi file into avi demuxer</span><span
+    style='font-size:10.0pt;font-family:Arial;mso-fareast-font-family:SimSun;
+    color:black'><o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style='mso-yfti-irow:2;page-break-inside:avoid;height:23.05pt'>
+    <td width=123 style='width:92.55pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt'>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    mso-fareast-font-family:SimSun;color:black'>ENGR00120357<o:p></o:p></span></p>
+    </td>
+    <td width=465 style='width:348.8pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt' id=c173>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    color:black'>[LMX51_VDI] Add VDI dynamic support feature</span><span
+    style='font-size:10.0pt;font-family:Arial;mso-fareast-font-family:SimSun;
+    color:black'><o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style='mso-yfti-irow:3;mso-yfti-lastrow:yes;page-break-inside:avoid;
+    height:23.05pt'>
+    <td width=123 style='width:92.55pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt'>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    mso-fareast-font-family:SimSun;color:black'>ENGR00120545<o:p></o:p></span></p>
+    </td>
+    <td width=465 style='width:348.8pt;border:none;border-bottom:solid windowtext 1.0pt;
+    mso-border-top-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+    mso-border-bottom-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;
+    height:23.05pt' id=c193>
+    <p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial;
+    color:black'>[gstreamer] mp4 demuxer new parser</span><span
+    style='font-size:10.0pt;font-family:Arial;mso-fareast-font-family:SimSun;
+    color:black'><o:p></o:p></span></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal><span style='mso-fareast-font-family:SimSun'><o:p></o:p></span></p>
+  </td>
+  <td style='mso-cell-special:placeholder;border:none;padding:0cm 0cm 0cm 0cm'
+  width=0><p class='MsoNormal'>&nbsp;</td>
+ </tr>
+ <tr style='mso-yfti-irow:2;mso-row-margin-right:.25pt'>
+  <td width=658 valign=top style='width:493.2pt;background:#FF6600;padding:
+  0cm 0cm 0cm 0cm'>
+  <p class=MsoNormal>&nbsp;</p>
+  </td>
+  <td style='mso-cell-special:placeholder;border:none;padding:0cm 0cm 0cm 0cm'
+  width=0><p class='MsoNormal'>&nbsp;</td>
+ </tr>
+ <tr style='mso-yfti-irow:3;mso-yfti-lastrow:yes;mso-row-margin-right:.25pt'>
+<!-- A nice earthtone bar  with revision date, copyright notice and link to tech support. -->
+  <td width=658 valign=top style='width:493.2pt;padding:0cm 0cm 0cm 0cm'>
+  <p align=center style='text-align:center'><span class=GramE><i><span
+  style='font-size:10.0pt;color:#666666'>Copyright ?</span></i></span><i><span
+  style='font-size:10.0pt;color:#666666'> </span></i><i><span style='font-size:
+  10.0pt;mso-fareast-font-family:SimSun;color:#666666'><span
+  style='mso-spacerun:yes'>  </span>2006-2010</span></i><i><span
+  style='font-size:10.0pt;color:#666666'> &nbsp; Freescale Semiconductor.&nbsp;
+  All rights reserved.</span></i><span style='font-size:10.0pt;color:red'><br>
+  Freescale Confidential Proprietary - NDA Required</span></p>
+  </td>
+  <td style='mso-cell-special:placeholder;border:none;padding:0cm 0cm 0cm 0cm'
+  width=0><p class='MsoNormal'>&nbsp;</td>
+ </tr>
+</table>
+
+<p class=section1 style='margin:0cm;margin-bottom:.0001pt'><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>

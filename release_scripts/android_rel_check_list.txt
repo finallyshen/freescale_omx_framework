@@ -1,0 +1,13 @@
+This file is the release check list for android release,
+release owner shall guarantee each items in the list is ready for each release.
+
+Check List:
+2. run repo sync to sync up android project code to latest one.
+3. change ../../device/fsl-proprietary/omx/fsl-omx.mk
+   to make sure all the released libraries are included in this files.
+4. update OpenMAXIL/doc/i_MX_Android_Codec_Release_Notes.html, especially the release date.
+5. update vpu firmware(std + div3) in OpenMAXIL/release/lib/android/vpu_fw_imx5x/ to the corresponding version.
+6. run android_rel.sh to prepare omxgm prebuilt libraries and excluded codec pacakge.
+7. pick up fsl_ac3_dec.tar.gz, fsl_sorenson_dec.tar.gz, vpu_fw_imx5x.tar.gz
+   and i_MX_Android_Codec_Release_Notes.html to make the standard codec
+   excluded package.

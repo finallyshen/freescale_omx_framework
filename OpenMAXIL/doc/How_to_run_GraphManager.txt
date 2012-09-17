@@ -1,0 +1,13 @@
+1. Enviroment Setup
+> copy asound.conf to folder /etc for running in Ubuntu
+> sudo chmod 755 /etc/asound.conf
+> copy omx_release package to {test_folder}
+> export LD_LIBRARY_PATH={test_folder}/omx_release/OpenMAXIL/release/lib:$LD_LIBRARY_PATH
+> export CORE_REGISTER_FILE={test_folder}/omx_release/OpenMAXIL/release/registry/core_register
+> export COMPONENT_REGISTER_FILE={test_folder}/omx_release/OpenMAXIL/release/registry/component_register
+> export CONTENTPIPE_REGISTER_FILE={test_folder}/omx_release/OpenMAXIL/release/registry/contentpipe_register
+> export PATH={test_folder}/omx_release/OpenMAXIL/release/bin:$PATH
+
+2. How to run
+> cd {test_folder}/omx_release/OpenMAXIL/release/bin
+> ./omxgraph_manager_arm11_elinux {test_clip}

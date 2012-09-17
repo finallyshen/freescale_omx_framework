@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/home/lijian/ffmpeg/ffmpeg-HEAD-d0df293
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 52.106.0
+Requires: libavcodec = 52.117.0
+Conflicts:
+Libs: ${libdir}/libavformat.a -ldl -lasound -lm -pthread -lbz2 -lz 
+Cflags: -I${includedir}

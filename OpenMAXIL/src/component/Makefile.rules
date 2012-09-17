@@ -1,0 +1,47 @@
+#####################################################################################
+#
+#   Copyright (c) 2009, Freescale Semiconductors Inc.,
+#   All Rights Reserved.
+# 
+#   The following programs are the sole property of Freescale Semiconductors Inc.,
+#   and contain its proprietary and confidential information.
+# 
+####################################################################################### 
+#
+#   This file will compile all cpp file and build target library. 
+#
+######################################################################################
+
+ifneq ($(COMPONENT_SO_NAME), $(COMMON_SO_NAME))
+LFLAGS+= -l$(COMMON_LIB_NAME)
+endif
+
+OBJECTS += $(SOURCE_FILES:.cpp=.o)
+
+# Build component lib and so
+
+all: $(COMPONENT_SO_NAME)
+
+$(COMPONENT_SO_NAME):$(OBJECTS)
+	$(CXX) -shared -Wl,-soname,$(COMPONENT_SO_NAME) -o $(COMPONENT_SO_NAME)	$(OBJECTS) $(LFLAGS) 
+	
+	mv $(COMPONENT_SO_NAME) $(RELEASE_LIB_DIR)/$(COMPONENT_SO_NAME)
+	@echo "-------------------------------------------------------------------------------"
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+clean:
+	@echo "cleaning ..."
+	rm  -f $(SRC_DIR)/*.o
+	rm  -f $(RELEASE_LIB_DIR)/$(COMPONENT_SO_NAME)
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,159 @@
+element * CHECKEDOUT
+
+element /fsl_mad_multimedia_codec/release .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/release/lib .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/release/lib/demo .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/release/exe .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/test .../mln_main/LATEST
+
+element /fsl_mad_multimedia_codec/ghdr .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/docs .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/common .../mln_main/LATEST
+element /fsl_mad_multimedia_codec/build  .../mln_main/LATEST
+
+element /fsl_mad_multimedia_layer/ghdr  .../mln_main/LATEST
+element /fsl_mad_multimedia_layer/release .../mln_main/LATEST
+element /fsl_mad_multimedia_layer/release/lib .../mln_main/LATEST
+element /fsl_mad_multimedia_layer/release/exe .../mln_main/LATEST
+
+element /fsl_mad_multimedia_layer/docs .../mln_main/LATEST
+
+# ------------
+# OMX
+# ------------
+element * BLN_MAD-MMLAYER_NEW_OPENMAXIL_00.02.00
+
+# ------------
+# Common Parser API
+# ------------
+element * BLN_MAD-MMLAYER_PARSERTEST_01.03.06
+
+# ------------
+# FLAC Parser
+# ------------
+element * BLN_MAD-MMLAYER_FLACPARSER_01.01.00
+
+# ------------
+# WAV Parser
+# ------------
+element * BLN_MAD-MMLAYER_WAVPARSER_01.01.00
+
+# ------------
+# MP3 Parser
+# ------------
+element * BLN_MAD-MMLAYER_MP3PARSER_00.01.04
+
+# ------------
+# AC3 Parser
+# ------------
+element * BLN_MAD-MMLAYER_AC3PARSER_01.01.00
+
+# ------------
+# AAC Parser
+# ------------
+element * BLN_MAD-MMLAYER_AACPARSER_01.01.00
+
+# ------------
+# RM Parser
+# ------------
+element * BLN_MAD-MMLAYER_RMPARSER_03.00.02
+
+# ------------
+# Flv Parser
+# ------------
+element * BLN_MAD-MMLAYER_FLVPARSER_01.08.02
+
+# ------------
+# MP4 Parser
+# ------------
+element * BLN_MAD-MMLAYER_MP4PARSER_06.04.16
+
+# -----------
+# MKV Parser
+# ------------
+element * BLN_MAD-MMLAYER_MKVPARSER_01.02.00
+
+# -----------
+# MPEG2 Parser
+# locally modified to disable track mode
+# ------------
+element * BLN_MAD-MMLAYER_MPG2PARSER_04.00.07
+
+# -----------
+# ASF Parser
+# ------------
+element * BLN_MAD-MMLAYER_ASFPARSER_01.00.09
+
+# ------------
+# AVI Parser
+# ------------
+element * BLN_MAD-MMLAYER_AVIPARSER_03.03.02
+
+# ------------
+# ID3 Parser
+# ------------
+element * BLN_MAD-MMLAYER_ID3PARSER_00.01.02
+
+# ------------
+# OGG Parser
+# ------------
+element * BLN_MAD-MMLAYER_OGGPARSER_01.07.00
+
+# ------------
+# MP3 Decoder
+# ------------
+element * BLN_MAD-MMCODECS_MP3D_ARM_02.11.00
+
+# ------------
+# AAC Decoder
+# ------------
+element * BLN_MAD-MMCODECS_AACD_ARM_03.05.00
+
+# ------------
+# AACPlus Decoder
+# ------------
+element * BLN_MAD-MMCODECS_AACPD_ARM_03.06.00
+
+# ------------
+# AC3 Decoder
+# ------------
+element * BLN_MAD-MMCODECS_AC3D_ARM_02.09.00
+
+# ------------
+# WMA Decoder
+# ------------
+element * BLN_MAD-MMCODECS_WMA10D_ARM_03.04.00
+
+# ------------
+# FLAC Decoder
+# ------------
+element * BLN_MAD-MMCODECS_FLACD_ARM_02.01.00
+
+# ------------
+# AMR-NB Decoder
+# ------------
+element * BLN_MAD-MMCODECS_NBAMR_ARM_02.02.00
+
+# ------------
+# RA Decoder
+# ------------
+element * BLN_MAD-MMCODECS_REALAUDIOD_ARM_02.00.00
+
+# ------------
+# VORBIS Decoder
+# ------------
+element * BLN_MAD-MMCODECS_OGGVORBISD_ARM_02.04.00
+
+# ------------
+# PEQ Audio Post Process
+# ------------
+element * BLN_MAD-MMCODECS_PEQ_ARM11_01.08.00
+
+# ------------
+# WMV789 Decoder
+# ------------
+element * BLN_MAD-MMCODECS_WMV789_ARM11_00.01.03
+
+load \fsl_mad_multimedia_codec\release
+load \fsl_mad_multimedia_codec\ghdr
+load \fsl_mad_multimedia_layer

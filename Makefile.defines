@@ -1,0 +1,145 @@
+#####################################################################################
+#
+#   Copyright (c) 2009, Freescale Semiconductors Inc.,
+#   All Rights Reserved.
+# 
+#   The following programs are the sole property of Freescale Semiconductors Inc.,
+#   and contain its proprietary and confidential information.
+# 
+####################################################################################### 
+#
+#   This file include the common defines for OMX. Such as tool chain and user defines
+#   for whole OMX project.
+#
+######################################################################################
+
+BUILD = ARM11ELINUX
+
+ifeq ($(BUILD),UNIX)
+
+# Tool chain for UNIX build
+
+PROCESSOR=x86
+OSTYPE=linux
+
+CC=gcc
+CXX=g++
+LD=ld
+AR=ar
+
+LFLAGS = -lc -lm -lpthread -ldl
+CXXFLAGS= -g -Wall -fPIC
+
+endif
+
+ifeq ($(BUILD),LINUX)
+
+# Tool chain for UNIX build
+
+PROCESSOR=arm11
+OSTYPE=elinux
+HWPLATFORM=MX51
+
+CC=gcc
+CXX=g++
+LD=ld
+AR=ar
+
+LFLAGS = -lc -lm -lpthread -ldl
+CXXFLAGS= -g -Wall -fPIC 
+
+endif
+
+ifeq ($(BUILD),ARM11ELINUX)
+
+PROCESSOR=arm11
+OSTYPE=elinux
+HWPLATFORM=MX51
+
+# Tool chain for OMX build
+
+TOOLS_DIR=/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi
+CC=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-gcc
+CXX=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-g++
+LD=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-ld   
+AR=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-ar
+LN=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-gcc
+LFLAGS=-L$(TOOLS_DIR)/lib/gcc/arm-fsl-linux-gnueabi/4.4.4 -lpthread -lrt
+CFLAGS_CPU=-mcpu=arm1136j-s
+LFLAGS_CPU=$(CFLAGS_CPU)
+CXXFLAGS= -fPIC -Wall -g
+
+endif
+
+ifeq ($(BUILD),MX6XELINUX)
+
+PROCESSOR=arm11
+OSTYPE=elinux
+HWPLATFORM=MX6X
+
+# Tool chain for OMX build
+
+TOOLS_DIR=/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi
+CC=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-gcc
+CXX=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-g++
+LD=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-ld   
+AR=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-ar
+LN=$(TOOLS_DIR)/bin/arm-none-linux-gnueabi-gcc
+LFLAGS=-L$(TOOLS_DIR)/lib/gcc/arm-fsl-linux-gnueabi/4.4.4 -lpthread -lrt
+CFLAGS_CPU=-mcpu=arm1136j-s
+LFLAGS_CPU=$(CFLAGS_CPU)
+CXXFLAGS= -fPIC -Wall -g
+
+endif
+
+
+# User defined flag
+#OMX_CHECK_MEM=1
+ifeq ($(OMX_CHECK_MEM),1)
+	CXXFLAGS+= -DOMX_MEM_CHECK 
+endif
+
+#OMX_STEREO_OUTPUT=1
+ifeq ($(OMX_STEREO_OUTPUT),1)
+	CXXFLAGS+= -DOMX_STEREO_OUTPUT 
+endif
+
+HDR_DIR=.
+SRC_DIR=.
+
+OSAL_DIR=$(OMX_ROOT_DIR)/OSAL/ghdr
+UTILS_DIR=$(OMX_ROOT_DIR)/utils
+OMX_INC_DIR=$(OMX_ROOT_DIR)/OpenMAXIL/ghdr
+DIVX_DRM_INC=$(OMX_ROOT_DIR)/fsl_mad_multimedia_layer/ghdr/divx_drm
+FFMPEG_DIR=$(OMX_ROOT_DIR)/lib_ffmpeg
+
+ifeq ($(HWPLATFORM),MX37)
+BSP_RELATED_INC_DIR=$(OMX_ROOT_DIR)/bsp_37/include
+BSP_RELATED_LIB_DIR=$(OMX_ROOT_DIR)/bsp_37/lib
+CXXFLAGS+=-DMX37
+endif
+
+ifeq ($(HWPLATFORM),MX51)
+BSP_RELATED_INC_DIR=$(OMX_ROOT_DIR)/bsp_51/include
+BSP_RELATED_LIB_DIR=$(OMX_ROOT_DIR)/bsp_51/lib
+CXXFLAGS+=-DMX51
+CXXFLAGS+=-I$(BSP_RELATED_INC_DIR)
+endif
+
+ifeq ($(HWPLATFORM),MX6X)
+BSP_RELATED_INC_DIR=$(OMX_ROOT_DIR)/bsp_6x/include
+BSP_RELATED_LIB_DIR=$(OMX_ROOT_DIR)/bsp_6x/lib
+CXXFLAGS+=-DMX6X
+CXXFLAGS+=-I$(BSP_RELATED_INC_DIR)
+endif
+
+RELEASE_LIB_DIR=$(OMX_ROOT_DIR)/OpenMAXIL/release/lib
+RELEASE_EXE_DIR=$(OMX_ROOT_DIR)/OpenMAXIL/release/bin
+
+OSAL_LIB_NAME=_omx_osal_v2_$(PROCESSOR)_$(OSTYPE)
+UTILS_LIB_NAME=_omx_utils_v2_$(PROCESSOR)_$(OSTYPE)
+RESOURCE_MGR_LIB_NAME =_omx_res_mgr_v2_$(PROCESSOR)_$(OSTYPE)
+FFMPEG_LIB_NAME=_ffmpeg_$(PROCESSOR)_$(OSTYPE)
+
+CXXFLAGS+= -I$(HDR_DIR) -I$(OSAL_DIR) -I$(UTILS_DIR) -I$(OMX_INC_DIR) -I$(DIVX_DRM_INC) -DLINUX
+LFLAGS+= -L$(RELEASE_LIB_DIR)
